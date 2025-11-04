@@ -9,9 +9,11 @@
 class Entity3DCommon
 {
 public:
-	void Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
+	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
 
 	void DrawCommon();
+
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdList() const { return cmdList_; }
 
 private:
 	// グラフィックパイプラインの作成

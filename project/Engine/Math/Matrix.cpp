@@ -86,13 +86,13 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	result.m[0][3] = 0.0f;
 
 	result.m[1][0] = 0.0f;
-	result.m[1][1] = std::cos(radian);
-	result.m[1][2] = std::sin(radian);
+	result.m[1][1] = cosf(radian);
+	result.m[1][2] = sinf(radian);
 	result.m[1][3] = 0.0f;
 
 	result.m[2][0] = 0.0f;
-	result.m[2][1] = -std::sin(radian);
-	result.m[2][2] = std::cos(radian);
+	result.m[2][1] = -sinf(radian);
+	result.m[2][2] = cosf(radian);
 	result.m[2][3] = 0.0f;
 
 	result.m[3][0] = 0.0f;
@@ -106,9 +106,9 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 // Y軸回転行列
 Matrix4x4 MakeRotateYMatrix(float radian) {
 	Matrix4x4 result;
-	result.m[0][0] = std::cos(radian);
+	result.m[0][0] = cosf(radian);
 	result.m[0][1] = 0.0f;
-	result.m[0][2] = -std::sin(radian);
+	result.m[0][2] = -sinf(radian);
 	result.m[0][3] = 0.0f;
 
 	result.m[1][0] = 0.0f;
@@ -116,9 +116,9 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 	result.m[1][2] = 0.0f;
 	result.m[1][3] = 0.0f;
 
-	result.m[2][0] = std::sin(radian);
+	result.m[2][0] = sinf(radian);
 	result.m[2][1] = 0.0f;
-	result.m[2][2] = std::cos(radian);
+	result.m[2][2] = cosf(radian);
 	result.m[2][3] = 0.0f;
 
 	result.m[3][0] = 0.0f;
@@ -132,13 +132,13 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 // Z軸回転行列
 Matrix4x4 MakeRotateZMatrix(float radian) {
 	Matrix4x4 result;
-	result.m[0][0] = std::cos(radian);
-	result.m[0][1] = std::sin(radian);
+	result.m[0][0] = cosf(radian);
+	result.m[0][1] = sinf(radian);
 	result.m[0][2] = 0.0f;
 	result.m[0][3] = 0.0f;
 
-	result.m[1][0] = -std::sin(radian);
-	result.m[1][1] = std::cos(radian);
+	result.m[1][0] = -sinf(radian);
+	result.m[1][1] = cosf(radian);
 	result.m[1][2] = 0.0f;
 	result.m[1][3] = 0.0f;
 
@@ -160,9 +160,9 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			result.m[j][i] = 0;
+			result.m[i][j] = 0;
 			for (int k = 0; k < 4; ++k) {
-				result.m[j][i] += m1.m[j][k] * m2.m[k][i];
+				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
 			}
 		}
 	}
@@ -370,6 +370,19 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	result.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0];
 	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1];
 	result.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2];
+	return result;
+}
+
+Matrix4x4 Transpose(const Matrix4x4& matrix)
+{
+	Matrix4x4 result{};
+
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			result.m[i][j] = matrix.m[j][i];
+		}
+	}
+
 	return result;
 }
 

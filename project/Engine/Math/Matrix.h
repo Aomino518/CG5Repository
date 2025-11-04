@@ -116,6 +116,8 @@ Vector3 Normalize(const Vector3& normal);
 
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
+Matrix4x4 Transpose(const Matrix4x4& matrix);
+
 // オペレーター
 Vector2& operator+=(Vector2& v1, const Vector2& v2);
 

@@ -13,8 +13,6 @@
 class Graphics
 {
 public:
-	static Graphics* GetInstance();
-
 	// 最大SRV数 (最大テクスチャ枚数)
 	static constexpr uint32_t kMaxSRVCount = 4096;
 

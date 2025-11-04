@@ -8,7 +8,7 @@
 
 class SpriteCommon {
 public:
-	void Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
+	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
 	void DrawCommon();
 	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
 

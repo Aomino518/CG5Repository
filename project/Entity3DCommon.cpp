@@ -1,10 +1,10 @@
 #include "Entity3DCommon.h"
 
-void Entity3DCommon::Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
+void Entity3DCommon::Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
 {
 	rootSignature_ = rootSignature;
-	CreateGraphicPipeline(Graphics::GetInstance(), dxcCompiler);
-	cmdList_ = Graphics::GetCmdList();
+	CreateGraphicPipeline(graphics, dxcCompiler);
+	cmdList_ = graphics->GetCmdList();
 }
 
 void Entity3DCommon::DrawCommon()
@@ -30,7 +30,7 @@ void Entity3DCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCo
 	// RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面(時計回り)を表示しない
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
 	// 三角形の中を塗りつぶす
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
