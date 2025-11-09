@@ -5,12 +5,21 @@
 #include <DxcCompiler.h>
 #include <InputLayout.h>
 #include "PsoBuilder.h"
+#include "Camera.h"
 
-class SpriteCommon {
+class Entity3DCommon
+{
 public:
 	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
+
 	void DrawCommon();
-	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
+
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdList() const { return cmdList_; }
+
+	// Getter
+	Camera* GetDefaultCamera() const { return defaultCamera_; }
+	// Setter
+	void SetDefaultCamera(Camera* camera) { this->defaultCamera_ = camera; }
 
 private:
 	// グラフィックパイプラインの作成
@@ -20,6 +29,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState_;
 	Graphics* graphics_;
 
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pso2D_;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pso3D_;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList_;
+
+	Camera* defaultCamera_ = nullptr;
 };
+

@@ -1,8 +1,5 @@
 #include "Application.h"
 #include <format>
-#include <dxgidebug.h>
-#include <dbghelp.h>
-#include <strsafe.h>
 #include <sstream>
 #include <dxcapi.h>
 #include <vector>
@@ -13,14 +10,20 @@
 #include "Logger.h"
 #pragma comment(lib, "winmm.lib")
 
+#ifdef USE_IMGUI
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
+
+int Application::clientWidth_ = 1280;
+int Application::clientHeight_ = 720;
 
 LRESULT Application::WindowProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
+#ifdef USE_IMGUI
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wp, lp)) {
-		Logger::Write("ループ開始");
 		return true;
 	}
+#endif
 
 	// メッセージに応じてゲーム固有の処理を行う
 	switch (msg) {

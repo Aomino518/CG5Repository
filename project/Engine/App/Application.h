@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 #include <cassert>
-#include "externals/imgui/imgui.h"
-#include "externals/imgui/imgui_impl_dx12.h"
+#ifdef USE_IMGUI
 #include "externals/imgui/imgui_impl_win32.h"
+#endif
 
 class Application
 {
@@ -21,8 +21,8 @@ public:
 	// アクセッサ
 	HINSTANCE GetHInstance() const { return hInstance_; }
 	HWND GetHWND() const { return hwnd_; }
-	int GetWidth() const { return clientWidth_; }
-	int GetHeight() const { return clientHeight_; }
+	static int GetWidth() { return clientWidth_; }
+	static int GetHeight() { return clientHeight_; }
 
 private:
 	HINSTANCE hInstance_ = nullptr;
@@ -30,8 +30,8 @@ private:
 	WNDCLASS wndclass{};
 	std::wstring className_ = L"CG2WindowClass";
 	std::wstring title_ = L"CG2";
-	int clientWidth_ = 1280;
-	int clientHeight_ = 720;
+	static int clientWidth_;
+	static int clientHeight_;
 	DWORD style_ = WS_OVERLAPPEDWINDOW;
 };
 
