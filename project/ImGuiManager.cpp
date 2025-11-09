@@ -61,11 +61,17 @@ void ImGuiManager::Shutdown()
 #endif
 }
 
-void ImGuiManager::SpriteSetting(const std::string& spriteName, const Vector4& spriteMaterial, const Vector2& positoin, float& rotation, const Vector2& scale)
+void ImGuiManager::SpriteSetting(const std::string& spriteName, Sprite* sprite)
 {
 #ifdef USE_IMGUI
+	Vector4 spriteMaterial = sprite->GetColor();
+	Vector2 spritePosition = sprite->GetPosition();
+	float spriteRotate = sprite->GetRotation();
+	Vector2 spriteScale = sprite->GetSize();
+
 	if (ImGui::CollapsingHeader(spriteName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::PushID(spriteName.c_str());
 		if (ImGui::TreeNode("Material"))
 		{
 			ImGui::ColorEdit4("Color", (float*)&spriteMaterial);
@@ -74,34 +80,55 @@ void ImGuiManager::SpriteSetting(const std::string& spriteName, const Vector4& s
 
 		if (ImGui::TreeNode("Transform"))
 		{
-			ImGui::SliderFloat2("Position", (float*)&positoin, -1280.0f, 1280.0f, "%.3f");
-			ImGui::SliderAngle("Rotation", (float*)&rotation, 0.0f, 360.0f, "%.3f");
-			ImGui::SliderFloat2("Scale", (float*)&scale, 0.0f, 1280.0f, "%.3f");
+			ImGui::DragFloat2("Position", (float*)&spritePosition, 1.00f, -1280.0f, 1280.0f, "%.2f");
+			ImGui::SliderAngle("Rotation", (float*)&spriteRotate, 0.0f, 360.0f, "%.3f");
+			ImGui::DragFloat2("Scale", (float*)&spriteScale, 1.00f, 0.0f, 1280.0f, "%.2f");
 			ImGui::TreePop();
 		}
+		ImGui::PopID();
 	}
+
+	sprite->SetColor(spriteMaterial);
+	sprite->SetPosition(spritePosition);
+	sprite->SetRotation(spriteRotate);
+	sprite->SetSize(spriteScale);
+	sprite->Update();
 #endif
 }
 
-void ImGuiManager::ModelSetting(const std::string& modelName, Vector4& spriteMaterial, Vector3& positoin, Vector3& rotation, Vector3& scale)
+void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 {
 #ifdef USE_IMGUI
+	Vector4 modelMaterial = model->GetMaterial();
+	Vector3 modelPosition = model->GetTranslate();
+	Vector3 modelRotate = model->GetRotate();
+	Vector3 modelScale = model->GetScale();
+
 	if (ImGui::CollapsingHeader(modelName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::PushID(modelName.c_str());
 		if (ImGui::TreeNode("Material"))
 		{
-			ImGui::ColorEdit4("Color", (float*)&spriteMaterial);
+			ImGui::ColorEdit4("Color", (float*)&modelMaterial);
 			ImGui::TreePop();
 		}
 
 		if (ImGui::TreeNode("Transform"))
 		{
-			ImGui::SliderFloat3("Position", (float*)&positoin, -1280.0f, 1280.0f, "%.3f");
-			ImGui::SliderFloat3("Rotation", (float*)&rotation, 0.0f, 360.0f, "%.3f");
-			ImGui::SliderFloat3("Scale", (float*)&scale, 0.0f, 1280.0f, "%.3f");
+			ImGui::DragFloat3("Position", (float*)&modelPosition, 0.01f, -1280.0f, 1280.0f, "%.2f");
+			ImGui::DragFloat3("Rotation", (float*)&modelRotate, 0.01f, -360.0f, 360.0f, "%.2f");
+			ImGui::DragFloat3("Scale", (float*)&modelScale, 0.01f, 0.0f, 1280.0f, "%.2f");
 			ImGui::TreePop();
 		}
+		ImGui::PopID();
 	}
+
+	model->SetMaterial(modelMaterial);
+	model->SetTranslate(modelPosition);
+	model->SetRotate(modelRotate);
+	model->SetScale(modelScale);
+	model->Update();
+
 #endif
 }
 
@@ -145,8 +172,8 @@ void ImGuiManager::CameraSetting(Vector3& positoin, Vector3& rotation)
 {
 	if (ImGui::CollapsingHeader("DefaultCamera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::SliderFloat3("Position", (float*)&positoin, -10.0f, 10.0f, "%.3f");
-		ImGui::SliderFloat3("Rotation", (float*)&rotation, 0.0f, 360.0f, "%.3f");
+		ImGui::DragFloat3("Position", (float*)&positoin, 0.01f, -10.0f, 10.0f, "%.2f");
+		ImGui::DragFloat3("Rotation", (float*)&rotation, 0.01f, 0.0f, 360.0f, "%.2f");
 	}
 }
 

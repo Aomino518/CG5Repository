@@ -5,6 +5,8 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Sprite.h"
+#include "Entity3D.h"
 #ifdef USE_IMGUI
 #include "externals/imgui/imgui.h"
 #include "externals/imgui/imgui_impl_dx12.h"
@@ -20,8 +22,8 @@ public:
 	void Draw();
 	void Shutdown();
 
-	void SpriteSetting(const std::string& spriteName, const Vector4& spriteMaterial, const Vector2& positoin, float& rotation, const Vector2& scale);
-	void ModelSetting(const std::string& modelName, Vector4& spriteMaterial, Vector3& positoin, Vector3& rotation, Vector3& scale);
+	void SpriteSetting(const std::string& spriteName, Sprite* sprite);
+	void ModelSetting(const std::string& modelName, Entity3D* model);
 	void Stats();
 	void ShowMemoryUsage();
 	void BegineInspector();

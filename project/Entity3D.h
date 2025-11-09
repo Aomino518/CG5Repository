@@ -27,6 +27,7 @@ public:
 	const Vector3& GetScale() const { return transform_.scale; }
 	const Vector3& GetRotate() const { return transform_.rotate; }
 	const Vector3& GetTranslate() const { return transform_.translate; }
+	const Vector4& GetMaterial() const { return model_->GetMaterial(); }
 
 	// setter関数
 	void SetModel(const std::string& filePath);
@@ -34,6 +35,7 @@ public:
 	void SetRotate(const Vector3& rotate) { this->transform_.rotate = rotate; }
 	void SetTranslate(const Vector3& translate) { this->transform_.translate = translate; }
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
+	void SetMaterial(const Vector4& material) { model_->SetMaterial(material); }
 
 private:
 	void ModelResourcesSetting();

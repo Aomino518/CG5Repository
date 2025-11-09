@@ -27,6 +27,9 @@ public:
 
 	void LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
+	Vector4& GetMaterial() const { return materialData_->color; }
+	void SetMaterial(const Vector4& material) { this->materialData_->color = material; }
+
 private:
 	void CreateBufferResources();
 	void MaterialInit();

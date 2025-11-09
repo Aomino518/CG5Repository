@@ -1,8 +1,5 @@
 #include "Application.h"
 #include <format>
-#include <dxgidebug.h>
-#include <dbghelp.h>
-#include <strsafe.h>
 #include <sstream>
 #include <dxcapi.h>
 #include <vector>

@@ -199,6 +199,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelCommon.cpp" />
     <ClCompile Include="ModelManager.cpp" />
+    <ClCompile Include="SeekerEngine.cpp" />
     <ClCompile Include="SoundCommon.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
@@ -273,6 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelCommon.h" />
     <ClInclude Include="ModelManager.h" />
+    <ClInclude Include="SeekerEngine.h" />
     <ClInclude Include="SoundCommon.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Vector2.h" />

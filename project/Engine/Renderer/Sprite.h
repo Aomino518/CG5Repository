@@ -39,6 +39,7 @@ public:
 	bool GetFlipY() const { return isFlipY_; }
 	const Vector2& GetTextureLeftTop() const { return textureLeftTop_; }
 	const Vector2& GetTextureSize() const { return textureSize_; }
+	const Transform& GetUV() const { return uvTransform_; }
 
 	// Setter
 	void SetPosition(const Vector2& position) { this->position_ = position; }
@@ -56,6 +57,7 @@ public:
 		materialData->color.y = g;
 		materialData->color.z = b;
 	}
+	void SetUV(const Transform& uvTransform) { this->uvTransform_ = uvTransform; }
 
 	/// <summary>
 	/// スプライトを生成
