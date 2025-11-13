@@ -7,9 +7,16 @@
 class CameraManager
 {
 public:
+	struct CameraInfo {
+		std::string name;
+		std::unique_ptr<Camera> camera;
+	};
+
 	void Init();
 
+	int CreateCamera(const std::string& cameraName);
+
 private:
-	std::vector<std::unique_ptr<Camera>> cameras_;
+	std::vector<CameraInfo> cameras_;
 };
 
