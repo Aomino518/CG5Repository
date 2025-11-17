@@ -1,4 +1,5 @@
 #include "SeekerEngine.h"
+#include "CameraManager.h"
 #include <dxgidebug.h>
 #include <dbghelp.h>
 #include <strsafe.h>
@@ -50,6 +51,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SoundData sHAudio3 = se->SoundLoad("resources/gold.mp3");
 	SoundData sHAudio4 = se->SoundLoad("resources/se_itemget.wav"); 
 
+	std::unique_ptr<CameraManager> cameraManager = std::make_unique<CameraManager>();
+	cameraManager->Init();
+	cameraManager->CreateCamera("EntranceCamera");
+	engine.GetEntityCommon()->SetCameraManager(cameraManager.get());
+	engine.GetEntityCommon()->SetDebugCamera(cameraManager->GetDebugCamera());
+
 	// Sprite
 	Vector2 positoin = {0.0f, 0.0f};
 	float rotation = 0.0f;
@@ -66,12 +73,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
 
 	// カメラ
-	std::unique_ptr<Camera> camera = std::make_unique<Camera>();
+	/*std::unique_ptr<Camera> camera = std::make_unique<Camera>();
 	Vector3 cameraPos = { 0.0f, 0.0f, -10.0f };
 	Vector3 cameraRotate = { 0.0f, 0.0f, 0.0f };
 	camera->SetRotate(cameraRotate);
-	camera->SetTranslate(cameraPos);
-	engine.GetEntityCommon()->SetDefaultCamera(camera.get());
+	camera->SetTranslate(cameraPos);*/
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (engine.GetApp()->ProcessMessage()) {
@@ -99,18 +106,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			se->SoundStop();
 		}
 
-		camera->SetRotate(cameraRotate);
-		camera->SetTranslate(cameraPos);
-		camera->Update();
+		cameraManager->Update();
+
+		//camera->Update();
 
 		sprite->Update();
 
-		entity->SetCamera(camera.get());
+		entity->SetCamera(cameraManager->GetActiveCamera());
 		entity->Update();
 
 		imgui.BegineFrame();
+		imgui.CameraSetting(cameraManager.get());
 		imgui.BegineInspector();
-		imgui.CameraSetting(cameraPos, cameraRotate);
 		imgui.SpriteSetting("uvChecker", sprite.get());
 		imgui.ModelSetting("axis.obj", entity.get());
 		imgui.EndInspector();
