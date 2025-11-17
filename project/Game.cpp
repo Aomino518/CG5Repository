@@ -1,0 +1,114 @@
+#include "Game.h"
+
+void Game::Init()
+{
+	SEFramework::Init();
+
+    //===========================
+    // ImGui
+    //===========================
+    imgui.Init(engine_.GetApp(), engine_.GetGraphics());
+
+    //===========================
+    // Sound
+    //===========================
+    bgm = std::make_unique<Sound>();
+    se = std::make_unique<Sound>();
+
+    bgm->SetCommon(engine_.GetSoundCommon());
+    se->SetCommon(engine_.GetSoundCommon());
+
+    sHAudio1 = bgm->SoundLoad("resources/c21.mp3");
+    sHAudio2 = bgm->SoundLoad("resources/koharubiyori.mp3");
+    sHAudio3 = se->SoundLoad("resources/gold.mp3");
+    sHAudio4 = se->SoundLoad("resources/se_itemget.wav");
+
+    //===========================
+    // Sprite
+    //===========================
+    sprite = std::make_unique<Sprite>();
+    uint32_t tHChecker = TextureManager::GetInstance()->Load("resources/uvChecker.png");
+    sprite->Create(tHChecker, { 0.0f, 0.0f }, Color::WHITE);
+    sprite->SetRotation(0.0f);
+
+    //===========================
+    // Model
+    //===========================
+    entity = std::make_unique<Entity3D>();
+    ModelManager::GetInstance()->LoadModel("axis.obj");
+    entity->Init(engine_.GetEntityCommon());
+    entity->SetModel("axis.obj");
+    entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
+
+    //===========================
+    // Camera
+    //===========================
+    camera = std::make_unique<Camera>();
+    camera->SetTranslate(cameraPos);
+    camera->SetRotate(cameraRotate);
+	engine_.GetEntityCommon()->SetDefaultCamera(camera.get());
+}
+
+void Game::Shutdown()
+{
+	imgui.Shutdown();
+
+	SEFramework::Shutdown();
+}
+
+void Game::Update()
+{
+	SEFramework::Update();
+
+	/*-- 更新処理 --*/
+	if (Input::GetInstance()->IsPressed(DIK_SPACE)) {
+		bgm->SoundPlay(sHAudio1, false);
+	}
+
+	if (Input::GetInstance()->IsPressed(DIK_N)) {
+		bgm->SoundPlay(sHAudio2, false);
+	}
+
+	if (Input::GetInstance()->IsPressed(DIK_M)) {
+		se->SoundPlay(sHAudio3, false);
+	}
+
+	if (Input::GetInstance()->IsPressed(DIK_V)) {
+		se->SoundPlay(sHAudio4, false);
+	}
+
+	if (Input::GetInstance()->IsPressed(DIK_B)) {
+		bgm->SoundStop();
+		se->SoundStop();
+	}
+
+	camera->SetRotate(cameraRotate);
+	camera->SetTranslate(cameraPos);
+	camera->Update();
+
+	sprite->Update();
+
+	entity->SetCamera(camera.get());
+	entity->Update();
+
+	imgui.BegineFrame();
+	imgui.BegineInspector();
+	imgui.CameraSetting(cameraPos, cameraRotate);
+	imgui.SpriteSetting("uvChecker", sprite.get());
+	imgui.ModelSetting("axis.obj", entity.get());
+	imgui.EndInspector();
+	imgui.Stats();
+	imgui.EndFrame();
+}
+
+void Game::Draw()
+{
+	/*-- 描画処理 --*/
+	engine_.GetEntityCommon()->DrawCommon();
+	entity->Draw();
+
+	engine_.GetSpriteCommon()->DrawCommon();
+	sprite->Draw();
+
+	imgui.Draw();
+}

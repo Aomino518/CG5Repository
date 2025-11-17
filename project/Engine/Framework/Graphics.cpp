@@ -78,6 +78,11 @@ bool Graphics::Init(HWND hwnd, uint32_t width, uint32_t height, bool enableDebug
 		return false;
 	}
 
+	// デバイスの生成がうまくいかなかったので起動できない
+	assert(device_ != nullptr);
+	// 初期化完了ログ
+	Logger::Write("Complete Create D3D12Device!!!");
+
 	return true;
 }
 

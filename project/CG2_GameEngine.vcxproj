@@ -184,6 +184,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Input\Input.cpp" />
     <ClCompile Include="Engine\Utils\Logger.cpp" />
     <ClCompile Include="Engine\Framework\ImGuiManager.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MaxSpeed</Optimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</WholeProgramOptimization>
@@ -203,6 +204,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\SeekerEngine.cpp" />
     <ClCompile Include="Engine\Audio\SoundCommon.cpp" />
     <ClCompile Include="Engine\Renderer\TextureManager.cpp" />
+    <ClCompile Include="SEFramework.cpp" />
+    <ClCompile Include="StartupManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\hlsl\Object2D.PS.hlsl">
@@ -281,6 +284,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Math\Vector2.h" />
     <ClInclude Include="Engine\Math\Vector3.h" />
     <ClInclude Include="Engine\Math\Vector4.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="SEFramework.h" />
+    <ClInclude Include="StartupManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
