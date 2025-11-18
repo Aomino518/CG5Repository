@@ -2,6 +2,7 @@
 
 void SeekerEngine::Init()
 {
+	StartupManager::Init();
 	Logger::Init();
 	Logger::Write("アプリ開始");
 
@@ -19,11 +20,6 @@ void SeekerEngine::Init()
 	Input::GetInstance()->Init(app_.get());
 	TextureManager::GetInstance()->Init(graphics_.get());
 	ModelManager::GetInstance()->Init(graphics_.get());
-
-	// デバイスの生成がうまくいかなかったので起動できない
-	assert(graphics_->GetDevice() != nullptr);
-	// 初期化完了ログ
-	Logger::Write("Complete Create D3D12Device!!!");
 
 	// RootSignature作成
 	rootSignatureFactory_.Init(graphics_.get());
@@ -65,6 +61,7 @@ void SeekerEngine::Shutdown()
 
 	Logger::Write("アプリ終了");
 	Logger::Shutdown();
+	StartupManager::Shutdown();
 }
 
 void SeekerEngine::BegineFrame()

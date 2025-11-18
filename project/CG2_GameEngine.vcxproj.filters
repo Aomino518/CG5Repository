@@ -177,6 +177,15 @@
     <ClCompile Include="Engine\SeekerEngine.cpp">
       <Filter>ソース ファイル\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="StartupManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SEFramework.cpp">
+     <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="CameraManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -309,6 +318,15 @@
     </ClInclude>
     <ClInclude Include="Engine\SeekerEngine.h">
       <Filter>ヘッダー ファイル\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="StartupManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SEFramework.h">
+       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CameraManager.h">
       <Filter>ヘッダー ファイル</Filter>
