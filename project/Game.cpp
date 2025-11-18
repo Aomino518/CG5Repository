@@ -24,6 +24,14 @@ void Game::Init()
     sHAudio4 = se->SoundLoad("resources/se_itemget.wav");
 
     //===========================
+    // Camera
+    //===========================
+    camera = std::make_unique<Camera>();
+    camera->SetTranslate(cameraPos);
+    camera->SetRotate(cameraRotate);
+	engine_.GetEntityCommon()->SetDefaultCamera(camera.get());
+
+    //===========================
     // Sprite
     //===========================
     sprite = std::make_unique<Sprite>();
@@ -40,13 +48,6 @@ void Game::Init()
     entity->SetModel("axis.obj");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
 
-    //===========================
-    // Camera
-    //===========================
-    camera = std::make_unique<Camera>();
-    camera->SetTranslate(cameraPos);
-    camera->SetRotate(cameraRotate);
-	engine_.GetEntityCommon()->SetDefaultCamera(camera.get());
 }
 
 void Game::Shutdown()
