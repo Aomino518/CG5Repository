@@ -6,10 +6,6 @@ void Particle3DCommon::Init(Graphics* graphics, DxcCompiler& dxcCompiler, ID3D12
     rootSignature_ = rootSignature;
 
     CreateGraphicsPipeline(graphics, dxcCompiler);
-	// 板ポリモデル生成
-	CreatePlaneModel();
-	// インスタンス用バッファ
-	CreateInstanceResource();
 
 	// マテリアルリソースを作る
 	materialResource = CreateBufferResource(Graphics::GetDevice(), sizeof(Material));
@@ -19,7 +15,18 @@ void Particle3DCommon::Init(Graphics* graphics, DxcCompiler& dxcCompiler, ID3D12
 	materialData->enableLighting = false;
 	materialData->uvTransform = MakeIdentity4x4();
 
+	// 板ポリモデル生成
+	CreatePlaneModel();
+	// インスタンス用バッファ
+	CreateInstanceResource();
+
     cmdList_ = Graphics::GetCmdList();
+
+	for (uint32_t i = 0; i < kNumMaxInstance_; ++i) {
+		std::random_device seedGenerator;
+		std::mt19937 randomEngine(seedGenerator());
+		particle_[i] = MakeNewParticle(randomEngine);
+	}
 }
 
 void Particle3DCommon::DrawCommon()
@@ -44,7 +51,7 @@ void Particle3DCommon::Draw()
 	cmdList_->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	cmdList_->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(3, instanceSrvIndex_);
-	cmdList_->DrawIndexedInstanced(6, kNumInstance_, 0, 0, 0);
+	cmdList_->DrawIndexedInstanced(6, numInstance, 0, 0, 0);
 }
 
 void Particle3DCommon::SetBlendMode(BlendMode mode)
@@ -102,21 +109,24 @@ void Particle3DCommon::UpdateInstanceData(CameraManager* cameraManager)
 
 	bool isDebug = cameraManager_->GetIsDebug();
 
-	for (uint32_t i = 0; i < kNumInstance_; ++i) {
+	numInstance = 0;
+	for (uint32_t i = 0; i < kNumMaxInstance_; ++i) {
+		if (particle_[i].lifeTime <= particle_[i].currentTime) {
+			continue;
+		}
 
-		// パーティクルの座標（例：横方向に 2.0f ずつずらす）
-		float x = i * 0.1f;
-		float y = i * 0.1f;
-		float z = i * 0.1f;
-
-		// スケール（すべて同じ）
-		Vector3 scale = { 1.0f, 1.0f, 1.0f };
-		Vector3 rotate = { 0.0f, 0.0f, 0.0f };
-		Vector3 translate = { x, y, z };
+		particle_[i].transform.translate.x += particle_[i].velocity.x * kDeltaTime;
+		particle_[i].transform.translate.y += particle_[i].velocity.y * kDeltaTime;
+		particle_[i].transform.translate.z += particle_[i].velocity.z * kDeltaTime;
+		particle_[i].currentTime += kDeltaTime;
+		float alpha = 1.0f - (particle_[i].currentTime / particle_[i].lifeTime);
 
 		Matrix4x4 wvpMatrix;
 		// World行列
-		Matrix4x4 worldMatrix = MakeAffineMatrix(scale, rotate, translate);
+		Matrix4x4 worldMatrix = MakeAffineMatrix(
+			particle_[i].transform.scale,
+			particle_[i].transform.rotate,
+			particle_[i].transform.translate);
 
 		if (isDebug) {
 			if (debugCamera_) {
@@ -135,9 +145,30 @@ void Particle3DCommon::UpdateInstanceData(CameraManager* cameraManager)
 		}
 
 		// 書き込み
-		instancingData_[i].World = worldMatrix;
-		instancingData_[i].WVP = wvpMatrix;
+		instancingData_[numInstance].World = worldMatrix;
+		instancingData_[numInstance].WVP = wvpMatrix;
+		instancingData_[numInstance].color = particle_[i].color;
+		instancingData_[numInstance].color.w = alpha;
+		++numInstance;
 	}
+}
+
+Particle Particle3DCommon::MakeNewParticle(std::mt19937& randomEngine)
+{
+	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
+	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
+	Particle particle;
+	// スケール（すべて同じ
+	particle.transform.scale = { 1.0f, 1.0f, 1.0f };
+	particle.transform.rotate = { 0.0f, 0.0f, 0.0f };
+	particle.velocity = { distribution(randomEngine), distribution(randomEngine), distribution(randomEngine) };
+	particle.transform.translate = { distribution(randomEngine), distribution(randomEngine), distribution(randomEngine) };
+	particle.color = { distColor(randomEngine), distColor(randomEngine), distColor(randomEngine), 1.0f };
+	particle.lifeTime = distTime(randomEngine);
+	particle.currentTime = 0;
+
+	return particle;
 }
 
 void Particle3DCommon::CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& dxcCompiler)
@@ -226,26 +257,25 @@ void Particle3DCommon::CreateInstanceResource()
 {
 	instanceSrvIndex_ = SrvManager::GetInstance()->Allocate();
 
-	size_t bufferSize = sizeof(TransformationMatrix) * kNumInstance_;
+	size_t bufferSize = sizeof(ParticleForGPU) * kNumMaxInstance_;
 	instancingResource_ = CreateBufferResource(Graphics::GetDevice(), bufferSize);
 
 	instancingData_ = nullptr;
 	instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
 
-	for (uint32_t i = 0; i < kNumInstance_; ++i) {
+	for (uint32_t i = 0; i < kNumMaxInstance_; ++i) {
 		instancingData_[i].WVP = MakeIdentity4x4();
 		instancingData_[i].World = MakeIdentity4x4();
+		instancingData_[i].color = particle_[i].color;
 	}
-
-	instancingResource_->Unmap(0, nullptr);
 
 	Logger::Write("Particle instancing buffer created");
 
 	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(
 		instanceSrvIndex_,
 		instancingResource_.Get(),
-		kNumInstance_,
-		sizeof(TransformationMatrix)
+		kNumMaxInstance_,
+		sizeof(ParticleForGPU)
 	);
 
 	Logger::Write("Particle instancing SRV created");

@@ -13,6 +13,7 @@
 #include "CameraManager.h"
 #include "DebugCamera.h"
 #include "TextureManager.h"
+#include <random>
 
 class Particle3DCommon
 {
@@ -33,6 +34,8 @@ public:
 		textureIndex_ = textureId;
 		textureSrvHandleGPU_ = TextureManager::GetInstance()->GetGPUHandle(textureId);
 	}
+
+	Particle MakeNewParticle(std::mt19937& randomEngine);
 
 private:
 	void CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& dxcCompiler);
@@ -63,9 +66,9 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	D3D12_INDEX_BUFFER_VIEW  ibView_{};
 
-	static constexpr uint32_t kNumInstance_ = 10;
+	static constexpr uint32_t kNumMaxInstance_ = 10;
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
-	TransformationMatrix* instancingData_ = nullptr;
+	ParticleForGPU* instancingData_ = nullptr;
 
 	uint32_t instanceSrvIndex_ = 0;
 	// テクスチャ番号
@@ -75,5 +78,10 @@ private:
 	Material* materialData = nullptr;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_{};
+
+	Particle particle_[kNumMaxInstance_];
+
+	const float kDeltaTime = 1.0f / 60.0f;
+	uint32_t numInstance = 0;
 };
 

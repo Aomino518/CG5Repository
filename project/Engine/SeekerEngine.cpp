@@ -6,7 +6,7 @@ void SeekerEngine::Init()
 	Logger::Init();
 	Logger::Write("アプリ開始");
 
-	app_ = std::make_unique<Application>(1280, 720, L"LE2B_27_モリ_アオト");
+	app_ = std::make_unique<Application>(1280, 720, L"CG2");
 	app_->Init();
 
 	// graphicsの初期化
