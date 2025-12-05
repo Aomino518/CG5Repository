@@ -73,6 +73,13 @@ void Particle3DCommon::SetBlendMode(BlendMode mode)
 
 void Particle3DCommon::RebuildPso()
 {
+	depthStencilDesc_ = {};
+	// DepthStencilStateの設定
+	depthStencilDesc_.DepthEnable = true;
+	// 書き込みします
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
 	InputLayout inputLayout;
 	D3D12_INPUT_LAYOUT_DESC layout = inputLayout.CreateInputLayout3D();
 
@@ -91,7 +98,8 @@ void Particle3DCommon::RebuildPso()
 		vsBlob_,
 		psBlob_,
 		blendDesc_,
-		rasterizerDesc
+		rasterizerDesc,
+		depthStencilDesc_
 	);
 
 	psoParticle3D_ = builder.BuildPso(psoDesc);
@@ -173,6 +181,13 @@ Particle Particle3DCommon::MakeNewParticle(std::mt19937& randomEngine)
 
 void Particle3DCommon::CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& dxcCompiler)
 {
+	depthStencilDesc_ = {};
+	// DepthStencilStateの設定
+	depthStencilDesc_.DepthEnable = true;
+	// 書き込みします
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
 	// InputLayout
 	InputLayout inputLayout;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc3D{};
@@ -202,7 +217,8 @@ void Particle3DCommon::CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& d
 		vsBlob_,
 		psBlob_,
 		blendDesc_,
-		rasterizerDesc
+		rasterizerDesc,
+		depthStencilDesc_
 	);
 
 	psoParticle3D_ = builder.BuildPso(psoDesc3D);

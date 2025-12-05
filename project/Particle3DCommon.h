@@ -57,7 +57,7 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> psBlob_;
 
 	D3D12_BLEND_DESC blendDesc_{};
-	BlendMode mode_ = kBlendModeNormal;
+	BlendMode mode_ = kBlendModeAdd;
 	std::unordered_map<BlendMode, Microsoft::WRL::ComPtr<ID3D12PipelineState>> psoCache_;
 
 	// リソース
@@ -66,7 +66,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	D3D12_INDEX_BUFFER_VIEW  ibView_{};
 
-	static constexpr uint32_t kNumMaxInstance_ = 10;
+	static constexpr uint32_t kNumMaxInstance_ = 100;
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 	ParticleForGPU* instancingData_ = nullptr;
 
@@ -83,5 +83,7 @@ private:
 
 	const float kDeltaTime = 1.0f / 60.0f;
 	uint32_t numInstance = 0;
+
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
 };
 

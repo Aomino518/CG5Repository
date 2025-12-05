@@ -49,7 +49,8 @@ void Game::Init()
     entity->SetModel("fence");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
 
-	engine_.GetPaticleCommon()->SetTexture(tHChecker);
+	uint32_t tHParticle = TextureManager::GetInstance()->Load("resources/circle.png");
+	engine_.GetPaticleCommon()->SetTexture(tHParticle);
 }
 
 void Game::Shutdown()

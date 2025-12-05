@@ -32,7 +32,6 @@ public:
 	static uint32_t GetWidth() { return width_; }
 	static uint32_t GetHeight() { return height_; }
 
-	D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc() const { return depthStencilDesc; }
 	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() const { return swapChainDesc; }
 	D3D12_RENDER_TARGET_VIEW_DESC GetRTVDesc() const { return rtvDesc; }
 
@@ -89,7 +88,6 @@ private:
 	uint64_t fenceValue_ = 0;
 	HANDLE fenceEvent_ = nullptr;
 
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	D3D12_RESOURCE_BARRIER barrier{};
