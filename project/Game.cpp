@@ -48,6 +48,7 @@ void Game::Init()
     entity->Init(engine_.GetEntityCommon());
     entity->SetModel("fence");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
+
 }
 
 void Game::Shutdown()
