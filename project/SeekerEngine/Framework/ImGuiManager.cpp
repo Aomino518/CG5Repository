@@ -95,12 +95,11 @@ void ImGuiManager::SpriteSetting(const std::string& spriteName, Sprite* sprite)
 			ImGui::DragFloat2("Scale", (float*)&spriteScale, 1.00f, 0.0f, 1280.0f, "%.2f");
 			ImGui::TreePop();
 		}
-
+    
 		int current = static_cast<int>(sprite->GetBlendMode());
 		if (ImGui::Combo("BlendMode", &current, blendNames, IM_ARRAYSIZE(blendNames))) {
 			sprite->SetBlendMode(static_cast<BlendMode>(current));
 		}
-
 		ImGui::PopID();
 	}
 
@@ -137,14 +136,12 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 			ImGui::DragFloat3("Scale", (float*)&modelScale, 0.01f, 0.0f, 1280.0f, "%.2f");
 			ImGui::TreePop();
 		}
-
 		int current = static_cast<int>(model->GetBlendMode());
 		if (ImGui::Combo("BlendMode", &current, blendNames, IM_ARRAYSIZE(blendNames))) {
 			model->SetBlendMode(static_cast<BlendMode>(current));
 		}
 
 		ImGui::Checkbox("Lighting", &isLighting);
-
 		ImGui::PopID();
 	}
 
@@ -154,7 +151,6 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 	model->SetScale(modelScale);
 	model->SetIsLighting(isLighting);
 	model->Update();
-
 #endif
 }
 
@@ -246,7 +242,6 @@ void ImGuiManager::CameraSetting(CameraManager* cameraManager)
 	}
 
 	ImGui::End();
-
 #endif
 }
 

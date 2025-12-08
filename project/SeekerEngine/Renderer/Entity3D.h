@@ -43,7 +43,7 @@ public:
 	void SetMaterial(const Vector4& material) { model_->SetMaterial(material); }
 	void SetIsLighting(const bool isLighting) { model_->SetIsLighting(isLighting); }
 	void SetBlendMode(BlendMode mode);
-
+  
 private:
 	void ModelResourcesSetting();
 

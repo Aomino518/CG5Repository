@@ -21,7 +21,6 @@ void Entity3D::Update()
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	// WVPMatrixを作る
 	Matrix4x4 worldViewProjectionMatrix;
-
 	bool isDebug = cameraManager_->GetIsDebug();
 
 	if (isDebug) {

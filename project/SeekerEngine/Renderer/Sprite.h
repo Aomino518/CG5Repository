@@ -42,7 +42,7 @@ public:
 	const Vector2& GetTextureSize() const { return textureSize_; }
 	const Transform& GetUV() const { return uvTransform_; }
 	const BlendMode& GetBlendMode() { return mode_; }
-
+  
 	// Setter
 	void SetPosition(const Vector2& position) { this->position_ = position; }
 	void SetRotation(float rotation) { this->rotation_ = rotation; }
@@ -119,7 +119,6 @@ private:
 
 	// テクスチャサイズをイメージに合わせる
 	void AdjustTextureSize();
-
 	// ブレンドモード取得
 	BlendMode mode_ = kBlendModeNone;
 };

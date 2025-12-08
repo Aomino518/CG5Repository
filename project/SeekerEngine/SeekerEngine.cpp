@@ -23,6 +23,11 @@ void SeekerEngine::Init()
 	TextureManager::GetInstance()->Init(graphics_.get());
 	ModelManager::GetInstance()->Init(graphics_.get());
 
+	// デバイスの生成がうまくいかなかったので起動できない
+	assert(graphics_->GetDevice() != nullptr);
+	// 初期化完了ログ
+	Logger::Write("Complete Create D3D12Device!!!");
+
 	// RootSignature作成
 	rootSignatureFactory_.Init(graphics_.get());
 	rs3D_ = rootSignatureFactory_.Create3D();
@@ -57,6 +62,7 @@ void SeekerEngine::Shutdown()
 	soundCommon_->Shutdown();
 
 	SrvManager::GetInstance()->Shutdown();
+
 	graphics_->Shutdown();
 
 	Logger::Write("AppのShutdown");
@@ -64,7 +70,9 @@ void SeekerEngine::Shutdown()
 
 	Logger::Write("アプリ終了");
 	Logger::Shutdown();
+
 	StartupManager::Shutdown();
+
 }
 
 void SeekerEngine::BegineFrame()

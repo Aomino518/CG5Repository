@@ -67,7 +67,6 @@ void SpriteCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcComp
 	// BlendStateの設定
 	// すべての色要素を書き込む
 	blendDesc_ = CreateBlendDesc(mode_);
-	
 	// RasterizerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	// 裏面(時計回り)を表示しない

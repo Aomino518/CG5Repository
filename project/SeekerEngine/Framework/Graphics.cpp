@@ -94,7 +94,6 @@ void Graphics::Shutdown()
 		bb.Reset();
 	}
 	depthTex_.Reset();
-	//srvHeap_.Reset();
 	dsvHeap_.Reset();
 	rtvHeap_.Reset();
 
@@ -349,7 +348,7 @@ bool Graphics::CreateDevice(bool enableDebug)
 	// Descriptorサイズ取得
 	descSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	descSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	
+
 	return true;
 }
 
@@ -416,8 +415,6 @@ bool Graphics::CreateHeapsAndTargets()
 	device_->CreateDepthStencilView(depthTex_.Get(), &dsvDesc, dsvCpuHandle);
 
 	// SRV用のヒープでディスクリプタの数は128。SRVはShaderないで触れるものなので、ShaderVisibleはtrue
-	//srvHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, Graphics::kMaxSRVCount, true);
-
 	return true;
 }
 

@@ -22,7 +22,7 @@ public:
 	// ゲッター
 	static ID3D12Device* GetDevice() { return device_.Get(); }
 	static ID3D12GraphicsCommandList* GetCmdList() { return cmdList_.Get(); }
-	
+
 	D3D12_CPU_DESCRIPTOR_HANDLE CurrentRTV() const { return rtvHandles_[backBufferIndex_]; }
 	D3D12_CPU_DESCRIPTOR_HANDLE DsvHandle() const { return dsvHeap_->GetCPUDescriptorHandleForHeapStart(); }
 
@@ -41,7 +41,6 @@ public:
 
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 		const Microsoft::WRL::ComPtr<ID3D12Device>& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
-
 private:
 	bool CreateDevice(bool enableDebug);
 	bool CreateSwapChain();
