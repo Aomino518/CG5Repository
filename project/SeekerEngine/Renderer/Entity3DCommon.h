@@ -53,5 +53,6 @@ private:
 	D3D12_BLEND_DESC blendDesc_{};
 	BlendMode mode_ = kBlendModeNormal;
 	std::unordered_map<BlendMode, Microsoft::WRL::ComPtr<ID3D12PipelineState>> psoCache_;
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
 };
 

@@ -22,7 +22,6 @@ public:
 	// ゲッター
 	static ID3D12Device* GetDevice() { return device_.Get(); }
 	static ID3D12GraphicsCommandList* GetCmdList() { return cmdList_.Get(); }
-
 	D3D12_CPU_DESCRIPTOR_HANDLE CurrentRTV() const { return rtvHandles_[backBufferIndex_]; }
 	D3D12_CPU_DESCRIPTOR_HANDLE DsvHandle() const { return dsvHeap_->GetCPUDescriptorHandleForHeapStart(); }
 
@@ -32,7 +31,6 @@ public:
 	static uint32_t GetWidth() { return width_; }
 	static uint32_t GetHeight() { return height_; }
 
-	D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc() const { return depthStencilDesc; }
 	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() const { return swapChainDesc; }
 	D3D12_RENDER_TARGET_VIEW_DESC GetRTVDesc() const { return rtvDesc; }
 
@@ -41,6 +39,7 @@ public:
 
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 		const Microsoft::WRL::ComPtr<ID3D12Device>& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
+  
 private:
 	bool CreateDevice(bool enableDebug);
 	bool CreateSwapChain();
@@ -88,7 +87,6 @@ private:
 	uint64_t fenceValue_ = 0;
 	HANDLE fenceEvent_ = nullptr;
 
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	D3D12_RESOURCE_BARRIER barrier{};
