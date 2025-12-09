@@ -114,8 +114,3 @@ void Entity3DCommon::RebuildPso()
 
 	pso3D_ = builder.BuildPso(psoDesc);
 }
-		rasterizerDesc
-	);
-
-	pso3D_ = builder.BuildPso(psoDesc);
-}
