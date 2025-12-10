@@ -34,6 +34,15 @@ void Entity3DCommon::SetBlendMode(BlendMode mode)
 
 void Entity3DCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler)
 {
+	depthStencilDesc_ = {};
+	// DepthStencilStateの設定
+	// Depthの機能を有効化する
+	depthStencilDesc_.DepthEnable = true;
+	// 書き込みします
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	// 比較関数はLessEqual。つまり、近ければ描画される
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
 	// InputLayout
 	InputLayout inputLayout;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc3D{};
@@ -63,7 +72,8 @@ void Entity3DCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCo
 		vs3DBlob_,
 		ps3DBlob_,
 		blendDesc_,
-		rasterizerDesc
+		rasterizerDesc,
+		depthStencilDesc_
 	);
 
 	pso3D_ = builder.BuildPso(psoDesc3D);
@@ -72,6 +82,14 @@ void Entity3DCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCo
 
 void Entity3DCommon::RebuildPso()
 {
+	depthStencilDesc_ = {};
+	// DepthStencilStateの設定
+	// Depthの機能を有効化する
+	depthStencilDesc_.DepthEnable = true;
+	// 書き込みします
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	// 比較関数はLessEqual。つまり、近ければ描画される
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	InputLayout inputLayout;
 	D3D12_INPUT_LAYOUT_DESC layout = inputLayout.CreateInputLayout3D();
 
@@ -90,7 +108,8 @@ void Entity3DCommon::RebuildPso()
 		vs3DBlob_,
 		ps3DBlob_,
 		blendDesc_,
-		rasterizerDesc
+		rasterizerDesc,
+		depthStencilDesc_
 	);
 
 	pso3D_ = builder.BuildPso(psoDesc);

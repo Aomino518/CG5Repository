@@ -22,16 +22,12 @@ void SeekerEngine::Init()
 	Input::GetInstance()->Init(app_.get());
 	TextureManager::GetInstance()->Init(graphics_.get());
 	ModelManager::GetInstance()->Init(graphics_.get());
-
-	// デバイスの生成がうまくいかなかったので起動できない
-	assert(graphics_->GetDevice() != nullptr);
-	// 初期化完了ログ
-	Logger::Write("Complete Create D3D12Device!!!");
-
+  
 	// RootSignature作成
 	rootSignatureFactory_.Init(graphics_.get());
 	rs3D_ = rootSignatureFactory_.Create3D();
 	rs2D_ = rootSignatureFactory_.Create2D();
+	rsParticle_ = rootSignatureFactory_.CreateParticle3D();
 
 	// SoundCommon作成
 	soundCommon_ = std::make_unique<SoundCommon>();
@@ -45,6 +41,9 @@ void SeekerEngine::Init()
 
 	// モデル共通部の作成
 	entityCommon_->Init(graphics_.get(), dxcCompiler_, rs3D_.Get());
+
+	particleCommon_ = std::make_unique<Particle3DCommon>();
+	particleCommon_->Init(graphics_.get(), dxcCompiler_, rsParticle_.Get());
 }
 
 void SeekerEngine::Update()
@@ -62,7 +61,7 @@ void SeekerEngine::Shutdown()
 	soundCommon_->Shutdown();
 
 	SrvManager::GetInstance()->Shutdown();
-
+  
 	graphics_->Shutdown();
 
 	Logger::Write("AppのShutdown");
@@ -70,9 +69,7 @@ void SeekerEngine::Shutdown()
 
 	Logger::Write("アプリ終了");
 	Logger::Shutdown();
-
 	StartupManager::Shutdown();
-
 }
 
 void SeekerEngine::BegineFrame()

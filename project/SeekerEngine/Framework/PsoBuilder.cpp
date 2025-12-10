@@ -12,7 +12,8 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC PsoBuilder::CreatePsoDesc(
 	Microsoft::WRL::ComPtr<IDxcBlob> vsBlob, 
 	Microsoft::WRL::ComPtr<IDxcBlob> psBlob, 
 	D3D12_BLEND_DESC blendState, 
-	D3D12_RASTERIZER_DESC rasterizerDesc
+	D3D12_RASTERIZER_DESC rasterizerDesc,
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc
 	)
 {
 	desc_.pRootSignature = rootSignature.Get();
@@ -25,7 +26,8 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC PsoBuilder::CreatePsoDesc(
 	desc_.RasterizerState = rasterizerDesc;
 
 	// DepthStencilの設定
-	desc_.DepthStencilState = graphics_->GetDepthStencilDesc();
+	desc_.DepthStencilState = depthStencilDesc;
+  
 	desc_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	// 書き込むRTVの情報

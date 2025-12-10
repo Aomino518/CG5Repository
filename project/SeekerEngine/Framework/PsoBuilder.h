@@ -15,7 +15,8 @@ public:
 		Microsoft::WRL::ComPtr<IDxcBlob> vsBlob,
 		Microsoft::WRL::ComPtr<IDxcBlob> psBlob, 
 		D3D12_BLEND_DESC blendState,
-		D3D12_RASTERIZER_DESC rasterizerDesc
+		D3D12_RASTERIZER_DESC rasterizerDesc,
+		D3D12_DEPTH_STENCIL_DESC depthStencilDesc
 		);
 
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> BuildPso(D3D12_GRAPHICS_PIPELINE_STATE_DESC desc);

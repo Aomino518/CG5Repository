@@ -17,6 +17,12 @@ void SpriteCommon::DrawCommon()
 
 void SpriteCommon::RebuildPso()
 {
+	depthStencilDesc_ = {};
+	// DepthStencilStateの設定
+	depthStencilDesc_.DepthEnable = false;
+	// 書き込みします
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 	InputLayout inputLayout;
 	D3D12_INPUT_LAYOUT_DESC layout = inputLayout.CreateInputLayout2D();
 
@@ -35,7 +41,8 @@ void SpriteCommon::RebuildPso()
 		vs2DBlob_,
 		ps2DBlob_,
 		blendDesc_,
-		rasterizerDesc
+		rasterizerDesc,
+		depthStencilDesc_
 	);
 
 	pso2D_ = builder.BuildPso(psoDesc);
@@ -60,8 +67,14 @@ void SpriteCommon::SetBlendMode(BlendMode mode)
 
 void SpriteCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler)
 {
-	InputLayout inputLayout;
+	depthStencilDesc_ = {};
+	// DepthStencilStateの設定
+	depthStencilDesc_.DepthEnable = false;
+	// 書き込みします
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc2D{};
+	InputLayout inputLayout;
 	inputLayoutDesc2D = inputLayout.CreateInputLayout2D();
 
 	// BlendStateの設定
@@ -89,7 +102,8 @@ void SpriteCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcComp
 		vs2DBlob_,
 		ps2DBlob_,
 		blendDesc_,
-		rasterizerDesc
+		rasterizerDesc,
+		depthStencilDesc_
 	);
 
 	pso2D_ = builder.BuildPso(psoDesc2D);
