@@ -74,6 +74,7 @@ void SpriteCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcComp
 	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc2D{};
+	InputLayout inputLayout;
 	inputLayoutDesc2D = inputLayout.CreateInputLayout2D();
 
 	// BlendStateの設定
