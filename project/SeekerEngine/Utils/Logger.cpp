@@ -5,11 +5,14 @@
 #include <Windows.h>
 
 std::ofstream Logger::stream_;
+Logger::LogLevel Logger::currentLevel_ = Logger::LogLevel::Info;
 
 void Logger::Init()
 {
 	// ログのディレクトリを用意
 	std::filesystem::create_directory("logs");
+	// ログ数の上限を超えていないか確認
+	RemoveOldLogs();
 	// 現在時刻を取得　(UTC時刻)
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 	// ログファイルの名前にコンマ何秒はいらないので、削って秒にする
@@ -22,6 +25,12 @@ void Logger::Init()
 	// 時刻を使ってファイル名を決定
 	std::string logFilePath = std::string("logs/") + dateString + ".log";
 	stream_.open(logFilePath, std::ios::out);
+
+#ifdef _DEBUG
+	currentLevel_ = LogLevel::Debug;
+#else
+	currentLevel_ = LogLevel::Info;
+#endif
 }
 
 void Logger::Shutdown()
@@ -33,10 +42,76 @@ void Logger::Shutdown()
 
 void Logger::Write(const std::string& msg)
 {
-	if (stream_.is_open()) {
-		stream_ << msg << std::endl;
+	Write(LogLevel::Info, msg);
+}
+
+void Logger::Write(LogLevel level, const std::string& msg)
+{
+	if (level < currentLevel_) {
+		return;
 	}
 
-	// デバッグ出力にも流す
-	OutputDebugStringA((msg + "\n").c_str());
+	const char* prefix = "";
+	switch (level) {
+	case LogLevel::Debug: 
+		prefix = "[DEBUG] "; 
+		break;
+	case LogLevel::Info:  
+		prefix = "[INFO] "; 
+		break;
+	case LogLevel::Warning:  
+		prefix = "[WARNING] "; 
+		break;
+	case LogLevel::Error: 
+		prefix = "[ERROR] "; 
+		break;
+	}
+
+	std::string line = std::string(prefix) + msg;
+
+	if (stream_.is_open()) {
+		stream_ << line << std::endl;
+	}
+
+	OutputDebugStringA((line + "\n").c_str());
+}
+
+void Logger::SetLevel(LogLevel level)
+{
+	currentLevel_ = level;
+}
+
+void Logger::RemoveOldLogs()
+{
+	namespace fs = std::filesystem;
+
+	std::vector<fs::directory_entry> logFiles;
+
+	for (const auto& entry : fs::directory_iterator("logs")) {
+		// 通常ファイルを指しているか
+		if (!entry.is_regular_file()) {
+			continue;
+		}
+
+		if (entry.path().extension() == ".log") {
+			logFiles.push_back(entry);
+		}
+	}
+
+	// ログの保存上限以内か
+	if ((int)logFiles.size() < kMaxLogFiles) {
+		return;
+	}
+
+	// 更新日時が古い順にソート
+	std::sort(logFiles.begin(), logFiles.end(),
+		[](const fs::directory_entry& a, const fs::directory_entry& b) {
+			return fs::last_write_time(a) < fs::last_write_time(b);
+		});
+
+	// 上限を超えた分だけ削除
+	int removeCount = (int)logFiles.size() - kMaxLogFiles + 1;
+	for (int i = 0; i < removeCount; ++i) {
+		fs::remove(logFiles[i]);
+	}
 }
