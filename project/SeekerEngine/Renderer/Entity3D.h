@@ -33,6 +33,7 @@ public:
 	const Vector4& GetMaterial() const { return model_->GetMaterial(); }
 	const bool GetIsLighting() const { return model_->GetIsLighting(); }
 	const BlendMode& GetBlendMode() { return mode_; }
+	const Vector3& GetLightDirection() const { return directionalLightData_->direction; }
 
 	// setter関数
 	void SetModel(const std::string& filePath);
@@ -43,6 +44,7 @@ public:
 	void SetMaterial(const Vector4& material) { model_->SetMaterial(material); }
 	void SetIsLighting(const bool isLighting) { model_->SetIsLighting(isLighting); }
 	void SetBlendMode(BlendMode mode);
+	void SetLightDirection(const Vector3& pos) { this->directionalLightData_->direction = pos; }
 
 private:
 	void ModelResourcesSetting();

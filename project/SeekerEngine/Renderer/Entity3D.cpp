@@ -40,8 +40,11 @@ void Entity3D::Update()
 		}
 	}
 
+	Matrix4x4 worldInverseTransform = Inverse(worldMatrix);
+
 	transformationMatrixData_->World = worldMatrix;
 	transformationMatrixData_->WVP = worldViewProjectionMatrix;
+	transformationMatrixData_->WorldInverseTranspose = worldInverseTransform;
 }
 
 void Entity3D::Draw()

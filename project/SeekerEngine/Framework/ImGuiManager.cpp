@@ -120,6 +120,7 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 	Vector3 modelRotate = model->GetRotate();
 	Vector3 modelScale = model->GetScale();
 	bool isLighting = model->GetIsLighting();
+	Vector3 modelLightDir = model->GetLightDirection();
 
 	if (ImGui::CollapsingHeader(modelName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -145,6 +146,8 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 
 		ImGui::Checkbox("Lighting", &isLighting);
 
+		ImGui::DragFloat3("LightDirection", (float*)&modelLightDir, 0.01f, -1.0f, 1.0f, "%.2f");
+
 		ImGui::PopID();
 	}
 
@@ -153,6 +156,7 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 	model->SetRotate(modelRotate);
 	model->SetScale(modelScale);
 	model->SetIsLighting(isLighting);
+	model->SetLightDirection(modelLightDir);
 	model->Update();
 
 #endif
