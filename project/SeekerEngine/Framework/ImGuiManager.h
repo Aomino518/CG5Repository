@@ -6,7 +6,6 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Sprite.h"
-#include "Entity3D.h"
 #include "CameraManager.h"
 #include "BlendStateUtils.h"
 #include "ParticleManager.h"
@@ -17,6 +16,7 @@
 #include "externals/imgui/imgui_impl_win32.h"
 #endif
 
+class Entity3D;
 class ImGuiManager
 {
 public:

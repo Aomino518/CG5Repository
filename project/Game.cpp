@@ -49,6 +49,12 @@ void Game::Init()
     entity->Init(engine_.GetEntityCommon());
     entity->SetModel("ball");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
+
+	modelTerrain = std::make_unique<Entity3D>();
+	ModelManager::GetInstance()->LoadModel("terrain");
+	modelTerrain->Init(engine_.GetEntityCommon());
+	modelTerrain->SetModel("terrain");
+	modelTerrain->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
 }
 
 void Game::Shutdown()
@@ -91,11 +97,15 @@ void Game::Update()
 	entity->SetCamera(cameraManager->GetActiveCamera());
 	entity->Update();
 
+	modelTerrain->SetCamera(cameraManager->GetActiveCamera());
+	modelTerrain->Update();
+
 	imgui.BegineFrame();
 	imgui.BegineInspector();
 	imgui.CameraSetting(cameraManager.get());
 	//imgui.SpriteSetting("uvChecker", sprite.get());
-	imgui.ModelSetting("ball.obj", entity.get());
+	imgui.ModelSetting("ball", entity.get());
+	imgui.ModelSetting("terrain", modelTerrain.get());
 	imgui.EndInspector();
 	imgui.Stats();
 	imgui.EndFrame();
@@ -106,6 +116,7 @@ void Game::Draw()
 	/*-- 描画処理 --*/
 	engine_.GetEntityCommon()->DrawCommon();
 	entity->Draw();
+	modelTerrain->Draw();
 
 	engine_.GetSpriteCommon()->DrawCommon();
 	//sprite->Draw();

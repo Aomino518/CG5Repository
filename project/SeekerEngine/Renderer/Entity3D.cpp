@@ -51,8 +51,10 @@ void Entity3D::Draw()
 {
 	// wvp用のCBufferの場所を設定
 	cmdList_->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-	cmdList_->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(3, LightManager::GetInstance()->GetDirLightResource()->GetGPUVirtualAddress());
 	cmdList_->SetGraphicsRootConstantBufferView(4, cameraResource->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(5, LightManager::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(6, LightManager::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
 
 	if (model_) {
 		model_->Draw();
@@ -78,14 +80,6 @@ void Entity3D::ModelResourcesSetting()
 	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
 	// 単位行列を書きこんでおく
 	transformationMatrixData_->WVP = MakeIdentity4x4();
-
-	// 平行光源用のリソース
-	directionalLightResource_ = CreateBufferResource(Graphics::GetDevice(), sizeof(DirectionalLight));
-	directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
-	// 初期化値
-	directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	directionalLightData_->direction = { 1.0f, 0.0f, 0.0f };
-	directionalLightData_->intensity = 1.0f;
 
 	// カメラリソース
 	cameraResource = CreateBufferResource(Graphics::GetDevice(), sizeof(CameraForGPU));

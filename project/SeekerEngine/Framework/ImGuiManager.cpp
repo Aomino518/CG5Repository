@@ -1,4 +1,5 @@
 #include "ImGuiManager.h"
+#include "Entity3D.h"
 #include "Logger.h"
 #include <Psapi.h>
 
@@ -120,7 +121,9 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 	Vector3 modelRotate = model->GetRotate();
 	Vector3 modelScale = model->GetScale();
 	bool isLighting = model->GetIsLighting();
-	Vector3 modelLightDir = model->GetLightDirection();
+	DirectionalLight lightDir = LightManager::GetInstance()->GetDirectionalLight();
+	PointLight pointLight = LightManager::GetInstance()->GetPointLight();
+	SpotLight spotLight = LightManager::GetInstance()->GetSpotLight();
 
 	if (ImGui::CollapsingHeader(modelName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -146,7 +149,19 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 
 		ImGui::Checkbox("Lighting", &isLighting);
 
-		ImGui::DragFloat3("LightDirection", (float*)&modelLightDir, 0.01f, -1.0f, 1.0f, "%.2f");
+		ImGui::DragFloat3("LightDirection", (float*)&lightDir.direction, 0.01f, -1.0f, 1.0f, "%.2f");
+		ImGui::ColorEdit4("LightDirColor", (float*)&lightDir.color);
+		ImGui::DragFloat("LightDirectionIntensity", (float*)&lightDir.intensity, 0.01f, 0.0f, 1.0f, "%.2f");
+		ImGui::DragFloat3("PointLightPos", (float*)&pointLight.position, 0.01f, -100.0f, 100.0f, "%.2f");
+		ImGui::ColorEdit4("PointLightColor", (float*)&pointLight.color);
+		ImGui::DragFloat("PointLightIntensity", (float*)&pointLight.intensity, 0.01f, 0.0f, 1.0f, "%.2f");
+		ImGui::DragFloat("PointLightRadius", (float*)&pointLight.radius, 0.01f, 0.0f, 100.0f, "%.2f");
+		ImGui::DragFloat("PointLightDecay", (float*)&pointLight.decay, 0.01f, 0.0f, 1.0f, "%.2f");
+		ImGui::DragFloat3("SpotLightPos", (float*)&spotLight.position, 0.01f, -100.0f, 100.0f, "%.2f");
+		ImGui::DragFloat("SpotLightDistance", (float*)&spotLight.distance, 0.01f, 0.0f, 100.0f, "%.2f");
+		ImGui::DragFloat("SpotLightIntensity", (float*)&spotLight.intensity, 0.01f, 0.0f, 100.0f, "%.2f");
+		ImGui::DragFloat("SpotLightFalloffStart", (float*)&spotLight.cosFalloffStart, 0.01f, 0.8f, 10.0f, "%.2f");
+
 
 		ImGui::PopID();
 	}
@@ -156,7 +171,9 @@ void ImGuiManager::ModelSetting(const std::string& modelName, Entity3D* model)
 	model->SetRotate(modelRotate);
 	model->SetScale(modelScale);
 	model->SetIsLighting(isLighting);
-	model->SetLightDirection(modelLightDir);
+	LightManager::GetInstance()->SetDirectionalLight(&lightDir);
+	LightManager::GetInstance()->SetPointLight(&pointLight);
+	LightManager::GetInstance()->SetSpotLight(&spotLight);
 	model->Update();
 
 #endif

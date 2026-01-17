@@ -77,6 +77,27 @@ struct DirectionalLight {
 	float intensity;
 };
 
+struct PointLight {
+	Vector4 color;
+	Vector3 position;
+	float intensity;
+	float radius; // 光が届く最大距離
+	float decay;
+	float padding[2];
+};
+
+struct SpotLight {
+	Vector4 color;
+	Vector3 position;
+	float intensity;
+	Vector3 direction;
+	float distance; // 光が届く最大距離
+	float decay;
+	float cosAngle;
+	float cosFalloffStart;
+	float padding[2];
+};
+
 struct Particle {
 	Transform transform;
 	Vector3 velocity;

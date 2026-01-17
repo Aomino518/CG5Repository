@@ -23,6 +23,7 @@
 #include "SrvManager.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
+#include "LightManager.h"
 
 class SeekerEngine
 {

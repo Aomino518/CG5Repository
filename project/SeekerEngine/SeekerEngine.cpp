@@ -43,6 +43,7 @@ void SeekerEngine::Init()
 	entityCommon_->Init(graphics_.get(), dxcCompiler_, rs3D_.Get());
 
 	ParticleManager::GetInstance()->Init(graphics_.get(), dxcCompiler_, rsParticle_.Get());
+	LightManager::GetInstance()->Init();
 }
 
 void SeekerEngine::Update()
@@ -52,6 +53,7 @@ void SeekerEngine::Update()
 
 void SeekerEngine::Shutdown()
 {
+	LightManager::GetInstance()->Shutdown();
 	ParticleManager::GetInstance()->Shutdown();
 	ModelManager::GetInstance()->Shutdown();
 	TextureManager::GetInstance()->Shutdown();

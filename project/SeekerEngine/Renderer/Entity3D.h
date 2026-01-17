@@ -13,6 +13,7 @@
 #include "DebugCamera.h"
 #include "CameraManager.h"
 #include "BlendStateUtils.h"
+#include "LightManager.h"
 
 class Entity3DCommon;
 class TextureManager;
@@ -34,6 +35,7 @@ public:
 	const bool GetIsLighting() const { return model_->GetIsLighting(); }
 	const BlendMode& GetBlendMode() { return mode_; }
 	const Vector3& GetLightDirection() const { return directionalLightData_->direction; }
+	const Vector3& GetPointLightPos() const { return pointLightData_->position; }
 
 	// setter関数
 	void SetModel(const std::string& filePath);
@@ -45,6 +47,7 @@ public:
 	void SetIsLighting(const bool isLighting) { model_->SetIsLighting(isLighting); }
 	void SetBlendMode(BlendMode mode);
 	void SetLightDirection(const Vector3& pos) { this->directionalLightData_->direction = pos; }
+	void SetPointLightPos(const Vector3& pos) { this->pointLightData_->position = pos; }
 
 private:
 	void ModelResourcesSetting();
@@ -58,6 +61,9 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
 	DirectionalLight* directionalLightData_ = nullptr;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
+	PointLight* pointLightData_ = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource = nullptr;
 	CameraForGPU* cameraData_ = nullptr;
