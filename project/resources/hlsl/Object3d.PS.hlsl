@@ -122,7 +122,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         output.color.rgb = CalcDirectionalLight(input, specularPowDir, textureColor) + 
         CalcPointLight(input, specularPowPoint, textureColor, lightDirPoint) + 
-        CalcSpotLight(input, specularPowPoint, textureColor, spotLightDirectionOnSurface);
+        CalcSpotLight(input, specularPowSpot, textureColor, spotLightDirectionOnSurface);
 
         if (textureColor.a == 0.0f)
         {

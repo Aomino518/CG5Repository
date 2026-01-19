@@ -25,8 +25,8 @@ void LightManager::Init()
     pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLight_));
     // 初期化値
     pointLight_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-    pointLight_->position = { 0.0f, -2.0f, 0.0f };
-    pointLight_->intensity = 1.0f;
+    pointLight_->position = { 0.0f, 2.0f, 2.0f };
+    pointLight_->intensity = 0.0f;
     pointLight_->radius = 5.0f;
     pointLight_->decay = 1.0f;
 
@@ -34,8 +34,8 @@ void LightManager::Init()
     spotLightResource_ = CreateBufferResource(Graphics::GetDevice(), sizeof(SpotLight));
     spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLight_));
     spotLight_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-    spotLight_->position = { 2.0f, -1.0f, 0.0f };
-    spotLight_->intensity = 4.0f;
+    spotLight_->position = { -10.0f, 1.0f, 0.0f };
+    spotLight_->intensity = 15.0f;
     spotLight_->decay = 2.0f;
     spotLight_->cosAngle = std::cos(std::numbers::pi_v<float> / 3.0f);
     spotLight_->cosFalloffStart = 1.0f;
