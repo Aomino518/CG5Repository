@@ -21,10 +21,13 @@ class TextureManager;
 class Entity3D
 {
 public:
-	void Init(Entity3DCommon* entity3DCommon);
+	// 初期化
+	void Init();
 
+	// 更新
 	void Update();
 
+	// 描画
 	void Draw();
 
 	// getter関数
@@ -54,8 +57,6 @@ private:
 
 	Transform transform_;
 
-	Entity3DCommon* entity3DCommon_ = nullptr;
-	
 	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_;
 	TransformationMatrix* transformationMatrixData_ = nullptr;
 

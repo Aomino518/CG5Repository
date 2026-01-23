@@ -38,17 +38,13 @@ public:
 	// Getter
 	Application* GetApp() const { return app_.get(); }
 	Graphics* GetGraphics() const { return graphics_.get(); }
-	SoundCommon* GetSoundCommon() const { return soundCommon_.get(); }
-	SpriteCommon* GetSpriteCommon() const { return spriteCommon_.get(); }
-	Entity3DCommon* GetEntityCommon() const { return entityCommon_.get(); }
 	DxcCompiler GetDxcCompiler() const { return dxcCompiler_; }
 	RootSignatureFactory GetRootSig() const { return rootSignatureFactory_; }
 
 private:
 	std::unique_ptr<Application> app_;
 	std::unique_ptr<Graphics> graphics_;
-	std::unique_ptr<SoundCommon> soundCommon_;
-
+	
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rs3D_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rs2D_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rsParticle_;
@@ -58,6 +54,4 @@ private:
 	InputLayout inputLayout_;
 	PsoBuilder psoBuilder_;
 
-	std::unique_ptr<SpriteCommon> spriteCommon_;
-	std::unique_ptr<Entity3DCommon> entityCommon_;
 };

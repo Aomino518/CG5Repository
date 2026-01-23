@@ -1,6 +1,8 @@
 #pragma once
 #include "SeekerEngine.h"
 #include "SEFramework.h"
+#include "TitleScene.h"
+#include "PlayScene.h"
 
 class Game : public SEFramework
 {
@@ -11,19 +13,6 @@ public:
 	void Draw() override;
 
 private:
-    std::unique_ptr<Sprite> sprite;
-    std::unique_ptr<Entity3D> entity;
-    std::unique_ptr<Entity3D> modelTerrain;
-	std::unique_ptr<Entity3D> modelPlane;
-    std::unique_ptr<Camera> camera;
- 
-    std::unique_ptr<Sound> bgm;
-    std::unique_ptr<Sound> se;
-    SoundData sHAudio1, sHAudio2, sHAudio3, sHAudio4;
-
-    std::unique_ptr<CameraManager> cameraManager;
-
-    ImGuiManager imgui;
-
+	std::unique_ptr<TitleScene> scene_;
 };
 

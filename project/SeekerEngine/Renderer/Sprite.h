@@ -15,7 +15,7 @@ class SpriteCommon;
 
 class Sprite {
 public:
-	void Init(SpriteCommon* spriteCommon);
+	void Init();
 
 	void Update();
 
@@ -68,15 +68,13 @@ public:
 	/// <param name="pos">スプライトの座標</param>
 	/// <param name="color">スプライトの色</param>
 	/// <param name="size">スプライトのサイズ</param>
-	void Create(SpriteCommon* spriteCommon, uint32_t textureId, const Vector2& pos, const Vector4& color, const Vector2& size = { 0.0f, 0.0f });
+	void Create(uint32_t textureId, const Vector2& pos, const Vector4& color, const Vector2& size = { 0.0f, 0.0f });
 	void Move(const Vector2& delta);
 	void Rotate(float deltaAngle);
 	void Scale(float factor);
 	void Scale(const Vector2& factor);
 
 private:
-	SpriteCommon* spriteCommon_ = nullptr;
-
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource;
 	VertexData* vertexData = nullptr;

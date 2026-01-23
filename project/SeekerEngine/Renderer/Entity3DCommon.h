@@ -13,9 +13,14 @@
 class Entity3DCommon
 {
 public:
+	// シングルトンインスタンスの取得
+	static Entity3DCommon* GetInstance();
+
 	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
 
 	void DrawCommon();
+
+	void Shutdown();
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCmdList() const { return cmdList_; }
 
@@ -31,6 +36,13 @@ public:
 	void SetBlendMode(BlendMode mode);
 
 private:
+	static Entity3DCommon* instance_;
+
+	Entity3DCommon() = default;
+	~Entity3DCommon() = default;
+	Entity3DCommon(const Entity3DCommon&) = delete;
+	Entity3DCommon& operator=(const Entity3DCommon&) = delete;
+
 	// グラフィックパイプラインの作成
 	void CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler);
 

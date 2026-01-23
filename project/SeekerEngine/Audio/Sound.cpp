@@ -4,6 +4,10 @@
 #include "Logger.h"
 #include <algorithm>
 
+Sound::Sound() {
+	soundCommon_ = SoundCommon::GetInstance();
+}
+
 /// <summary>
 /// 音声読み込み関数
 /// </summary>

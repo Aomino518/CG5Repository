@@ -1,5 +1,15 @@
 #include "SpriteCommon.h"
 
+SpriteCommon* SpriteCommon::instance_ = nullptr;
+
+SpriteCommon* SpriteCommon::GetInstance()
+{
+	if (instance_ == nullptr) {
+		instance_ = new SpriteCommon;
+	}
+	return instance_;
+}
+
 void SpriteCommon::Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
 {
 	graphics_ = graphics;
@@ -14,6 +24,19 @@ void SpriteCommon::DrawCommon()
 	cmdList_->SetPipelineState(pso2D_.Get());
 	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
+
+void SpriteCommon::Shutdown()
+{
+	pso2D_.Reset();
+	vs2DBlob_.Reset();
+	ps2DBlob_.Reset();
+	rootSignature_.Reset();
+	graphics_ = nullptr;
+	psoCache_.clear();
+	pipelineState_.Reset();
+	cmdList_.Reset();
+	instance_ = nullptr;
+}	
 
 void SpriteCommon::RebuildPso()
 {

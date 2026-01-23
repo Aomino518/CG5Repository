@@ -10,8 +10,13 @@
 
 class SpriteCommon {
 public:
+	// シングルトンインスタンスの取得
+	static SpriteCommon* GetInstance();
 	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
 	void DrawCommon();
+
+	void Shutdown();
+
 	ID3D12PipelineState* GetPipelineState() { return pipelineState_.Get(); }
 
 	BlendMode& GetBlendMode() { return mode_; }
@@ -19,6 +24,13 @@ public:
 	void SetBlendMode(BlendMode mode);
 
 private:
+	static SpriteCommon* instance_;
+
+	SpriteCommon() = default;
+	~SpriteCommon() = default;
+	SpriteCommon(const SpriteCommon&) = delete;
+	SpriteCommon& operator=(const SpriteCommon&) = delete;
+
 	// グラフィックパイプラインの作成
 	void CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler);
 

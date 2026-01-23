@@ -1,5 +1,16 @@
 #include "SoundCommon.h"
 
+SoundCommon* SoundCommon::instance_ = nullptr;
+
+SoundCommon* SoundCommon::GetInstance() {
+
+	if (instance_ == nullptr) {
+		instance_ = new SoundCommon;
+	}
+
+	return instance_;
+}
+
 void SoundCommon::Init()
 {
 	HRESULT hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);

@@ -1,5 +1,15 @@
 #include "Entity3DCommon.h"
 
+Entity3DCommon* Entity3DCommon::instance_ = nullptr;
+
+Entity3DCommon* Entity3DCommon::GetInstance()
+{
+	if (instance_ == nullptr) {
+		instance_ = new Entity3DCommon;
+	}
+	return instance_;
+}
+
 void Entity3DCommon::Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
 {
 	graphics_ = graphics;
@@ -13,6 +23,17 @@ void Entity3DCommon::DrawCommon()
 	cmdList_->SetGraphicsRootSignature(rootSignature_.Get());
 	cmdList_->SetPipelineState(pso3D_.Get());
 	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void Entity3DCommon::Shutdown()
+{
+	instance_ = nullptr;
+	rootSignature_.Reset();
+	pipelineState_.Reset();
+	vs3DBlob_.Reset();
+	ps3DBlob_.Reset();
+	pso3D_.Reset();
+	cmdList_.Reset();
 }
 
 void Entity3DCommon::SetBlendMode(BlendMode mode)

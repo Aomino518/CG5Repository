@@ -89,7 +89,7 @@ private:
     // 板ポリの生成関数
     void CreatePlaneModel();
     // ワールド計算行列
-    Matrix4x4 CalculateWorldMatrix(const Particle& particle, const std::string& name);
+    Matrix4x4 CalculateWorldMatrix(const Particle& particle, const std::string& name, bool isDebug);
     // WVP計算行列
     Matrix4x4 CalculateWVPMatrix(const Matrix4x4& worldMatrix, bool isDebug);
 

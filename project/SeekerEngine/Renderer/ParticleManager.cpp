@@ -63,7 +63,7 @@ void ParticleManager::Update(CameraManager* cameraManager)
 			particleIterator->currentTime += kDeltaTime;
 			float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
 
-			Matrix4x4 worldMatrix = CalculateWorldMatrix(*particleIterator, name);
+			Matrix4x4 worldMatrix = CalculateWorldMatrix(*particleIterator, name, isDebug);
 			Matrix4x4 wvpMatrix = CalculateWVPMatrix(worldMatrix, isDebug);
 
 			if (group.instanceCount < kNumMaxInstance_) {
@@ -258,16 +258,25 @@ ID3D12PipelineState* ParticleManager::GetPso(BlendMode mode)
 }
 
 // ワールド行列計算関数
-Matrix4x4 ParticleManager::CalculateWorldMatrix(const Particle& particle, const std::string& name)
+Matrix4x4 ParticleManager::CalculateWorldMatrix(const Particle& particle, const std::string& name, bool isDebug)
 {
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(particle.transform.scale);
 	Matrix4x4 translateMatrix = MakeTranslateMatrix(particle.transform.translate);
 
-	if (particleGroups[name].useBillboard_ && camera_) {
-		const Matrix4x4& billBoardMatrix = camera_->GetBillboardMatrix();
-		return scaleMatrix * billBoardMatrix * translateMatrix;
-	} else {
-		return scaleMatrix * translateMatrix;
+	if (isDebug) {
+		if (particleGroups[name].useBillboard_ && debugCamera_) {
+			const Matrix4x4& billBoardMatrix = debugCamera_->GetBillboardMatrix();
+			return scaleMatrix * billBoardMatrix * translateMatrix;
+		} else {
+			return scaleMatrix * translateMatrix;
+		}
+	}else {
+		if (particleGroups[name].useBillboard_ && camera_) {
+			const Matrix4x4& billBoardMatrix = camera_->GetBillboardMatrix();
+			return scaleMatrix * billBoardMatrix * translateMatrix;
+		} else {
+			return scaleMatrix * translateMatrix;
+		}
 	}
 }
 

@@ -1,10 +1,9 @@
 #include "Sprite.h"
 #include "SpriteCommon.h"
 
-void Sprite::Init(SpriteCommon* spriteCommon) {
+void Sprite::Init() {
 	cmdList_ = Graphics::GetCmdList();
-	spriteCommon_ = spriteCommon;
-	mode_ = spriteCommon->GetBlendMode();
+	mode_ = SpriteCommon::GetInstance()->GetBlendMode();
 
 	// VertexResourceの作成
 	vertexResource = CreateBufferResource(Graphics::GetDevice(), sizeof(VertexData) * 4);
@@ -156,12 +155,12 @@ void Sprite::Draw()
 void Sprite::SetBlendMode(BlendMode mode)
 {
 	this->mode_ = mode;
-	spriteCommon_->SetBlendMode(mode);
+	SpriteCommon::GetInstance()->SetBlendMode(mode);
 }
 
-void Sprite::Create(SpriteCommon* spriteCommon, uint32_t textureId, const Vector2& pos, const Vector4& color, const Vector2& size)
+void Sprite::Create(uint32_t textureId, const Vector2& pos, const Vector4& color, const Vector2& size)
 {
-	Init(spriteCommon);
+	Init();
 	SetTexture(textureId);
 	SetPosition(pos);
 	SetColor(color);

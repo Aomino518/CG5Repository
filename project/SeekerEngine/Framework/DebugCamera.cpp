@@ -94,3 +94,14 @@ void DebugCamera::Update()
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(Application::GetWidth()) / float(Application::GetHeight()), 0.1f, 100.0f);
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix);
 }
+
+Matrix4x4 DebugCamera::GetBillboardMatrix() {
+	Matrix4x4 invView = Inverse(viewMatrix_);
+
+	// 平行移動は不要なので0.0fに
+	invView.m[3][0] = 0.0f;
+	invView.m[3][1] = 0.0f;
+	invView.m[3][2] = 0.0f;
+
+	return invView;
+}

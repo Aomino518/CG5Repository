@@ -4,8 +4,7 @@
 class Sound
 {
 public:
-	void SetCommon(SoundCommon* soundCommon) { soundCommon_ = soundCommon; }
-
+	Sound();
 	SoundData SoundLoad(const char* filename);
 	void SoundPlay(const SoundData& soundData, bool isLoop, float volume = 1.0f);
 	void SoundUnload(SoundData* soundData);

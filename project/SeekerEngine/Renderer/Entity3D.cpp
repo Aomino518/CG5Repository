@@ -3,14 +3,13 @@
 #include "TextureManager.h"
 #include "ModelManager.h"
 
-void Entity3D::Init(Entity3DCommon* entity3DCommon)
+void Entity3D::Init()
 {
-	this->entity3DCommon_ = entity3DCommon;
-	this->camera_ = entity3DCommon->GetDefaultCamera();
-	this->debugCamera_ = entity3DCommon->GetDebugCamera();
-	this->cameraManager_ = entity3DCommon->GetCameraManager();
-	cmdList_ = entity3DCommon->GetCmdList();
-	mode_ = entity3DCommon->GetBlendMode();
+	this->camera_ = Entity3DCommon::GetInstance()->GetDefaultCamera();
+	this->debugCamera_ = Entity3DCommon::GetInstance()->GetDebugCamera();
+	this->cameraManager_ = Entity3DCommon::GetInstance()->GetCameraManager();
+	cmdList_ = Entity3DCommon::GetInstance()->GetCmdList();
+	mode_ = Entity3DCommon::GetInstance()->GetBlendMode();
 	ModelResourcesSetting();
 
 	transform_ = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
@@ -69,7 +68,7 @@ void Entity3D::SetModel(const std::string& filePath)
 void Entity3D::SetBlendMode(BlendMode mode)
 {
 	this->mode_ = mode;
-	entity3DCommon_->SetBlendMode(mode);
+	Entity3DCommon::GetInstance()->SetBlendMode(mode);
 }
 
 void Entity3D::ModelResourcesSetting()

@@ -151,7 +151,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="LightManager.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SeekerEngine\Renderer\ParticleEmitter.cpp" />
     <ClCompile Include="SeekerEngine\Utils\BlendStateUtils.cpp" />
     <ClCompile Include="SeekerEngine\Framework\CameraManager.cpp" />
@@ -212,6 +215,7 @@
     <ClCompile Include="SeekerEngine\Framework\SEFramework.cpp" />
     <ClCompile Include="SeekerEngine\Framework\SrvManager.cpp" />
     <ClCompile Include="SeekerEngine\Utils\StartupManager.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\hlsl\Particle2D.PS.hlsl">
@@ -284,7 +288,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseScene.h" />
     <ClInclude Include="LightManager.h" />
+    <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SeekerEngine\Renderer\ParticleEmitter.h" />
     <ClInclude Include="SeekerEngine\Utils\BlendStateUtils.h" />
     <ClInclude Include="SeekerEngine\Framework\CameraManager.h" />
@@ -331,6 +338,7 @@
     <ClInclude Include="SeekerEngine\Framework\SEFramework.h" />
     <ClInclude Include="SeekerEngine\Framework\SrvManager.h" />
     <ClInclude Include="SeekerEngine\Utils\StartupManager.h" />
+    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

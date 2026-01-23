@@ -4,6 +4,15 @@
 #include <Psapi.h>
 #include "LightManager.h"
 
+ImGuiManager* ImGuiManager::instance_ = nullptr;
+
+ImGuiManager* ImGuiManager::GetInstance() {
+	if (instance_ == nullptr) {
+		instance_ = new ImGuiManager;
+	}
+	return instance_;
+}
+
 static const char* blendNames[] = {
 		"None",
 		"Normal",
@@ -252,13 +261,14 @@ void ImGuiManager::CameraSetting(CameraManager* cameraManager)
 #endif
 }
 
-void ImGuiManager::ParticleSetting(const std::string& name, ParticleManager* particleManager, ParticleEmitter* emitter)
+void ImGuiManager::ParticleSetting(const std::string& name, ParticleEmitter* emitter)
 {
 #ifdef USE_IMGUI
 	if (ImGui::CollapsingHeader(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		ImGui::PushID(name.c_str());
 
+		ParticleManager* particleManager = ParticleManager::GetInstance();
 		ParticleGroup& group = particleManager->GetGroup(name);
 
 		// Billboard ON/OFF

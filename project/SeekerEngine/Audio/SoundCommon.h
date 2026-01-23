@@ -43,6 +43,7 @@ struct SoundData {
 class SoundCommon
 {
 public:
+	static SoundCommon* GetInstance();
 	void Init();
 	void Shutdown();
 
@@ -51,6 +52,12 @@ public:
 	bool GetIsMfStarted() const { return mfStarted_; }
 
 private:
+	static SoundCommon* instance_;
+	SoundCommon() = default;
+	~SoundCommon() = default;
+	SoundCommon(const SoundCommon&) = delete;
+	SoundCommon& operator=(const SoundCommon&) = delete;
+
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
 	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 	bool mfStarted_ = false;

@@ -20,6 +20,8 @@ class Entity3D;
 class ImGuiManager
 {
 public:
+	static ImGuiManager* GetInstance();
+
 	void Init(Application* app, Graphics* graphics);
 	void BegineFrame();
 	void EndFrame();
@@ -33,10 +35,17 @@ public:
 	void BegineInspector();
 	void EndInspector();
 	void CameraSetting(CameraManager* cameraManager);
-	void ParticleSetting(const std::string& name, ParticleManager* particleManager, ParticleEmitter* emitter);
+	void ParticleSetting(const std::string& name, ParticleEmitter* emitter);
 	void LightSetting();
 
 private:
+	static ImGuiManager* instance_;
+
+	ImGuiManager() = default;
+	~ImGuiManager() = default;
+	ImGuiManager(const ImGuiManager&) = delete;
+	ImGuiManager& operator=(const ImGuiManager&) = delete;
+
 	void StyleSetting();
 
 	Application* app_ = nullptr;

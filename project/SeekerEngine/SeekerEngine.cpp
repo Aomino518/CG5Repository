@@ -30,20 +30,17 @@ void SeekerEngine::Init()
 	rsParticle_ = rootSignatureFactory_.CreateParticle3D();
 
 	// SoundCommon作成
-	soundCommon_ = std::make_unique<SoundCommon>();
-	soundCommon_->Init();
-
-	spriteCommon_ = std::make_unique<SpriteCommon>();
-	entityCommon_ = std::make_unique<Entity3DCommon>();
-
+	SoundCommon::GetInstance()->Init();
+	
 	// スプライト共通部の作成
-	spriteCommon_->Init(graphics_.get(), dxcCompiler_, rs2D_.Get());
+	SpriteCommon::GetInstance()->Init(graphics_.get(), dxcCompiler_, rs2D_.Get());
 
 	// モデル共通部の作成
-	entityCommon_->Init(graphics_.get(), dxcCompiler_, rs3D_.Get());
+	Entity3DCommon::GetInstance()->Init(graphics_.get(), dxcCompiler_, rs3D_.Get());
 
 	ParticleManager::GetInstance()->Init(graphics_.get(), dxcCompiler_, rsParticle_.Get());
 	LightManager::GetInstance()->Init();
+	ImGuiManager::GetInstance()->Init(app_.get(), graphics_.get());
 }
 
 void SeekerEngine::Update()
@@ -53,15 +50,18 @@ void SeekerEngine::Update()
 
 void SeekerEngine::Shutdown()
 {
+	ImGuiManager::GetInstance()->Shutdown();
 	LightManager::GetInstance()->Shutdown();
 	ParticleManager::GetInstance()->Shutdown();
+	Entity3DCommon::GetInstance()->Shutdown();
+	SpriteCommon::GetInstance()->Shutdown();
 	ModelManager::GetInstance()->Shutdown();
 	TextureManager::GetInstance()->Shutdown();
 
 	Input::GetInstance()->Shutdown();
 
-	soundCommon_->Shutdown();
-
+	SoundCommon::GetInstance()->Shutdown();
+	
 	SrvManager::GetInstance()->Shutdown();
   
 	graphics_->Shutdown();

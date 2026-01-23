@@ -18,6 +18,7 @@ public:
   
 	const Matrix4x4& GetViewMatrix() const{ return viewMatrix_; }
 	const Matrix4x4& GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
+	Matrix4x4 GetBillboardMatrix();
 
 	// X,Y,Z軸回りのローカル回転角
 	//Vector3 rotation_ = { 0, 0, 0 };

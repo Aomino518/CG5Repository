@@ -4,134 +4,23 @@ void Game::Init()
 {
 	SEFramework::Init();
 
-    //===========================
-    // ImGui
-    //===========================
-    imgui.Init(engine_.GetApp(), engine_.GetGraphics());
-
-    //===========================
-    // Sound
-    //===========================
-    bgm = std::make_unique<Sound>();
-    se = std::make_unique<Sound>();
-
-    bgm->SetCommon(engine_.GetSoundCommon());
-    se->SetCommon(engine_.GetSoundCommon());
-
-    sHAudio1 = bgm->SoundLoad("resources/c21.mp3");
-    sHAudio2 = bgm->SoundLoad("resources/koharubiyori.mp3");
-    sHAudio3 = se->SoundLoad("resources/gold.mp3");
-    sHAudio4 = se->SoundLoad("resources/se_itemget.wav");
-
-    //===========================
-    // Camera
-    //===========================
-	cameraManager = std::make_unique<CameraManager>();
-	cameraManager->Init();
-	cameraManager->CreateCamera("EntranceCamera");
-	engine_.GetEntityCommon()->SetCameraManager(cameraManager.get());
-	engine_.GetEntityCommon()->SetDebugCamera(cameraManager->GetDebugCamera());
-
-    //===========================
-    // Sprite
-    //===========================
-    sprite = std::make_unique<Sprite>();
-    uint32_t tHChecker = TextureManager::GetInstance()->Load("resources/uvChecker.png");
-	//uint32_t tHMonsterBall = TextureManager::GetInstance()->Load("resources/monsterBall.png");
-    sprite->Create(engine_.GetSpriteCommon(), tHChecker, {0.0f, 0.0f}, Color::WHITE);
-    sprite->SetRotation(0.0f);
-
-    //===========================
-    // Model
-    //===========================
-    entity = std::make_unique<Entity3D>();
-    ModelManager::GetInstance()->LoadModel("ball");
-    entity->Init(engine_.GetEntityCommon());
-    entity->SetModel("ball");
-    entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
-
-	modelTerrain = std::make_unique<Entity3D>();
-	ModelManager::GetInstance()->LoadModel("terrain");
-	modelTerrain->Init(engine_.GetEntityCommon());
-	modelTerrain->SetModel("terrain");
-	modelTerrain->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
-
-	modelPlane = std::make_unique<Entity3D>();
-	ModelManager::GetInstance()->LoadModel("axis");
-	modelPlane->Init(engine_.GetEntityCommon());
-	modelPlane->SetModel("axis");
-	modelPlane->SetTranslate(Vector3(0.0f, -5.0f, 0.0f));
+	scene_ = std::make_unique<TitleScene>();
+	scene_->Init();
 }
 
 void Game::Shutdown()
 {
-	imgui.Shutdown();
-
 	SEFramework::Shutdown();
 }
 
 void Game::Update()
 {
 	SEFramework::Update();
-
-	/*-- 更新処理 --*/
-	if (Input::GetInstance()->IsPressed(DIK_SPACE)) {
-		bgm->SoundPlay(sHAudio1, false);
-	}
-
-	if (Input::GetInstance()->IsPressed(DIK_N)) {
-		bgm->SoundPlay(sHAudio2, false);
-	}
-
-	if (Input::GetInstance()->IsPressed(DIK_M)) {
-		se->SoundPlay(sHAudio3, false);
-	}
-
-	if (Input::GetInstance()->IsPressed(DIK_V)) {
-		se->SoundPlay(sHAudio4, false);
-	}
-
-	if (Input::GetInstance()->IsPressed(DIK_B)) {
-		bgm->SoundStop();
-		se->SoundStop();
-	}
-
-	cameraManager->Update();
-
-	//sprite->Update();
-	
-	entity->SetCamera(cameraManager->GetActiveCamera());
-	entity->Update();
-
-	modelTerrain->SetCamera(cameraManager->GetActiveCamera());
-	modelTerrain->Update();
-
-	modelPlane->SetCamera(cameraManager->GetActiveCamera());
-	modelPlane->Update();
-
-	imgui.BegineFrame();
-	imgui.BegineInspector();
-	imgui.CameraSetting(cameraManager.get());
-	//imgui.SpriteSetting("uvChecker", sprite.get());
-	imgui.ModelSetting("ball", entity.get());
-	imgui.ModelSetting("terrain", modelTerrain.get());
-	imgui.ModelSetting("axis", modelPlane.get());
-	imgui.EndInspector();
-	imgui.Stats();
-	imgui.LightSetting();
-	imgui.EndFrame();
+	scene_->Update();
 }
 
 void Game::Draw()
 {
-	/*-- 描画処理 --*/
-	engine_.GetEntityCommon()->DrawCommon();
-	entity->Draw();
-	modelTerrain->Draw();
-	modelPlane->Draw();
-
-	engine_.GetSpriteCommon()->DrawCommon();
-	//sprite->Draw();
-
-	imgui.Draw();
+	SpriteCommon::GetInstance()->DrawCommon();
+	scene_->Draw();
 }
