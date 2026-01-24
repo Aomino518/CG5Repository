@@ -32,7 +32,7 @@ void SceneManager::Draw() {
 SceneManager::SceneManager()
 {
 	scene_ = std::make_unique<TitleScene>();
-	scene_->Init();
+	nextScene_ = std::move(scene_);
 }
 
 SceneManager::~SceneManager()

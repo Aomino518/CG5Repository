@@ -54,6 +54,8 @@ void PlayScene::Init()
     //===========================
     // Particle
     //===========================
+
+    // ※シーンをループすると毎回初期化されて使用メモリが増加する問題が発生中
     ParticleManager::GetInstance()->CreateParticleGroup("Smoke", tHChecker);
     emitter_ = std::make_unique<ParticleEmitter>("Smoke", 10, 0.1f);
 	
@@ -92,7 +94,7 @@ void PlayScene::Update()
     emitter_->Update();
 	ParticleManager::GetInstance()->Update(cameraManager.get());
 
-    //sprite->Update();
+    sprite->Update();
 
     entity->SetCamera(cameraManager->GetActiveCamera());
     entity->Update();
@@ -106,7 +108,7 @@ void PlayScene::Update()
     ImGuiManager::GetInstance()->BegineFrame();
     ImGuiManager::GetInstance()->BegineInspector();
     ImGuiManager::GetInstance()->CameraSetting(cameraManager.get());
-    //ImGuiManager::GetInstance()->SpriteSetting("uvChecker", sprite.get());
+    ImGuiManager::GetInstance()->SpriteSetting("uvChecker", sprite.get());
     ImGuiManager::GetInstance()->ModelSetting("ball", entity.get());
     ImGuiManager::GetInstance()->ModelSetting("terrain", modelTerrain.get());
     ImGuiManager::GetInstance()->ModelSetting("axis", modelPlane.get());
@@ -128,7 +130,7 @@ void PlayScene::Draw()
     ParticleManager::GetInstance()->Draw();
 
     SpriteCommon::GetInstance()->DrawCommon();
-    //sprite->Draw();
+    sprite->Draw();
 
     ImGuiManager::GetInstance()->Draw();
 }

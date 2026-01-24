@@ -29,6 +29,7 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
+    SpriteCommon::GetInstance()->DrawCommon();
     sprite->Draw();
     ImGuiManager::GetInstance()->Draw();
 }

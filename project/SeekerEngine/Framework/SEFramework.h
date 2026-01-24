@@ -1,7 +1,5 @@
 #pragma once
 #include "SeekerEngine.h"
-#include "SceneManager.h"
-#include "BaseScene.h"
 
 class SEFramework
 {
@@ -20,6 +18,5 @@ private:
 
 protected:
 	SeekerEngine engine_;
-	std::unique_ptr<SceneManager> sceneManager_ = nullptr;
 };
 
