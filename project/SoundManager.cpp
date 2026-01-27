@@ -22,7 +22,7 @@ void SoundManager::Load(const std::string& name, const std::string& filepath) {
 	soundDatas_[name] = sound_.SoundLoad(filepath.c_str());
 }
 
-void SoundManager::PlaySE(const std::string& name, bool loop = false, float volume = 1.0f) {
+void SoundManager::PlaySE(const std::string& name, bool loop, float volume) {
 	auto it = soundDatas_.find(name);
 	if (it == soundDatas_.end()) {
 		return;
@@ -31,7 +31,7 @@ void SoundManager::PlaySE(const std::string& name, bool loop = false, float volu
 	sound_.PlaySE(it->second, loop, volume);
 }
 
-void SoundManager::PlayBGM(const std::string& name, bool loop = true, float volume = 1.0f) {
+void SoundManager::PlayBGM(const std::string& name, bool loop, float volume) {
 	auto it = soundDatas_.find(name);
 	if (it == soundDatas_.end()) {
 		return;
