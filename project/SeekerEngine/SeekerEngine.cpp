@@ -61,6 +61,7 @@ void SeekerEngine::Shutdown()
 
 	Input::GetInstance()->Shutdown();
 
+	SoundManager::GetInstance()->Shutdown();
 	SoundCommon::GetInstance()->Shutdown();
 	
 	SrvManager::GetInstance()->Shutdown();

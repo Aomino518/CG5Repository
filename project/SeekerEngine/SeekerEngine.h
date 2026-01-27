@@ -25,6 +25,7 @@
 #include "ParticleEmitter.h"
 #include "LightManager.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 
 class SeekerEngine
 {

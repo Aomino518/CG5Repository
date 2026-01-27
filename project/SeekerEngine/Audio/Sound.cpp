@@ -35,47 +35,6 @@ SoundData Sound::SoundLoad(const char* filename)
 	return soundData;
 }
 
-/// <summary>
-/// 音声再生関数
-/// </summary>
-/// <param name="soundData">サウンドハンドル</param>
-/// <param name="isLoop">ループ判定</param>
-/// <param name="volume">音量</param>
-void Sound::SoundPlay(const SoundData& soundData, bool isLoop, float volume) {
-	if (!soundCommon_) {
-		return;
-	}
-	
-	if (isPlaying_) {
-		SoundStop();
-	}
-
-	HRESULT result;
-	isLooping_ = isLoop;
-	currentData_ = soundData;
-
-	// 波形フォーマットを元にSourceVoiceの生成
-	pSourceVoice_ = nullptr;
-	result = soundCommon_->GetXAudio()->CreateSourceVoice(&pSourceVoice_, &soundData.wfex);
-	assert(SUCCEEDED(result));
-
-	// 再生する波形データの設定
-	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData.pBuffer;
-	buf.AudioBytes = soundData.bufferSize;
-	buf.Flags = XAUDIO2_END_OF_STREAM;
-	buf.LoopCount = isLoop ? XAUDIO2_LOOP_INFINITE : 0;
-
-	currentVolume_ = volume;
-	// 音量設定
-	pSourceVoice_->SetVolume(currentVolume_);
-
-	// 波形データの再生
-	result = pSourceVoice_->SubmitSourceBuffer(&buf);
-	result = pSourceVoice_->Start();
-	isPlaying_ = true;
-}
-
 // 音声データ解放
 void Sound::SoundUnload(SoundData* soundData) {
 	// バッファのメモリ解放
@@ -86,41 +45,102 @@ void Sound::SoundUnload(SoundData* soundData) {
 	soundData->wfex = {};
 }
 
-/// <summary>
-/// 音声停止関数
-/// </summary>
-void Sound::SoundStop()
+void Sound::PlayBGM(const SoundData& data, bool loop, float volume)
 {
-	if (pSourceVoice_) {
-		pSourceVoice_->Stop();
-		pSourceVoice_->FlushSourceBuffers();
-		pSourceVoice_->DestroyVoice();
-		pSourceVoice_ = nullptr;
+	StopBGM();
+	
+	isLooping_ = loop;
+	currentData_ = data;
+
+	SoundCommon::GetInstance()->GetXAudio()->CreateSourceVoice(
+		&bgmVoice_,
+		&data.wfex
+	);
+
+	XAUDIO2_BUFFER buffer = {};
+	buffer.pAudioData = data.pBuffer;
+	buffer.AudioBytes = data.bufferSize;
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	if (loop) {
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
-	isPlaying_ = false;
+
+	currentBGMVolume_ = volume;
+	// 音量設定
+	bgmVoice_->SetVolume(currentBGMVolume_);
+
+	bgmVoice_->SubmitSourceBuffer(&buffer);
+	bgmVoice_->Start();
 }
 
-/// <summary>
-/// 音声再再生関数
-/// </summary>
-void Sound::SoundRestart()
+void Sound::PlaySE(const SoundData& data, bool loop, float volume)
+{
+	IXAudio2SourceVoice* seVoice = nullptr;
+
+	SoundCommon::GetInstance()->GetXAudio()->CreateSourceVoice(
+		&seVoice,
+		&data.wfex
+	);
+
+	XAUDIO2_BUFFER buffer = {};
+	buffer.pAudioData = data.pBuffer;
+	buffer.AudioBytes = data.bufferSize;
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
+	if (loop) {
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+
+	currentSEVolume_ = volume;
+	// 音量設定
+	seVoice->SetVolume(currentSEVolume_);
+
+	seVoice->SubmitSourceBuffer(&buffer);
+	seVoice->Start();
+
+	seVoices_.push_back(seVoice);
+}
+
+void Sound::StopBGM() {
+	if (bgmVoice_) {
+		bgmVoice_->Stop();
+		bgmVoice_->FlushSourceBuffers();
+		bgmVoice_->DestroyVoice();
+		bgmVoice_ = nullptr;
+	}
+}
+
+void Sound::StopSE()
+{
+	for (auto* v : seVoices_) {
+		v->Stop();
+		v->FlushSourceBuffers();
+		v->DestroyVoice();
+	}
+	seVoices_.clear();
+}
+
+void Sound::RestartBGM()
 {
 	if (!currentData_.pBuffer) {
 		return;
 	}
 
-	SoundPlay(currentData_, isLooping_);
+	PlayBGM(currentData_, isLooping_);
 }
 
-/// <summary>
-/// 音量調整関数
-/// </summary>
-/// <param name="volume">音量</param>
-void Sound::SetVolume(float volume)
+void Sound::SetVolumeBGM(float volume)
 {
-	currentVolume_ = std::clamp(volume, 0.0f, 1.0f);
-	if (pSourceVoice_) {
-		pSourceVoice_->SetVolume(currentVolume_);
+	currentBGMVolume_ = std::clamp(volume, 0.0f, 1.0f);
+	if (bgmVoice_) {
+		bgmVoice_->SetVolume(currentBGMVolume_);
+	}
+}
+
+void Sound::SetVolumeSE(float volume)
+{
+	currentSEVolume_ = std::clamp(volume, 0.0f, 1.0f);
+	for (auto* v : seVoices_) {
+		v->SetVolume(currentSEVolume_);
 	}
 }
 

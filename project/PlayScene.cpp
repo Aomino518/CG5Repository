@@ -5,16 +5,10 @@ void PlayScene::Init()
    //===========================
    // Sound
    //===========================
-
-    // ※シーンをループすると毎回ロードされて使用メモリが増加する問題が発生中
-    //   SoundManagerの実装を検討中
-    /*bgm = std::make_unique<Sound>();
-    se = std::make_unique<Sound>();
-
-    sHAudio1 = bgm->SoundLoad("resources/c21.mp3");
-    sHAudio2 = bgm->SoundLoad("resources/koharubiyori.mp3");
-    sHAudio3 = se->SoundLoad("resources/gold.mp3");
-    sHAudio4 = se->SoundLoad("resources/se_itemget.wav");*/
+    SoundManager::GetInstance()->Load("bgm1", "resources/c21.mp3");
+    SoundManager::GetInstance()->Load("bgm2", "resources/koharubiyori.mp3");
+    SoundManager::GetInstance()->Load("se1", "resources/gold.mp3");
+    SoundManager::GetInstance()->Load("se2", "resources/se_itemget.wav");
 
     //===========================
     // Camera
@@ -51,8 +45,6 @@ void PlayScene::Init()
     //===========================
     // Particle
     //===========================
-
-    // ※シーンをループすると毎回登録される問題が発生中
     ParticleManager::GetInstance()->CreateParticleGroup("Smoke", tHChecker);
     emitter_ = std::make_unique<ParticleEmitter>("Smoke", 10, 0.1f);
 	
@@ -61,28 +53,29 @@ void PlayScene::Init()
 void PlayScene::Update()
 {
     /*-- 更新処理 --*/
-    /*if (Input::GetInstance()->IsPressed(DIK_S)) {
-        bgm->SoundPlay(sHAudio1, false);
+    if (Input::GetInstance()->IsPressed(DIK_S)) {
+        SoundManager::GetInstance()->PlayBGM("bgm1");
     }
 
     if (Input::GetInstance()->IsPressed(DIK_N)) {
-        bgm->SoundPlay(sHAudio2, false);
+        SoundManager::GetInstance()->PlayBGM("bgm2");
     }
 
     if (Input::GetInstance()->IsPressed(DIK_M)) {
-        se->SoundPlay(sHAudio3, false);
+        SoundManager::GetInstance()->PlaySE("se1");
     }
 
     if (Input::GetInstance()->IsPressed(DIK_V)) {
-        se->SoundPlay(sHAudio4, false);
+        SoundManager::GetInstance()->PlaySE("se2");
     }
 
     if (Input::GetInstance()->IsPressed(DIK_B)) {
-        bgm->SoundStop();
-        se->SoundStop();
-    }*/
+        SoundManager::GetInstance()->StopBGM();
+    }
 
     if (Input::GetInstance()->IsPressed(DIK_SPACE)) {
+        SoundManager::GetInstance()->StopBGM();
+        SoundManager::GetInstance()->StopSE();
         SceneManager::GetInstance()->ChangeScene("TITLE");
     }
 
@@ -130,4 +123,8 @@ void PlayScene::Draw()
 void PlayScene::Shutdown()
 {
     ParticleManager::GetInstance()->RemoveParticleGroup("Smoke");
+    SoundManager::GetInstance()->Unload("bgm1");
+    SoundManager::GetInstance()->Unload("bgm2");
+    SoundManager::GetInstance()->Unload("se1");
+    SoundManager::GetInstance()->Unload("se2");
 }

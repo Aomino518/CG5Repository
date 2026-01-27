@@ -216,6 +216,7 @@
     <ClCompile Include="SeekerEngine\Framework\SEFramework.cpp" />
     <ClCompile Include="SeekerEngine\Framework\SrvManager.cpp" />
     <ClCompile Include="SeekerEngine\Utils\StartupManager.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -341,13 +342,13 @@
     <ClInclude Include="SeekerEngine\Framework\SEFramework.h" />
     <ClInclude Include="SeekerEngine\Framework\SrvManager.h" />
     <ClInclude Include="SeekerEngine\Utils\StartupManager.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CONTRIBUTING.md" />
     <None Include="resources\hlsl\Particle2D.hlsli" />
     <None Include="resources\hlsl\Particle3D.hlsli" />
     <None Include="resources\hlsl\Object2D.hlsli">

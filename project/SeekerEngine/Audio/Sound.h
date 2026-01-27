@@ -1,16 +1,21 @@
 #pragma once
 #include "SoundCommon.h"
+#include <vector>
 
 class Sound
 {
 public:
 	Sound();
 	SoundData SoundLoad(const char* filename);
-	void SoundPlay(const SoundData& soundData, bool isLoop, float volume = 1.0f);
 	void SoundUnload(SoundData* soundData);
-	void SoundStop();
-	void SoundRestart();
-	void SetVolume(float volume);
+	
+	void PlayBGM(const SoundData& data, bool loop = false, float volume = 1.0f);
+	void PlaySE(const SoundData& data, bool loop = false, float volume = 1.0f);
+	void StopBGM();
+	void StopSE();
+	void RestartBGM();
+	void SetVolumeBGM(float volume);
+	void SetVolumeSE(float volume);
 
 private:
 	// 内部用
@@ -20,11 +25,14 @@ private:
 	SoundData SoundLoadWave(const char* filename);
 
 	SoundCommon* soundCommon_ = nullptr;
-	IXAudio2SourceVoice* pSourceVoice_ = nullptr;
+	//IXAudio2SourceVoice* pSourceVoice_ = nullptr;
+	IXAudio2SourceVoice* bgmVoice_ = nullptr;
+	std::vector<IXAudio2SourceVoice*> seVoices_;
 	
 	bool isLooping_ = false;
-	bool isPlaying_ = false;
 	float currentVolume_ = 1.0f;
+	float currentBGMVolume_ = 1.0f;
+	float currentSEVolume_ = 1.0f;
 	SoundData currentData_ = {};
 };
 
