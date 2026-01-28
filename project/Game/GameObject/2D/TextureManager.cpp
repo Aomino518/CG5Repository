@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+#include "Graphics.h"
 #include "Logger.h"
 #include <format>
 #include "StringUtil.h"
@@ -13,10 +14,10 @@ TextureManager* TextureManager::GetInstance()
 	return &instance;
 }
 
-void TextureManager::Init(Graphics* graphics)
+void TextureManager::Init()
 {
-	device_ = graphics->GetDevice();
-	cmdList_ = graphics->GetCmdList();
+	device_ = Graphics::GetInstance()->GetDevice();
+	cmdList_ = Graphics::GetInstance()->GetCmdList();
 	descriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 

@@ -116,4 +116,5 @@ void Application::Shutdown()
 	CloseWindow(hwnd_);
 	hwnd_ = nullptr;
 	UnregisterClass(className_.c_str(), hInstance_);
+	Logger::Write("Application Shutdown");
 }

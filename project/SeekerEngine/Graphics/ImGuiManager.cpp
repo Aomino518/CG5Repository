@@ -4,6 +4,7 @@
 #include <Psapi.h>
 #include "LightManager.h"
 #include "Application.h"
+#include "Graphics.h"
 
 ImGuiManager* ImGuiManager::GetInstance() {
 	static ImGuiManager instance;
@@ -19,11 +20,11 @@ static const char* blendNames[] = {
 		"Screen"
 };
 
-void ImGuiManager::Init([[maybe_unused]] Graphics* graphics)
+void ImGuiManager::Init()
 {
 #ifdef USE_IMGUI
 	app_ = Application::GetInstance();
-	graphics_ = graphics;
+	graphics_ = Graphics::GetInstance();
 
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();

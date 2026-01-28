@@ -7,12 +7,12 @@ SrvManager* SrvManager::GetInstance()
 	return &instance;
 }
 
-void SrvManager::Init(Graphics* graphics)
+void SrvManager::Init()
 {
-	this->graphics_ = graphics;
-	device_ = graphics->GetDevice();
+	this->graphics_ = Graphics::GetInstance();
+	device_ = Graphics::GetInstance()->GetDevice();
 	// ディスクリプターヒープの生成
-	descriptorHeap_ = graphics->CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
+	descriptorHeap_ = graphics_->CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
 	descriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 

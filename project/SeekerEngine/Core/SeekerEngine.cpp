@@ -9,21 +9,20 @@ void SeekerEngine::Init()
 	Application::GetInstance()->Init(1280, 720, L"CG2");
 
 	// graphicsの初期化
-	graphics_ = std::make_unique<Graphics>();
-	graphics_->Init(true);
+	Graphics::GetInstance()->Init(true);
 
-	SrvManager::GetInstance()->Init(graphics_.get());
+	SrvManager::GetInstance()->Init();
 
 	// DxcCompilerの初期化
 	dxcCompiler_.Init();
 
 	//DirectInput初期化
 	Input::GetInstance()->Init();
-	TextureManager::GetInstance()->Init(graphics_.get());
-	ModelManager::GetInstance()->Init(graphics_.get());
+	TextureManager::GetInstance()->Init();
+	ModelManager::GetInstance()->Init();
   
 	// RootSignature作成
-	rootSignatureFactory_.Init(graphics_.get());
+	rootSignatureFactory_.Init();
 	rs3D_ = rootSignatureFactory_.Create3D();
 	rs2D_ = rootSignatureFactory_.Create2D();
 	rsParticle_ = rootSignatureFactory_.CreateParticle3D();
@@ -31,14 +30,14 @@ void SeekerEngine::Init()
 	SoundManager::GetInstance()->Init();
 
 	// スプライト共通部の作成
-	SpriteCommon::GetInstance()->Init(graphics_.get(), dxcCompiler_, rs2D_.Get());
+	SpriteCommon::GetInstance()->Init(dxcCompiler_, rs2D_.Get());
 
 	// モデル共通部の作成
-	Entity3DCommon::GetInstance()->Init(graphics_.get(), dxcCompiler_, rs3D_.Get());
+	Entity3DCommon::GetInstance()->Init(dxcCompiler_, rs3D_.Get());
 
-	ParticleManager::GetInstance()->Init(graphics_.get(), dxcCompiler_, rsParticle_.Get());
+	ParticleManager::GetInstance()->Init(dxcCompiler_, rsParticle_.Get());
 	LightManager::GetInstance()->Init();
-	ImGuiManager::GetInstance()->Init(graphics_.get());
+	ImGuiManager::GetInstance()->Init();
 }
 
 void SeekerEngine::Update()
@@ -60,10 +59,8 @@ void SeekerEngine::Shutdown()
 	Input::GetInstance()->Shutdown();
 	SrvManager::GetInstance()->Shutdown();
   
-	graphics_->Shutdown();
-	Logger::Write("Graphics Shutdown");
+	Graphics::GetInstance()->Shutdown();
 	Application::GetInstance()->Shutdown();
-	Logger::Write("AppのShutdown");
 
 	Logger::Write("アプリ終了");
 	Logger::Shutdown();
@@ -72,10 +69,10 @@ void SeekerEngine::Shutdown()
 
 void SeekerEngine::BegineFrame()
 {
-	graphics_->BeginFrame();
+	Graphics::GetInstance()->BeginFrame();
 }
 
 void SeekerEngine::EndFrame()
 {
-	graphics_->EndFrame();
+	Graphics::GetInstance()->EndFrame();
 }

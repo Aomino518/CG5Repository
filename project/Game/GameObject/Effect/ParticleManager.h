@@ -1,5 +1,4 @@
 #pragma once
-#include "Graphics.h"
 #include "DxcCompiler.h"
 #include <random>
 #include <numbers>
@@ -41,13 +40,13 @@ struct ParticleGroup {
     };
 };
 
-
+class Graphics;
 class ParticleManager
 {
 public:
 	static ParticleManager* GetInstance();
 
-	void Init(Graphics* graphics, DxcCompiler& dxcCompiler, ID3D12RootSignature* rootSignature);
+	void Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* rootSignature);
 
 	void Update(CameraManager* cameraManager);
 
@@ -86,7 +85,7 @@ private:
     ParticleManager& operator=(const ParticleManager&) = delete;
 
     // グラフィックパイプラインを生成
-    void CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& dxcCompiler);
+    void CreateGraphicsPipeline(DxcCompiler& dxcCompiler);
     // 板ポリの生成関数
     void CreatePlaneModel();
     // ワールド計算行列

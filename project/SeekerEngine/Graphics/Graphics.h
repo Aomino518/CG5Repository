@@ -10,6 +10,8 @@
 class Graphics
 {
 public:
+	static Graphics* GetInstance();
+
 	bool Init(bool enableDebug = true);
 	void Shutdown();
 
@@ -41,6 +43,11 @@ public:
 		const Microsoft::WRL::ComPtr<ID3D12Device>& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
   
 private:
+	Graphics() = default;
+	~Graphics() = default;
+	Graphics(const Graphics&) = delete;
+	Graphics& operator=(const Graphics&) = delete;
+
 	bool CreateDevice(bool enableDebug);
 	bool CreateSwapChain();
 	bool CreateHeapsAndTargets();

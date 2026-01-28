@@ -1,4 +1,5 @@
 #include "Entity3DCommon.h"
+#include <Graphics.h>
 
 Entity3DCommon* Entity3DCommon::GetInstance()
 {
@@ -6,12 +7,12 @@ Entity3DCommon* Entity3DCommon::GetInstance()
 	return &instance;
 }
 
-void Entity3DCommon::Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
+void Entity3DCommon::Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
 {
-	graphics_ = graphics;
+	graphics_ = Graphics::GetInstance();
 	rootSignature_ = rootSignature;
-	CreateGraphicPipeline(graphics, dxcCompiler);
-	cmdList_ = Graphics::GetCmdList();
+	CreateGraphicPipeline(dxcCompiler);
+	cmdList_ = Graphics::GetInstance()->GetCmdList();
 }
 
 void Entity3DCommon::DrawCommon()
@@ -49,7 +50,7 @@ void Entity3DCommon::SetBlendMode(BlendMode mode)
 	}
 }
 
-void Entity3DCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler)
+void Entity3DCommon::CreateGraphicPipeline(DxcCompiler dxcCompiler)
 {
 	depthStencilDesc_ = {};
 	// DepthStencilStateの設定
@@ -82,7 +83,7 @@ void Entity3DCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCo
 	// 3D用
 	PsoBuilder builder;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc3D{};
-	builder.Init(graphics);
+	builder.Init(graphics_);
 	psoDesc3D = builder.CreatePsoDesc(
 		rootSignature_,
 		inputLayoutDesc3D,

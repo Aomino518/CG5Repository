@@ -1,10 +1,11 @@
 #include "RootSignatureFactory.h"
 #include <assert.h>
 #include "Logger.h"
+#include "Graphics.h"
 
-void RootSignatureFactory::Init(Graphics* graphics)
+void RootSignatureFactory::Init()
 {
-	graphics_ = graphics;
+	graphics_ = Graphics::GetInstance();
 }
 
 Microsoft::WRL::ComPtr<ID3D12RootSignature> RootSignatureFactory::Create2D()

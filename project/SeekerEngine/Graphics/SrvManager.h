@@ -12,7 +12,7 @@ public:
 	// シングルトンインスタンスの取得
 	static SrvManager* GetInstance();
 
-	void Init(Graphics* graphics);
+	void Init();
 
 	uint32_t Allocate();
 	void Free(uint32_t index);

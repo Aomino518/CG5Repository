@@ -3,11 +3,11 @@
 #include <fstream>
 #include "Logger.h"
 #include <filesystem>
+#include "Graphics.h"
 
-void Model::Init(ModelCommon* modelCommon, const std::string& directoryPath, const std::string& filename)
+void Model::Init(const std::string& directoryPath, const std::string& filename)
 {
-	modelCommon_ = modelCommon;
-	cmdList_ = modelCommon->GetGraphics()->GetCmdList();
+	cmdList_ = Graphics::GetInstance()->GetCmdList();
 	LoadObjFile(directoryPath, filename);
 	CreateBufferResources();
 	MaterialInit();

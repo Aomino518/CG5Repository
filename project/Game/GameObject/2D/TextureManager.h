@@ -5,7 +5,6 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
-#include "Graphics.h"
 #include "SrvManager.h"
 #include "externals/DirectXTex/DirectXTex.h"
 #include "externals/DirectXTex/d3dx12.h"
@@ -17,7 +16,7 @@ public:
 	// シングルトンインスタンスの取得
 	static TextureManager* GetInstance();
 
-	void Init(Graphics* graphics);
+	void Init();
 
 	/// <summary>
 	/// テクスチャのロード

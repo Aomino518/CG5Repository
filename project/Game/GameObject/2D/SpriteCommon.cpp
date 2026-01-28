@@ -1,4 +1,5 @@
 #include "SpriteCommon.h"
+#include "Graphics.h"
 
 SpriteCommon* SpriteCommon::GetInstance()
 {
@@ -6,11 +7,11 @@ SpriteCommon* SpriteCommon::GetInstance()
 	return &instance;
 }
 
-void SpriteCommon::Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
+void SpriteCommon::Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature)
 {
-	graphics_ = graphics;
+	graphics_ = Graphics::GetInstance();
 	rootSignature_ = rootSignature;
-	CreateGraphicPipeline(graphics, dxcCompiler);
+	CreateGraphicPipeline(dxcCompiler);
 	cmdList_ = Graphics::GetCmdList();
 }
 
@@ -84,7 +85,7 @@ void SpriteCommon::SetBlendMode(BlendMode mode)
 	}
 }
 
-void SpriteCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler)
+void SpriteCommon::CreateGraphicPipeline(DxcCompiler dxcCompiler)
 {
 	depthStencilDesc_ = {};
 	// DepthStencilStateの設定
@@ -112,7 +113,7 @@ void SpriteCommon::CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcComp
 
 	// PSOを生成する
 	PsoBuilder builder;
-	builder.Init(graphics);
+	builder.Init(graphics_);
 	// 2D用
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc2D{};
 	psoDesc2D = builder.CreatePsoDesc(

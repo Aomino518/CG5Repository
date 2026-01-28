@@ -231,9 +231,6 @@
     <ClCompile Include="Game\GameObject\3D\Model.cpp">
       <Filter>ソース ファイル\Application\GameObject\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Game\GameObject\3D\ModelCommon.cpp">
-      <Filter>ソース ファイル\Application\GameObject\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Game\GameObject\3D\ModelManager.cpp">
       <Filter>ソース ファイル\Application\GameObject\3D</Filter>
     </ClCompile>
@@ -437,9 +434,6 @@
       <Filter>ヘッダー ファイル\Application\GameObject\3D</Filter>
     </ClInclude>
     <ClInclude Include="Game\GameObject\3D\Model.h">
-      <Filter>ヘッダー ファイル\Application\GameObject\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\GameObject\3D\ModelCommon.h">
       <Filter>ヘッダー ファイル\Application\GameObject\3D</Filter>
     </ClInclude>
     <ClInclude Include="Game\GameObject\3D\ModelManager.h">

@@ -15,6 +15,11 @@ ComPtr<ID3D12GraphicsCommandList> Graphics::cmdList_ = nullptr;
 uint32_t Graphics::width_ = 0;
 uint32_t Graphics::height_ = 0;
 
+Graphics* Graphics::GetInstance() {
+	static Graphics instance;
+	return &instance;
+}
+
 bool Graphics::Init(bool enableDebug)
 {
 	// FPSの固定初期化
@@ -109,6 +114,7 @@ void Graphics::Shutdown()
 	factory_.Reset();
 
 	CloseHandle(fenceEvent_);
+	Logger::Write("Graphics Shutdown");
 }
 
 void Graphics::BeginFrame()

@@ -1,5 +1,4 @@
 #pragma once
-#include "ModelCommon.h"
 #include "Model.h"
 #include <unordered_map>
 #include <string>
@@ -7,7 +6,6 @@
 #include <wrl.h>
 #include <vector>
 #include <map>
-#include "Graphics.h"
 #include "Logger.h"
 
 class ModelManager
@@ -18,7 +16,7 @@ public:
 	// 終了
 	void Shutdown();
 
-	void Init(Graphics* graphics);
+	void Init();
 
 	/// <summary>
 	/// モデルファイルの読み込み
@@ -41,6 +39,5 @@ private:
 
 	// モデルデータ
 	std::map<std::string, std::unique_ptr<Model>> models_;
-	std::unique_ptr<ModelCommon> modelCommon_ = std::make_unique<ModelCommon>();
 };
 

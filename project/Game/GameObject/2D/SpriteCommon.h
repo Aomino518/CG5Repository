@@ -1,18 +1,18 @@
 #pragma once
 #include <wrl.h>
 #include <d3d12.h>
-#include <Graphics.h>
-#include <DxcCompiler.h>
-#include <InputLayout.h>
+#include "DxcCompiler.h"
+#include "InputLayout.h"
 #include "PsoBuilder.h"
 #include "BlendStateUtils.h"
 #include <unordered_map>
 
+class Graphics;
 class SpriteCommon {
 public:
 	// シングルトンインスタンスの取得
 	static SpriteCommon* GetInstance();
-	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
+	void Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
 	void DrawCommon();
 
 	void Shutdown();
@@ -30,7 +30,7 @@ private:
 	SpriteCommon& operator=(const SpriteCommon&) = delete;
 
 	// グラフィックパイプラインの作成
-	void CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler);
+	void CreateGraphicPipeline(DxcCompiler dxcCompiler);
 
 	void RebuildPso();
 

@@ -1,5 +1,4 @@
 #pragma once
-#include "ModelCommon.h"
 #include <d3d12.h>
 #include <wrl.h>
 #include "CreateResorceUtils.h"
@@ -13,7 +12,7 @@
 class Model
 {
 public:
-	void Init(ModelCommon* modelCommon, const std::string& directoryPath, const std::string& filename);
+	void Init(const std::string& directoryPath, const std::string& filename);
 
 	void Draw();
 
@@ -36,8 +35,6 @@ public:
 private:
 	void CreateBufferResources();
 	void MaterialInit();
-
-	ModelCommon* modelCommon_;
 
 	// マテリアルデータ
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_ = nullptr;

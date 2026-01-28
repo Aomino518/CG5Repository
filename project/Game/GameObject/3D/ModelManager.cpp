@@ -8,13 +8,13 @@ ModelManager* ModelManager::GetInstance()
 
 void ModelManager::Shutdown()
 {
-	modelCommon_.reset();
+	models_.clear();
 	Logger::Write("ModelManager Shutdown");
 }
 
-void ModelManager::Init(Graphics* graphics)
+void ModelManager::Init()
 {
-	modelCommon_->Init(graphics);
+
 }
 
 void ModelManager::LoadModel(const std::string& filePath)
@@ -25,7 +25,7 @@ void ModelManager::LoadModel(const std::string& filePath)
 
 	// モデル生成とファイル読み込み、初期化
 	std::unique_ptr<Model> model = std::make_unique<Model>();
-	model->Init(modelCommon_.get(), "resources", filePath);
+	model->Init("resources", filePath);
 
 	// モデルをマップコンテナに格納する
 	models_.insert(std::make_pair(filePath, std::move(model)));

@@ -1,7 +1,6 @@
 #pragma once
 #include <wrl.h>
 #include <d3d12.h>
-#include <Graphics.h>
 #include <DxcCompiler.h>
 #include <InputLayout.h>
 #include "PsoBuilder.h"
@@ -10,13 +9,14 @@
 #include "CameraManager.h"
 #include "BlendStateUtils.h"
 
+class Graphics;
 class Entity3DCommon
 {
 public:
 	// シングルトンインスタンスの取得
 	static Entity3DCommon* GetInstance();
 
-	void Init(Graphics* graphics, DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
+	void Init(DxcCompiler dxcCompiler, ID3D12RootSignature* rootSignature);
 
 	void DrawCommon();
 
@@ -42,7 +42,7 @@ private:
 	Entity3DCommon& operator=(const Entity3DCommon&) = delete;
 
 	// グラフィックパイプラインの作成
-	void CreateGraphicPipeline(Graphics* graphics, DxcCompiler dxcCompiler);
+	void CreateGraphicPipeline(DxcCompiler dxcCompiler);
 
 	void RebuildPso();
 

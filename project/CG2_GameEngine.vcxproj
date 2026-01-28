@@ -206,7 +206,6 @@
     <ClCompile Include="Game\GameObject\3D\Entity3D.cpp" />
     <ClCompile Include="Game\GameObject\3D\Entity3DCommon.cpp" />
     <ClCompile Include="Game\GameObject\3D\Model.cpp" />
-    <ClCompile Include="Game\GameObject\3D\ModelCommon.cpp" />
     <ClCompile Include="Game\GameObject\3D\ModelManager.cpp" />
     <ClCompile Include="SeekerEngine\Core\SeekerEngine.cpp" />
     <ClCompile Include="Game\GameObject\2D\TextureManager.cpp" />
@@ -329,7 +328,6 @@
     <ClInclude Include="Game\GameObject\3D\Entity3DCommon.h" />
     <ClInclude Include="SeekerEngine\Graphics\ImGuiManager.h" />
     <ClInclude Include="Game\GameObject\3D\Model.h" />
-    <ClInclude Include="Game\GameObject\3D\ModelCommon.h" />
     <ClInclude Include="Game\GameObject\3D\ModelManager.h" />
     <ClInclude Include="SeekerEngine\Core\SeekerEngine.h" />
     <ClInclude Include="Game\GameObject\2D\TextureManager.h" />

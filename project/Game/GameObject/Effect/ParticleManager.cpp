@@ -1,4 +1,5 @@
 #include "ParticleManager.h"
+#include "Graphics.h"
 
 ParticleManager* ParticleManager::GetInstance()
 {
@@ -6,9 +7,9 @@ ParticleManager* ParticleManager::GetInstance()
 	return &instance;
 }
 
-void ParticleManager::Init(Graphics* graphics, DxcCompiler& dxcCompiler, ID3D12RootSignature* rootSignature)
+void ParticleManager::Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* rootSignature)
 {
-	graphics_ = graphics;
+	graphics_ = Graphics::GetInstance();
 	rootSignature_ = rootSignature;
 	// ランダムエンジンの初期化
 	std::random_device seed;
@@ -23,7 +24,7 @@ void ParticleManager::Init(Graphics* graphics, DxcCompiler& dxcCompiler, ID3D12R
 	materialData->uvTransform = MakeIdentity4x4();
 
 	// グラフィックパイプラインを生成
-	CreateGraphicsPipeline(graphics, dxcCompiler);
+	CreateGraphicsPipeline(dxcCompiler);
 	// 板ポリの生成
 	CreatePlaneModel();
 
@@ -317,7 +318,7 @@ Matrix4x4 ParticleManager::CalculateWVPMatrix(const Matrix4x4& worldMatrix, bool
 }
 
 // グラフィックパイプラインを生成する関数
-void ParticleManager::CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& dxcCompiler)
+void ParticleManager::CreateGraphicsPipeline(DxcCompiler& dxcCompiler)
 {
 	depthStencilDesc_ = {};
 	// DepthStencilStateの設定
@@ -348,7 +349,7 @@ void ParticleManager::CreateGraphicsPipeline(Graphics* graphics, DxcCompiler& dx
 	// 3D用
 	PsoBuilder builder;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc3D{};
-	builder.Init(graphics);
+	builder.Init(graphics_);
 	psoDesc3D = builder.CreatePsoDesc(
 		rootSignature_,
 		inputLayoutDesc3D,
