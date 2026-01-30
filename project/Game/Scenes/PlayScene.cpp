@@ -5,7 +5,7 @@ void PlayScene::Init()
    //===========================
    // Sound
    //===========================
-    SoundManager::GetInstance()->Load("bgm1", "resources/c21.mp3");
+    SoundManager::GetInstance()->Load("bgm1", "resources/sound5.wav");
     SoundManager::GetInstance()->Load("bgm2", "resources/koharubiyori.mp3");
     SoundManager::GetInstance()->Load("se1", "resources/gold.mp3");
     SoundManager::GetInstance()->Load("se2", "resources/se_itemget.wav");
