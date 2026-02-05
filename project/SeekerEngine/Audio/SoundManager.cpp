@@ -10,12 +10,12 @@ void SoundManager::Init() {
 }
 
 void SoundManager::Shutdown() {
+	sound_.StopBGM();
+	sound_.StopSE();
 	for (auto& [name, data] : soundDatas_) {
 		sound_.SoundUnload(&data);
 	}
 
-	sound_.StopBGM();
-	sound_.StopSE();
 	sound_.Shutdown();
 	soundDatas_.clear();
 	currentBGM_ = nullptr;
