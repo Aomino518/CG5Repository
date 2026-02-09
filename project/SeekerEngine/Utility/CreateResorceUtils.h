@@ -59,6 +59,12 @@ struct TripletHash {
 	}
 };
 
+struct Node {
+	Matrix4x4 localMatrix;
+	std::string name;
+	std::vector<Node> children;
+};
+
 struct MaterialData {
 	std::string textureFilePath;
 	uint32_t textureIndex = 0;
@@ -69,6 +75,7 @@ struct ModelData {
 	std::vector<VertexData> vertices;
 	std::vector<uint32_t> indices;
 	MaterialData material;
+	Node rootNode;
 };
 
 struct DirectionalLight {

@@ -31,16 +31,18 @@ void PlayScene::Init()
     // Model
     //===========================
     entity = std::make_unique<Entity3D>();
-    ModelManager::GetInstance()->LoadModel("ball");
+    ModelManager::GetInstance()->LoadModel("plane", ".gltf");
     entity->Init();
-    entity->SetModel("ball");
+    entity->SetModel("plane");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
+    entity->SetIsLighting(false);
 
-    modelTerrain = std::make_unique<Entity3D>();
-    ModelManager::GetInstance()->LoadModel("terrain");
-    modelTerrain->Init();
-    modelTerrain->SetModel("terrain");
-    modelTerrain->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
+    //modelTerrain = std::make_unique<Entity3D>();
+    //ModelManager::GetInstance()->LoadModel("terrain");
+    //modelTerrain->Init();
+    //modelTerrain->SetModel("terrain");
+    //modelTerrain->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
+    //modelTerrain->SetIsLighting(false);
 
     //===========================
     // Particle
@@ -89,15 +91,15 @@ void PlayScene::Update()
     entity->SetCamera(cameraManager->GetActiveCamera());
     entity->Update();
 
-    modelTerrain->SetCamera(cameraManager->GetActiveCamera());
-    modelTerrain->Update();
+    //modelTerrain->SetCamera(cameraManager->GetActiveCamera());
+    //modelTerrain->Update();
 
     ImGuiManager::GetInstance()->BegineFrame();
     ImGuiManager::GetInstance()->BegineInspector();
     ImGuiManager::GetInstance()->CameraSetting(cameraManager.get());
     ImGuiManager::GetInstance()->SpriteSetting("uvChecker", sprite.get());
-    ImGuiManager::GetInstance()->ModelSetting("ball", entity.get());
-    ImGuiManager::GetInstance()->ModelSetting("terrain", modelTerrain.get());
+    //ImGuiManager::GetInstance()->ModelSetting("plane", entity.get());
+    //ImGuiManager::GetInstance()->ModelSetting("terrain", modelTerrain.get());
     ImGuiManager::GetInstance()->ParticleSetting("Smoke", emitter_.get());
     ImGuiManager::GetInstance()->EndInspector();
     ImGuiManager::GetInstance()->Stats();
@@ -111,12 +113,12 @@ void PlayScene::Draw()
     /*-- 描画処理 --*/
     Entity3DCommon::GetInstance()->DrawCommon();
     entity->Draw();
-    modelTerrain->Draw();
+    //modelTerrain->Draw();
    
     ParticleManager::GetInstance()->Draw();
 
     SpriteCommon::GetInstance()->DrawCommon();
-    sprite->Draw();
+    //sprite->Draw();
 
     ImGuiManager::GetInstance()->Draw();
 }

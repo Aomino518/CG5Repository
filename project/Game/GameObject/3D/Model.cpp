@@ -5,10 +5,10 @@
 #include <filesystem>
 #include "Graphics.h"
 
-void Model::Init(const std::string& directoryPath, const std::string& filename)
+void Model::Init(const std::string& directoryPath, const std::string& filename, const std::string& path)
 {
 	cmdList_ = Graphics::GetInstance()->GetCmdList();
-	LoadObjFile(directoryPath, filename);
+	LoadObjFile(directoryPath, filename, path);
 	CreateBufferResources();
 	MaterialInit();
 	modelData_.material.textureIndex = TextureManager::GetInstance()->Load(modelData_.material.textureFilePath);
@@ -18,13 +18,16 @@ void Model::Init(const std::string& directoryPath, const std::string& filename)
 void Model::Draw()
 {
 	cmdList_->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
-	cmdList_->IASetIndexBuffer(&indexBufferView_);
+	// 一旦Index化はコメントアウト
+	//cmdList_->IASetIndexBuffer(&indexBufferView_);
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定する。
 	cmdList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	// SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	cmdList_->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
 	// 描画 (DrawCall)。
-	cmdList_->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	// 一旦Index化はコメントアウト
+	//cmdList_->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
+	cmdList_->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }
 
 MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename)
@@ -53,97 +56,55 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 	return materialData;
 }
 
-void Model::LoadObjFile(const std::string& directoryPath, const std::string& filename)
+void Model::LoadObjFile(const std::string& directoryPath, const std::string& filename, const std::string& path)
 {
-	std::vector<Vector4> positions; // 位置
-	std::vector<Vector3> normals; // 法線
-	std::vector<Vector2> texcoords; // テクスチャ座標
-	std::string line; // ファイルから読んだ1行を格納するもの
-	std::filesystem::path objPath = std::filesystem::path(directoryPath) / (filename + ".obj");
+	Assimp::Importer importer;
+	std::string filePath = directoryPath + "/" + filename + "/" + filename + path;
+	Logger::Write(filePath);
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 
-	if (!std::filesystem::exists(objPath)) {
-		objPath = std::filesystem::path(directoryPath) / filename / (filename + ".obj");
-	}
+	assert(scene->HasMeshes()); // メッシュがないのは対応しない
 
-	assert(std::filesystem::exists(objPath));
+	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
+		aiMesh* mesh = scene->mMeshes[meshIndex];
+		assert(mesh->HasNormals()); // 法線がないMeshは非対応
+		assert(mesh->HasTextureCoords(0)); // TexcoordがないMeshは非対応
 
-	// OBJ のディレクトリ
-	std::string modelDir = objPath.parent_path().string();
-
-	std::ifstream file(objPath); // ファイルを開く
-	assert(file.is_open());
-
-	std::unordered_map<TripletKey, uint32_t, TripletHash> lut;
-
-	while (std::getline(file, line)) {
-		std::string identifier;
-		std::istringstream s(line);
-		s >> identifier; // 先頭の識別子を読む
-
-		if (identifier == "v") {
-			Vector4 position;
-			s >> position.x >> position.y >> position.z;
-			position.w = 1.0f;
-			positions.push_back(position);
-		} else if (identifier == "vt") {
-			Vector2 texcoord;
-			s >> texcoord.x >> texcoord.y;
-			texcoords.push_back(texcoord);
-		} else if (identifier == "vn") {
-			Vector3 normal;
-			s >> normal.x >> normal.y >> normal.z;
-			normals.push_back(normal);
-		} else if (identifier == "f") {
-			//VertexData triangle[3];
-
-			struct FaceElm { uint32_t v, t, n; } f[3]{};
-
-			// 面は三角形限定。その他は未対応
-			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-				std::string vertexDefinition;
-				s >> vertexDefinition;
-				std::replace(vertexDefinition.begin(), vertexDefinition.end(), '/', ' ');
-				// 頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
-				std::istringstream v(vertexDefinition);
-
-				v >> f[faceVertex].v >> f[faceVertex].t >> f[faceVertex].n;
-				f[faceVertex].v--;
-				f[faceVertex].t--;
-				f[faceVertex].n--;
+		// Meshの中身の解析を行う
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+			aiFace& face = mesh->mFaces[faceIndex];
+			assert(face.mNumIndices == 3); // 三角形のみサポート
+			// faceの中身を解析を行う
+			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+				uint32_t vertexIndex = face.mIndices[element];
+				aiVector3D& position = mesh->mVertices[vertexIndex];
+				aiVector3D& normal = mesh->mNormals[vertexIndex];
+				aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+				VertexData vertex;
+				vertex.position = { position.x, position.y, position.z, 1.0f };
+				vertex.normal = { normal.x, normal.y, normal.z };
+				vertex.texcoord = { texcoord.x, texcoord.y };
+				// 右手から左手に変換するので手動で対処
+				vertex.position.x *= -1.0f;
+				vertex.normal.x *= -1.0f;
+				modelData_.vertices.push_back(vertex);
 			}
-
-			for (int order : {2, 1, 0}) {
-				TripletKey key{ f[order].v, f[order].t, f[order].n };
-				auto it = lut.find(key);
-				uint32_t idx;
-				if (it == lut.end()) {
-					// 頂点生成
-					Vector4 p = positions[key.v];
-					Vector2 t = texcoords[key.vt];
-					Vector3 n = normals[key.vn];
-
-					p.x *= -1.0f;
-					t.y = 1.0f - t.y;
-					n.x *= -1.0f;
-
-					VertexData vtx{ p, t, n };
-					idx = (uint32_t)modelData_.vertices.size();
-					modelData_.vertices.push_back(vtx);
-					lut.emplace(key, idx);
-				} else {
-					idx = it->second;
-				}
-				modelData_.indices.push_back(idx);
-			}
-
-		} else if (identifier == "mtllib") {
-			// materialTemplateLibraryファイルの名前を取得する
-			std::string materialFilename;
-			s >> materialFilename;
-			// 基本的にobjファイルと同一層にmtlは存在させるので、ディレクトリ名とファイル名を残す
-			modelData_.material = LoadMaterialTemplateFile(modelDir, materialFilename);
 		}
 	}
+
+	// Materialの解析を行う
+	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+		aiMaterial* material = scene->mMaterials[materialIndex];
+		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+			aiString textureFilePath;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+			std::string fullPath = directoryPath + "/" + filename + "/" + textureFilePath.C_Str();
+			Logger::Write("Trying to load texture from: " + fullPath);
+			modelData_.material.textureFilePath = fullPath;
+		}
+	}
+
+	modelData_.rootNode = ReadNode(scene->mRootNode);
 }
 
 void Model::CreateBufferResources()
@@ -159,13 +120,13 @@ void Model::CreateBufferResources()
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 	Logger::Write("モデルのVertexResource生成完了");
 
-	indexResource_ = CreateBufferResource(Graphics::GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
+	/*indexResource_ = CreateBufferResource(Graphics::GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
 	D3D12_INDEX_BUFFER_VIEW indexBufferViewModel{};
 	// リソースの先頭のアドレスから使う
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
 	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-	Logger::Write("モデルのindexResource生成完了");
+	Logger::Write("モデルのindexResource生成完了");*/
 
 	// モデル用の頂点リソースにデータを書き込む
 	// 書き込むためのアドレスを取得
@@ -177,11 +138,11 @@ void Model::CreateBufferResources()
 
 	// モデル用の頂点リソースにデータを書き込む
 	// 書き込むためのアドレスを取得
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	/*indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
 	std::memcpy(indexData_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	indexResource_->Unmap(0, nullptr);
 	indexData_ = nullptr;
-	Logger::Write("モデルのindexDataに書き込み完了");
+	Logger::Write("モデルのindexDataに書き込み完了");*/
 }
 
 void Model::MaterialInit()
@@ -194,4 +155,36 @@ void Model::MaterialInit()
 	materialData_->uvTransform = MakeIdentity4x4();
 	materialData_->enableLighting = true;
 	materialData_->shininess = 32.0f;
+	Logger::Write("MaterialResourceの作成完了");
+}
+
+Node Model::ReadNode(aiNode* node)
+{
+	Node result;
+	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
+	aiLocalMatrix.Transpose();
+	result.localMatrix.m[0][0] = aiLocalMatrix[0][0];
+	result.localMatrix.m[0][1] = aiLocalMatrix[0][1];
+	result.localMatrix.m[0][2] = aiLocalMatrix[0][2];
+	result.localMatrix.m[0][3] = aiLocalMatrix[0][3];
+	result.localMatrix.m[1][0] = aiLocalMatrix[1][0];
+	result.localMatrix.m[1][1] = aiLocalMatrix[1][1];
+	result.localMatrix.m[1][2] = aiLocalMatrix[1][2];
+	result.localMatrix.m[1][3] = aiLocalMatrix[1][3];
+	result.localMatrix.m[2][0] = aiLocalMatrix[2][0];
+	result.localMatrix.m[2][1] = aiLocalMatrix[2][1];
+	result.localMatrix.m[2][2] = aiLocalMatrix[2][2];
+	result.localMatrix.m[2][3] = aiLocalMatrix[2][3];
+	result.localMatrix.m[3][0] = aiLocalMatrix[3][0];
+	result.localMatrix.m[3][1] = aiLocalMatrix[3][1];
+	result.localMatrix.m[3][2] = aiLocalMatrix[3][2];
+	result.localMatrix.m[3][3] = aiLocalMatrix[3][3];
+
+	result.name = node->mName.C_Str();
+	result.children.resize(node->mNumChildren);
+	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
+		result.children[childIndex] = ReadNode(node->mChildren[childIndex]);
+	}
+
+	return result;
 }

@@ -20,7 +20,7 @@ void Entity3D::Update()
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	// WVPMatrixを作る
 	Matrix4x4 worldViewProjectionMatrix;
-
+	ModelData modelData = model_->GetRootNode();
 	bool isDebug = cameraManager_->GetIsDebug();
 
 	if (isDebug) {
@@ -41,8 +41,8 @@ void Entity3D::Update()
 
 	Matrix4x4 worldInverseTransform = Inverse(worldMatrix);
 
-	transformationMatrixData_->World = worldMatrix;
-	transformationMatrixData_->WVP = worldViewProjectionMatrix;
+	transformationMatrixData_->World = worldMatrix * modelData.rootNode.localMatrix;
+	transformationMatrixData_->WVP = worldViewProjectionMatrix * modelData.rootNode.localMatrix;
 	transformationMatrixData_->WorldInverseTranspose = worldInverseTransform;
 }
 

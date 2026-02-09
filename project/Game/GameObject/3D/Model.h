@@ -8,11 +8,14 @@
 #include <unordered_map>
 #include <algorithm>
 #include "Matrix.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 class Model
 {
 public:
-	void Init(const std::string& directoryPath, const std::string& filename);
+	void Init(const std::string& directoryPath, const std::string& filename, const std::string& path);
 
 	void Draw();
 
@@ -24,10 +27,11 @@ public:
 	/// <returns>マテリアルデータ</returns>
 	static MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
-	void LoadObjFile(const std::string& directoryPath, const std::string& filename);
+	void LoadObjFile(const std::string& directoryPath, const std::string& filename, const std::string& path);
 
 	Vector4& GetMaterial() const { return materialData_->color; }
 	bool GetIsLighting() const { return materialData_->enableLighting; }
+	ModelData GetRootNode() const { return modelData_; }
 
 	void SetMaterial(const Vector4& material) { this->materialData_->color = material; }
 	void SetIsLighting(const bool isLighting) { this->materialData_->enableLighting = isLighting; }
@@ -35,6 +39,7 @@ public:
 private:
 	void CreateBufferResources();
 	void MaterialInit();
+	Node ReadNode(aiNode* node);
 
 	// マテリアルデータ
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_ = nullptr;
