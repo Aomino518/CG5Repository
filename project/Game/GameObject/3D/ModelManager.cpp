@@ -30,7 +30,7 @@ void ModelManager::LoadModel(const std::string& filePath)
 	model->Init("resources/models", firstFilePath[0], firstFilePath[1]);
 
 	// モデルをマップコンテナに格納する
-	models_.insert(std::make_pair(filePath, std::move(model)));
+	models_.insert(std::make_pair(firstFilePath[0], std::move(model)));
 }
 
 Model* ModelManager::FindModel(const std::string& filePath)

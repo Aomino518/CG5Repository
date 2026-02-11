@@ -33,14 +33,14 @@ void PlayScene::Init()
     entity = std::make_unique<Entity3D>();
     ModelManager::GetInstance()->LoadModel("ball.obj");
     entity->Init();
-    entity->SetModel("ball.obj");
+    entity->SetModel("ball");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
     //entity->SetIsLighting(false);
 
     modelTerrain = std::make_unique<Entity3D>();
     ModelManager::GetInstance()->LoadModel("terrain.obj");
     modelTerrain->Init();
-    modelTerrain->SetModel("terrain.obj");
+    modelTerrain->SetModel("terrain");
     modelTerrain->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
     //modelTerrain->SetIsLighting(false);
 
