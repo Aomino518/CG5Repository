@@ -4,6 +4,11 @@
 void TitleScene::Init()
 {
     //===========================
+    // Sound
+    //===========================
+    SoundManager::GetInstance()->Load("bgm1", "resources/sound5.wav");
+
+    //===========================
     // Sprite
     //===========================
     sprite = std::make_unique<Sprite>();
@@ -14,9 +19,20 @@ void TitleScene::Init()
 
 void TitleScene::Update()
 {
+    if (Input::GetInstance()->IsPressed(DIK_M)) {
+        SoundManager::GetInstance()->PlayBGM("bgm1");
+    }
+
+    if (Input::GetInstance()->IsPressed(DIK_N)) {
+        SoundManager::GetInstance()->StopBGM();
+    }
+
     if (Input::GetInstance()->IsPressed(DIK_SPACE)) {
+       SoundManager::GetInstance()->StopBGM();
        SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
     }
+
+    SoundManager::GetInstance()->Update();
 
     sprite->Update();
 
@@ -37,4 +53,5 @@ void TitleScene::Draw()
 
 void TitleScene::Shutdown()
 {
+
 }

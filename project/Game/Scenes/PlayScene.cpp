@@ -5,7 +5,7 @@ void PlayScene::Init()
    //===========================
    // Sound
    //===========================
-    SoundManager::GetInstance()->Load("bgm1", "resources/sound5.wav");
+   // SoundManager::GetInstance()->Load("bgm1", "resources/sound5.wav");
     SoundManager::GetInstance()->Load("bgm2", "resources/koharubiyori.mp3");
     SoundManager::GetInstance()->Load("se1", "resources/gold.mp3");
     SoundManager::GetInstance()->Load("se2", "resources/se_itemget.wav");
@@ -81,6 +81,8 @@ void PlayScene::Update()
         SceneManager::GetInstance()->ChangeScene("TITLE");
     }
 
+    SoundManager::GetInstance()->Update();
+
     cameraManager->Update();
 
     emitter_->Update();
@@ -126,8 +128,4 @@ void PlayScene::Draw()
 void PlayScene::Shutdown()
 {
     ParticleManager::GetInstance()->RemoveParticleGroup("Smoke");
-    SoundManager::GetInstance()->Unload("bgm1");
-    SoundManager::GetInstance()->Unload("bgm2");
-    SoundManager::GetInstance()->Unload("se1");
-    SoundManager::GetInstance()->Unload("se2");
 }
