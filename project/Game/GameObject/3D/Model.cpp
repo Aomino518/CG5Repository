@@ -18,14 +18,12 @@ void Model::Init(const std::string& directoryPath, const std::string& filename, 
 void Model::Draw()
 {
 	cmdList_->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
-	// 一旦Index化はコメントアウト
 	cmdList_->IASetIndexBuffer(&indexBufferView_);
 	// 形状を設定。PSOに設定しているものとはまた別。同じものを設定する。
 	cmdList_->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	// SRVのDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	cmdList_->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU_);
 	// 描画 (DrawCall)。
-	// 一旦Index化はコメントアウト
 	cmdList_->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 	//cmdList_->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }

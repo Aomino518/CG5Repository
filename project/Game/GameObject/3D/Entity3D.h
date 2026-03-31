@@ -48,7 +48,6 @@ public:
 	void SetTranslate(const Vector3& translate) { this->transform_.translate = translate; }
 	void SetCamera(Camera* camera) { this->camera_ = camera; }
 	void SetMaterial(const Vector4& material) { model_->SetMaterial(material); }
-	void SetIsLighting(const bool isLighting) { model_->SetIsLighting(isLighting); }
 	void SetBlendMode(BlendMode mode);
 	void SetLightDirection(const Vector3& pos) { this->directionalLightData_->direction = pos; }
 	void SetPointLightPos(const Vector3& pos) { this->pointLightData_->position = pos; }

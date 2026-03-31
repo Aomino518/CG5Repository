@@ -112,8 +112,7 @@ void ImGuiManager::DrawModelInspector(const std::string& modelName, Entity3D* mo
 	Vector3 modelPosition = model->GetTranslate();
 	Vector3 modelRotate = model->GetRotate();
 	Vector3 modelScale = model->GetScale();
-	bool isLighting = model->GetIsLighting();
-
+	
 	if (ImGui::CollapsingHeader(modelName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::PushID(modelName.c_str());
@@ -132,12 +131,8 @@ void ImGuiManager::DrawModelInspector(const std::string& modelName, Entity3D* mo
 			model->SetBlendMode(blendMode);
 		}
 
-		ImGui::Checkbox("Lighting", &isLighting);
-
 		ImGui::PopID();
 	}
-
-	model->SetIsLighting(isLighting);
 
 #endif
 }
@@ -300,7 +295,7 @@ void ImGuiManager::DrawParticleInspector(const std::string& name, ParticleEmitte
 			emitter->SetFrenquency(frequency);
 		}
 
-		if (ImGui::CollapsingHeader("Field Settings")) {
+		if (ImGui::TreeNode("Field Settings")) {
 			if (ImGui::Checkbox("Use Field", &useField)) {
 				particleManager->SetUseField(name, useField);
 			}
@@ -312,6 +307,7 @@ void ImGuiManager::DrawParticleInspector(const std::string& name, ParticleEmitte
 			if (fieldChanged) {
 				particleManager->SetField(name, field);
 			}
+			ImGui::TreePop();
 		}
 
 		if (ImGui::Button("Emit Once")) {
@@ -337,65 +333,116 @@ void ImGuiManager::DrawParticleInspector(const std::string& name, ParticleEmitte
 void ImGuiManager::DrawLightWindow()
 {
 #ifdef USE_IMGUI
-	if (windowState_.showLight) {
-		DirectionalLight dirLight = LightManager::GetInstance()->GetDirectionalLight();
-		PointLight pointLight = LightManager::GetInstance()->GetPointLight();
-		SpotLight spotLight = LightManager::GetInstance()->GetSpotLight();
-
-		ImGui::Begin("Light Manager");
-		if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::PushID("DirectionalLight");
-
-			bool changed = false;
-			changed |= ImGui::DragFloat3("Direction", (float*)&dirLight.direction, 0.01f, -1.0f, 1.0f, "%.2f");
-			changed |= ImGui::ColorEdit4("Color", (float*)&dirLight.color);
-			changed |= ImGui::DragFloat("Intensity", (float*)&dirLight.intensity, 0.01f, 0.0f, 1.0f, "%.2f");
-
-			if (changed) {
-				LightManager::GetInstance()->SetDirectionalLight(&dirLight);
-			}
-
-			ImGui::PopID();
-		}
-
-		if (ImGui::CollapsingHeader("Point Light", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::PushID("PointLight");
-
-			bool changed = false;
-			changed |= ImGui::DragFloat3("Position", (float*)&pointLight.position, 0.01f, -100.0f, 100.0f, "%.2f");
-			changed |= ImGui::ColorEdit4("Color", (float*)&pointLight.color);
-			changed |= ImGui::DragFloat("Intensity", (float*)&pointLight.intensity, 0.01f, 0.0f, 1.0f, "%.2f");
-			changed |= ImGui::DragFloat("Radius", (float*)&pointLight.radius, 0.01f, 0.0f, 100.0f, "%.2f");
-			changed |= ImGui::DragFloat("Decay", (float*)&pointLight.decay, 0.01f, 0.0f, 1.0f, "%.2f");
-
-			if (changed) {
-				LightManager::GetInstance()->SetPointLight(&pointLight);
-			}
-
-			ImGui::PopID();
-		}
-
-		if (ImGui::CollapsingHeader("Spot Light", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::PushID("SpotLight");
-
-			bool changed = false;
-			changed |= ImGui::DragFloat3("Position", (float*)&spotLight.position, 0.01f, -100.0f, 100.0f, "%.2f");
-			changed |= ImGui::DragFloat3("Direction", (float*)&spotLight.direction, 0.01f, -1.0f, 1.0f, "%.2f");
-			changed |= ImGui::ColorEdit4("Color", (float*)&spotLight.color);
-			changed |= ImGui::DragFloat("Intensity", (float*)&spotLight.intensity, 0.01f, 0.0f, 100.0f, "%.2f");
-			changed |= ImGui::DragFloat("CosFalloffStart", (float*)&spotLight.cosFalloffStart, 0.01f, -1.0f, 1.0f, "%.2f");
-
-			if (changed) {
-				LightManager::GetInstance()->SetSpotLight(&spotLight);
-			}
-
-			ImGui::PopID();
-		}
-		ImGui::End();
+	if (!windowState_.showLight) {
+		return;
 	}
+
+	LightManager* lightMgr = LightManager::GetInstance();
+
+	DirectionalLight dirLight = lightMgr->GetDirectionalLight();
+	const auto& pointLights = lightMgr->GetPointLights();
+	const auto& spotLights = lightMgr->GetSpotLights();
+
+	bool isLighting = ModelManager::GetInstance()->GetIsModelLighting();
+	bool isChangedLighting = false;
+
+	static float yaw = 0.0f;
+	static float pitch = -45.0f;
+
+	ImGui::Begin("Light Manager");
+
+	isChangedLighting |= ImGui::Checkbox("isLighting", &isLighting);
+	if (isChangedLighting) {
+		ModelManager::GetInstance()->SetIsLighting(isLighting);
+	}
+
+	// Directional
+	if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::PushID("DirectionalLight");
+
+		bool changed = false;
+		changed |= ImGui::SliderFloat("Yaw", &yaw, -180.0f, 180.0f, "%.1f deg");
+		changed |= ImGui::SliderFloat("Pitch", &pitch, -89.0f, 89.0f, "%.1f deg");
+		changed |= ImGui::ColorEdit4("Color", (float*)&dirLight.color);
+		changed |= ImGui::DragFloat("Intensity", &dirLight.intensity, 0.01f, 0.0f, 10.0f, "%.2f");
+
+		if (changed) {
+			float yawRad = yaw * std::numbers::pi_v<float> / 180.0f;
+			float pitchRad = pitch * std::numbers::pi_v<float> / 180.0f;
+
+			dirLight.direction.x = cosf(pitchRad) * cosf(yawRad);
+			dirLight.direction.y = sinf(pitchRad);
+			dirLight.direction.z = cosf(pitchRad) * sinf(yawRad);
+
+			lightMgr->SetDirectionalLight(&dirLight);
+		}
+
+		ImGui::PopID();
+	}
+
+	// Point
+	if (ImGui::CollapsingHeader("Point Lights", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		for (const auto& [name, data] : pointLights)
+		{
+			PointLight pointLight = data;
+
+			ImGui::PushID(name.c_str());
+			if (ImGui::TreeNode(name.c_str()))
+			{
+				bool changed = false;
+				changed |= ImGui::DragFloat3("Position", (float*)&pointLight.position, 0.01f, -100.0f, 100.0f, "%.2f");
+				changed |= ImGui::ColorEdit4("Color", (float*)&pointLight.color);
+				changed |= ImGui::DragFloat("Intensity", &pointLight.intensity, 0.01f, 0.0f, 10.0f, "%.2f");
+				changed |= ImGui::DragFloat("Radius", &pointLight.radius, 0.01f, 0.0f, 100.0f, "%.2f");
+				changed |= ImGui::DragFloat("Decay", &pointLight.decay, 0.01f, 0.0f, 10.0f, "%.2f");
+
+				if (changed) {
+					std::string lightName = name;
+					lightMgr->SetPointLight(lightName, &pointLight);
+				}
+
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+		}
+	}
+
+	// Spot
+	if (ImGui::CollapsingHeader("Spot Lights", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		for (const auto& [name, data] : spotLights)
+		{
+			SpotLight spotLight = data;
+
+			ImGui::PushID(name.c_str());
+			if (ImGui::TreeNode(name.c_str()))
+			{
+				bool changed = false;
+				changed |= ImGui::DragFloat3("Position", (float*)&spotLight.position, 0.01f, -100.0f, 100.0f, "%.2f");
+				changed |= ImGui::ColorEdit4("Color", (float*)&spotLight.color);
+				changed |= ImGui::DragFloat("Intensity", &spotLight.intensity, 0.01f, 0.0f, 100.0f, "%.2f");
+				changed |= ImGui::DragFloat("Distance", &spotLight.distance, 0.01f, 0.0f, 100.0f, "%.2f");
+				changed |= ImGui::DragFloat("Decay", &spotLight.decay, 0.01f, 0.0f, 10.0f, "%.2f");
+				changed |= ImGui::DragFloat("CosAngle", &spotLight.cosAngle, 0.01f, -1.0f, 1.0f, "%.2f");
+				changed |= ImGui::DragFloat("CosFalloffStart", &spotLight.cosFalloffStart, 0.01f, -1.0f, 1.0f, "%.2f");
+
+				changed |= ImGui::DragFloat3("Direction", (float*)&spotLight.direction, 0.01f, -1.0f, 1.0f, "%.2f");
+
+				if (changed) {
+					spotLight.direction = Normalize(spotLight.direction);
+					std::string lightName = name;
+					lightMgr->SetSpotLight(lightName, &spotLight);
+				}
+
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+		}
+	}
+
+	ImGui::End();
 #endif
 }
 

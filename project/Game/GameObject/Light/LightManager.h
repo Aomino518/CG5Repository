@@ -1,6 +1,7 @@
 #pragma once
 #include "SeekerEngine.h"
 #include "CreateResorceUtils.h"
+#include <map>
 
 class LightManager
 {
@@ -11,16 +12,24 @@ public:
 	void Update();
 	void Shutdown();
 
-	const DirectionalLight& GetDirectionalLight() const { return *dirLight_; }
-	const PointLight& GetPointLight() const { return *pointLight_; }
-	const SpotLight& GetSpotLight() const { return *spotLight_; }
-	const Microsoft::WRL::ComPtr<ID3D12Resource> GetDirLightResource() const { return directionalLightResource_; }
-	const Microsoft::WRL::ComPtr<ID3D12Resource> GetPointLightResource() const { return pointLightResource_; }
-	const Microsoft::WRL::ComPtr<ID3D12Resource> GetSpotLightResource() const { return spotLightResource_; }
+	// ライト作成関数
+	void CreatePointLight(const std::string& name);
+	void CreateSpotLight(const std::string& name);
 
+	// Getter
+	const DirectionalLight& GetDirectionalLight() const { return *dirLight_; }
+	const std::map<std::string, PointLight>& GetPointLights() const { return pointLights_; };
+	const std::map<std::string, SpotLight>& GetSpotLights() const { return spotLights_; };
+	PointLight* GetPointLight(const std::string& name);
+	SpotLight* GetSpotLight(const std::string& name);
+	const Microsoft::WRL::ComPtr<ID3D12Resource> GetDirLightResource() const { return directionalLightResource_; }
+	const Microsoft::WRL::ComPtr<ID3D12Resource> GetPointLightGroupResource() const { return pointLightGroupResource_; }
+	const Microsoft::WRL::ComPtr<ID3D12Resource> GetSpotLightGroupResource() const { return spotLightGroupResource_; }
+
+	// Setter
 	void SetDirectionalLight(DirectionalLight* dirLight);
-	void SetPointLight(PointLight* pointLight);
-	void SetSpotLight(SpotLight* spotLight);
+	void SetPointLight(std::string& name, PointLight* pointLight);
+	void SetSpotLight(std::string& name, SpotLight* spotLight);
 
 private:
 	LightManager() = default;
@@ -31,10 +40,14 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_ = nullptr;
 	DirectionalLight* dirLight_ = nullptr;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> pointLightResource_ = nullptr;
-	PointLight* pointLight_ = nullptr;
+	std::map<std::string, PointLight> pointLights_;
+	std::map<std::string, SpotLight> spotLights_;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource_ = nullptr;
-	SpotLight* spotLight_ = nullptr;
+	// GPU送信用の配列CB
+	Microsoft::WRL::ComPtr<ID3D12Resource> pointLightGroupResource_ = nullptr;
+	PointLightGroup* pointLightGroup_ = nullptr;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> spotLightGroupResource_ = nullptr;
+	SpotLightGroup* spotLightGroup_ = nullptr;
 };
 

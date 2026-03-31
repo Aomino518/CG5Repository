@@ -34,15 +34,13 @@ void PlayScene::Init()
     entity->Init();
     entity->SetModel("ball");
     entity->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
-    //entity->SetIsLighting(false);
-
+    
     modelTerrain = std::make_unique<Entity3D>();
     ModelManager::GetInstance()->LoadModel("terrain.obj");
     modelTerrain->Init();
     modelTerrain->SetModel("terrain");
     modelTerrain->SetTranslate(Vector3(0.0f, 0.0f, 0.0f));
-    //modelTerrain->SetIsLighting(false);
-
+   
     //===========================
     // Particle
     //===========================
@@ -57,7 +55,10 @@ void PlayScene::Init()
         0.1f,
         -0.1f,
         0.1f);
-	
+
+    LightManager::GetInstance()->CreatePointLight("PointLight1");
+    LightManager::GetInstance()->CreatePointLight("PointLight2");
+    LightManager::GetInstance()->CreateSpotLight("SpotLight1");
 }
 
 void PlayScene::Update()

@@ -7,9 +7,10 @@
 
 bool ImGuiUtils::DrawTransform2D(Vector2& position, float& rotation, Vector2& scale)
 {
+#ifdef USE_IMGUI
     bool changed = false;
 
-    if (ImGui::TreeNode("Transform2D")) {
+    if (ImGui::TreeNode("Transform")) {
         changed |= ImGui::DragFloat2("Position", reinterpret_cast<float*>(&position), 0.01f);
         changed |= ImGui::DragFloat("Rotation", &rotation, 0.1f);
         changed |= ImGui::DragFloat2("Scale", reinterpret_cast<float*>(&scale), 0.01f, 0.0f);
@@ -17,10 +18,12 @@ bool ImGuiUtils::DrawTransform2D(Vector2& position, float& rotation, Vector2& sc
     }
 
     return changed;
+#endif
 }
 
 bool ImGuiUtils::DrawTransform3D(Vector3& position, Vector3& rotation, Vector3& scale)
 {
+#ifdef USE_IMGUI
     bool changed = false;
 
     if (ImGui::TreeNode("Transform")) {
@@ -31,10 +34,12 @@ bool ImGuiUtils::DrawTransform3D(Vector3& position, Vector3& rotation, Vector3& 
     }
 
     return changed;
+#endif
 }
 
 bool ImGuiUtils::DrawBlendModeSelector(const char* label, BlendMode& blendMode)
 {
+#ifdef USE_IMGUI
     static const char* blendNames[] = {
         "None",
         "Normal",
@@ -52,10 +57,12 @@ bool ImGuiUtils::DrawBlendModeSelector(const char* label, BlendMode& blendMode)
     }
 
     return false;
+#endif
 }
 
 bool ImGuiUtils::DrawColor4(const char* label, Vector4& color)
 {
+#ifdef USE_IMGUI
     bool changed = false;
 
     if (ImGui::TreeNode(label))
@@ -65,13 +72,16 @@ bool ImGuiUtils::DrawColor4(const char* label, Vector4& color)
     }
 
     return changed;
+#endif
 }
 
 bool ImGuiUtils::DrawVector3(const char* label, Vector3& value)
 {
+#ifdef USE_IMGUI
     bool changed = false;
 
     changed |= ImGui::DragFloat3(label, reinterpret_cast<float*>(&value), 0.01f);
 
     return changed;
+#endif
 }

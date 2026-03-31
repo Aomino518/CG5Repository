@@ -45,6 +45,7 @@ void SeekerEngine::Init()
 void SeekerEngine::Update()
 {
 	Input::GetInstance()->Update();
+	LightManager::GetInstance()->Update();
 	CameraManager::GetInstance()->Update();
 }
 

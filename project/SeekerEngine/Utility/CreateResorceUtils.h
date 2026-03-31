@@ -102,7 +102,7 @@ struct SpotLight {
 	float decay;
 	float cosAngle;
 	float cosFalloffStart;
-	float padding[2];
+	float padding;
 };
 
 struct Particle {
@@ -127,6 +127,21 @@ struct ParticleForGPU
 struct CameraForGPU {
 	Vector3 worldPosition;
 	float padding;
+};
+
+static constexpr uint32_t kMaxPointLights = 512;
+static constexpr uint32_t kMaxSpotLights = 512;
+
+struct PointLightGroup {
+	PointLight lights[kMaxPointLights];
+	int32_t count;
+	float pad[3];
+};
+
+struct SpotLightGroup {
+	SpotLight lights[kMaxSpotLights];
+	int32_t count;
+	float pad[3];
 };
 
 Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
