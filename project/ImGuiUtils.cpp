@@ -128,6 +128,23 @@ bool ImGuiUtils::DrawEditParticleConfig(const char* label, ParticleConfig& confi
         changed |= ImGui::DragFloat3("Min Rotate Velocity", &config.minRotateVelocity.x, 0.01f);
         changed |= ImGui::DragFloat3("Max Rotate Velocity", &config.maxRotateVelocity.x, 0.01f);
 
+        ImGui::SeparatorText("SpawnShape");
+        {
+            static const char* shapeNames[] = { "Box", "Sphere" };
+            int shapeIndex = static_cast<int>(config.shape);
+            if (ImGui::Combo("SpawnShape", &shapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames))) {
+                config.shape = static_cast<SpawnShape>(shapeIndex);
+                changed = true;
+            }
+        }
+
+        if (config.shape == SpawnShape::Box) {
+            changed |= ImGui::DragFloat3("Box Min", &config.boxMin.x, 0.01f);
+            changed |= ImGui::DragFloat3("Box Max", &config.boxMax.x, 0.01f);
+        } else if (config.shape == SpawnShape::Sphere) {
+            changed |= ImGui::DragFloat("Sphere Radius", &config.sphereRadius, 0.01f, 0.01f, FLT_MAX);
+        }
+
         config.minOffset.x = std::min(config.minOffset.x, config.maxOffset.x);
         config.minOffset.y = std::min(config.minOffset.y, config.maxOffset.y);
         config.minOffset.z = std::min(config.minOffset.z, config.maxOffset.z);
@@ -187,6 +204,14 @@ bool ImGuiUtils::DrawEditParticleConfig(const char* label, ParticleConfig& confi
         config.endColorMax.z = std::max(config.endColorMin.z, config.endColorMax.z);
         config.endColorMax.w = std::max(config.endColorMin.w, config.endColorMax.w);
 
+        config.boxMin.x = std::min(config.boxMin.x, config.boxMax.x);
+        config.boxMin.y = std::min(config.boxMin.y, config.boxMax.y);
+        config.boxMin.z = std::min(config.boxMin.z, config.boxMax.z);
+
+        config.boxMax.x = std::max(config.boxMin.x, config.boxMax.x);
+        config.boxMax.y = std::max(config.boxMin.y, config.boxMax.y);
+        config.boxMax.z = std::max(config.boxMin.z, config.boxMax.z);
+       
         ImGui::TreePop();
     }
 
