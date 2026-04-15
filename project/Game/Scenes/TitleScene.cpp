@@ -1,5 +1,5 @@
 #include "TitleScene.h"
-#include "SceneManager.h"
+#include "SceneIncludes.h"
 
 void TitleScene::Init()
 {

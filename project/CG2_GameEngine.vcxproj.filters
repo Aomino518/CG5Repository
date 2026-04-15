@@ -189,9 +189,6 @@
     <ClCompile Include="SeekerEngine\Input\Input.cpp">
       <Filter>ソース ファイル\Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="SeekerEngine\Math\Matrix.cpp">
-      <Filter>ソース ファイル\Engine\Math</Filter>
-    </ClCompile>
     <ClCompile Include="SeekerEngine\Scene\SceneManager.cpp">
       <Filter>ソース ファイル\Engine\Scene</Filter>
     </ClCompile>
@@ -289,6 +286,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekerEngine\Math\MathFunc.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SeekerEngine\Math\MathOperator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -402,9 +405,6 @@
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="SeekerEngine\Math\Vector2.h">
-      <Filter>ヘッダー ファイル\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="SeekerEngine\Math\Matrix.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="SeekerEngine\Scene\SceneManager.h">
@@ -741,6 +741,18 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SeekerEngine\Math\AABB.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekerEngine\Math\MathTypes.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekerEngine\Math\MathFunc.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SeekerEngine\Math\MathOperator.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneIncludes.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

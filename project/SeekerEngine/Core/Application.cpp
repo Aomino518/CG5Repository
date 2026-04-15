@@ -3,7 +3,7 @@
 #include <sstream>
 #include <dxcapi.h>
 #include <vector>
-#include "Matrix.h"
+#include "MathFunc.h"
 #include "DebugCamera.h"
 #define _USE_MATH_DEFINES 
 #include <math.h>

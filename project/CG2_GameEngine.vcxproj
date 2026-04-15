@@ -156,6 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AccelerationField.cpp" />
+    <ClCompile Include="SeekerEngine\Math\MathFunc.cpp" />
+    <ClCompile Include="SeekerEngine\Math\MathOperator.cpp" />
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw3D.cpp" />
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw.cpp" />
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw2D.cpp" />
@@ -207,7 +209,6 @@
     <ClCompile Include="SeekerEngine\Utility\Logger.cpp" />
     <ClCompile Include="SeekerEngine\Graphics\ImGuiManager.cpp" />
     <ClCompile Include="Game\Game.cpp" />
-    <ClCompile Include="SeekerEngine\Math\Matrix.cpp" />
     <ClCompile Include="SeekerEngine\Graphics\PsoBuilder.cpp" />
     <ClCompile Include="SeekerEngine\Graphics\RootSignatureFactory.cpp" />
     <ClCompile Include="SeekerEngine\Audio\Sound.cpp" />
@@ -330,6 +331,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SceneIncludes.h" />
+    <ClInclude Include="SeekerEngine\Math\MathFunc.h" />
+    <ClInclude Include="SeekerEngine\Math\MathOperator.h" />
+    <ClInclude Include="SeekerEngine\Math\MathTypes.h" />
     <ClInclude Include="SeekerEngine\Math\AABB.h" />
     <ClInclude Include="AccelerationField.h" />
     <ClInclude Include="SeekerEngine\DebugShape\DebugDraw3D.h" />
@@ -446,7 +451,6 @@
     <ClInclude Include="SeekerEngine\Graphics\InputLayout.h" />
     <ClInclude Include="SeekerEngine\Input\Input.h" />
     <ClInclude Include="SeekerEngine\Utility\Logger.h" />
-    <ClInclude Include="SeekerEngine\Math\Matrix.h" />
     <ClInclude Include="SeekerEngine\Graphics\PsoBuilder.h" />
     <ClInclude Include="SeekerEngine\Graphics\RootSignatureFactory.h" />
     <ClInclude Include="SeekerEngine\Audio\Sound.h" />

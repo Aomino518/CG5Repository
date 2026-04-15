@@ -1,4 +1,6 @@
 #include "LightManager.h"
+#include "Logger.h"
+#include <numbers>
 
 LightManager* LightManager::GetInstance()
 {

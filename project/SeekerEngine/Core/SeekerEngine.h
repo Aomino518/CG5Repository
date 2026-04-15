@@ -1,37 +1,12 @@
 #pragma once
-#include "Application.h"
-#include "Logger.h"
-#include "Matrix.h"
-#include "DebugCamera.h"
-#include "StringUtil.h"
-#include "Input.h"
-#include "Sound.h"
+#include <wrl.h>
 #include "DxcCompiler.h"
 #include "RootSignatureFactory.h"
 #include "InputLayout.h"
 #include "PsoBuilder.h"
-#include "SpriteCommon.h"
-#include "Sprite.h"
-#include "TextureManager.h"
-#include "Entity3DCommon.h"
-#include "Entity3D.h"
-#include "ModelManager.h"
-#include "ImGuiManager.h"
-#include "Camera.h"
-#include "StartupManager.h"
-#include "SrvManager.h"
-#include "ParticleManager.h"
-#include "ParticleEmitter.h"
-#include "LightManager.h"
-#include "SceneManager.h"
-#include "SoundManager.h"
-#include "CameraManager.h"
-#include "EmitterManager.h"
-#include "WorldFieldManager.h"
-#include "DebugDraw.h"
-#include "DebugDraw2D.h"
-#include "DebugDraw3D.h"
 
+class Application;
+class Graphics;
 class SeekerEngine
 {
 public:
@@ -43,10 +18,10 @@ public:
 	void EndFrame();
 
 	// Getter
-	Application* GetApp() const { return Application::GetInstance(); }
-	Graphics* GetGraphics() const { return Graphics::GetInstance(); }
-	DxcCompiler GetDxcCompiler() const { return dxcCompiler_; }
-	RootSignatureFactory GetRootSig() const { return rootSignatureFactory_; }
+	Application* GetApp() const;
+	Graphics* GetGraphics() const;
+	DxcCompiler GetDxcCompiler() const;
+	RootSignatureFactory GetRootSig() const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rs3D_;

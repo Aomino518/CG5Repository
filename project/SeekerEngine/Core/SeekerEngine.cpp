@@ -1,4 +1,32 @@
 #include "SeekerEngine.h"
+#include "Application.h"
+#include "Logger.h"
+#include "MathFunc.h"
+#include "DebugCamera.h"
+#include "StringUtil.h"
+#include "Input.h"
+#include "Sound.h"
+#include "SpriteCommon.h"
+#include "Sprite.h"
+#include "TextureManager.h"
+#include "Entity3DCommon.h"
+#include "Entity3D.h"
+#include "ModelManager.h"
+#include "ImGuiManager.h"
+#include "Camera.h"
+#include "StartupManager.h"
+#include "SrvManager.h"
+#include "ParticleManager.h"
+#include "ParticleEmitter.h"
+#include "LightManager.h"
+#include "SceneManager.h"
+#include "SoundManager.h"
+#include "CameraManager.h"
+#include "EmitterManager.h"
+#include "WorldFieldManager.h"
+#include "DebugDraw.h"
+#include "DebugDraw2D.h"
+#include "DebugDraw3D.h"
 
 void SeekerEngine::Init()
 {
@@ -87,4 +115,23 @@ void SeekerEngine::BegineFrame()
 void SeekerEngine::EndFrame()
 {
 	Graphics::GetInstance()->EndFrame();
+}
+
+Application* SeekerEngine::GetApp() const
+{
+	return Application::GetInstance();
+}
+
+Graphics* SeekerEngine::GetGraphics() const
+{
+	return Graphics::GetInstance();
+}
+
+DxcCompiler SeekerEngine::GetDxcCompiler() const {
+	return dxcCompiler_;
+}
+
+RootSignatureFactory SeekerEngine::GetRootSig() const
+{
+	return rootSignatureFactory_;
 }

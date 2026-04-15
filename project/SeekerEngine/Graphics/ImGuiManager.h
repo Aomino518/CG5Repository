@@ -1,9 +1,6 @@
 #pragma once
 #include <stdlib.h>
 #include <string>
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
 #ifdef USE_IMGUI
 #include "externals/imgui/imgui.h"
 #include "externals/imgui/imgui_impl_dx12.h"

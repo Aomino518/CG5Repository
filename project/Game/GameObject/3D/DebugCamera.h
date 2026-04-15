@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "MathFunc.h"
 #include "Application.h"
 #include <windows.h>
 

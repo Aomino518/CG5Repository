@@ -7,6 +7,14 @@
 #include "ParticleEmitter.h"
 #include "Application.h"
 #include "Graphics.h"
+#include "ModelManager.h"
+#include "SoundManager.h"
+#include "LightManager.h"
+#include "WorldFieldManager.h"
+#include "EmitterManager.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
 
 ImGuiManager* ImGuiManager::GetInstance() {
 	static ImGuiManager instance;

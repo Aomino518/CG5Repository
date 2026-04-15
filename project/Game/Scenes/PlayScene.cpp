@@ -1,4 +1,5 @@
 #include "PlayScene.h"
+#include "SceneIncludes.h"
 
 void PlayScene::Init()
 {

@@ -1,5 +1,6 @@
 #include "SEFramework.h"
 #include <SceneFactory.h>
+#include "SceneManager.h"
 
 void SEFramework::Init()
 {

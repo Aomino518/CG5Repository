@@ -10,7 +10,7 @@
 #include "Vector4.h"
 #include <unordered_map>
 #include <algorithm>
-#include "Matrix.h"
+#include "MathFunc.h"
 
 struct Transform {
 	Vector3 scale;

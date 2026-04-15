@@ -4,7 +4,7 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include <cassert>  
-#include "Matrix.h"
+#include "MathFunc.h"
 #include <unordered_map>
 #include <algorithm>
 #include "CreateResorceUtils.h"

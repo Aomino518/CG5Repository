@@ -1,5 +1,5 @@
 #pragma once
-#include "Matrix.h"
+#include "MathFunc.h"
 #include "Color.h"
 #include "CreateResorceUtils.h"
 
