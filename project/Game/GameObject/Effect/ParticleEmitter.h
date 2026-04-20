@@ -1,6 +1,8 @@
 #pragma once
 #include "ParticleManager.h"
 #include "Color.h"
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 class ParticleEmitter
 {
@@ -41,6 +43,10 @@ public:
 	void SetLocalField(AccelerationField& localField) { this->localField_ = localField; }
 
 	void DrawImGui();
+
+	// Json保存と読み込み
+	json SaveToJson() const;
+	void LoadFromJson(const json& j);
 
 private:
 	std::string groupName_;

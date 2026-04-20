@@ -16,6 +16,8 @@ public:
 
 	void Shutdown() override;
 
+	const char* GetSceneName() const override { return "GAMEPLAY"; }
+
 private:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Entity3D> entity;

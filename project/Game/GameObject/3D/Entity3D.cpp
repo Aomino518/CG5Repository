@@ -2,6 +2,8 @@
 #include "Entity3DCommon.h"
 #include "TextureManager.h"
 #include "ModelManager.h"
+#include "JsonTransform.h"
+#include "JsonMath.h"
 
 void Entity3D::Init()
 {
@@ -61,6 +63,32 @@ void Entity3D::Draw()
 
 	if (model_) {
 		model_->Draw();
+	}
+}
+
+json Entity3D::SaveToJson() const
+{
+	return json{
+	   {"transform", TransformToJson(transform_)},
+	   {"blendMode", static_cast<int>(mode_)},
+	   {"material", ToJson(model_->GetMaterial())}
+	};
+}
+
+void Entity3D::LoadFromJson(const json& j)
+{
+	if (j.contains("transform")) {
+		TransformFromJson(j.at("transform"), transform_);
+	}
+
+	if (j.contains("blendMode")) {
+		mode_ = static_cast<BlendMode>(j.at("blendMode").get<int>());
+	}
+
+	if (j.contains("material")) {
+		Vector4 material{};
+		FromJson(j.at("material"), material);
+		SetMaterial(material);
 	}
 }
 

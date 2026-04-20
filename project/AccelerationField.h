@@ -1,5 +1,7 @@
 #pragma once
 #include "CreateResorceUtils.h"
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 enum class FieldSpace {
     Local,
@@ -26,6 +28,10 @@ public:
     void SetAcceleration(const Vector3& acceleration) { this->acceleration_ = acceleration; }
     void SetAABB(const AABB& aabb) { this->area_ = aabb; }
     void SetIsActive(const bool isActive) { this->isActive_ = isActive; }
+
+    // Json保存と読み込み
+    json SaveToJson() const;
+    void LoadFromJson(const json& j);
 
 private:
     FieldSpace space_ = FieldSpace::Local;

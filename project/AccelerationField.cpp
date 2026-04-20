@@ -1,5 +1,7 @@
 #include "AccelerationField.h"
 #include "DebugDraw.h"
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 void AccelerationField::DrawDebug(const Vector3& origin)
 {
@@ -22,4 +24,36 @@ AABB AccelerationField::GetWorldAABB(const Vector3& origin) const
     }
 
     return result;
+}
+
+json AccelerationField::SaveToJson() const {
+    return json{
+        {"translate", ToJson(position_)},
+        {"acceleration", ToJson(acceleration_)},
+        {"areaMax", ToJson(area_.max)},
+        {"areaMin", ToJson(area_.min)},
+        {"isActive", isActive_}
+    };
+}
+
+void AccelerationField::LoadFromJson(const json& j) {
+    if (j.contains("translate")) {
+        FromJson(j.at("translate"), position_);
+    }
+
+    if (j.contains("acceleration")) {
+        FromJson(j.at("acceleration"), acceleration_);
+    }
+
+    if (j.contains("areaMax")) {
+        FromJson(j.at("areaMax"), area_.max);
+    }
+
+    if (j.contains("areaMin")) {
+        FromJson(j.at("areaMin"), area_.min);
+    }
+
+    if (j.contains("isActive")) {
+        isActive_ = j.at("isActive").get<bool>();
+    }
 }

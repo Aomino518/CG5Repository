@@ -26,6 +26,7 @@ void PlayScene::Init()
     uint32_t tHChecker = TextureManager::GetInstance()->Load("resources/sprites/circle.png");
     sprite->Create(tHChecker, { 0.0f, 0.0f }, Color::WHITE);
     sprite->SetRotation(0.0f);
+    Editor::GetInstance()->RegisterSprite("uvChecker", sprite.get());
 
     //===========================
     // Model
@@ -57,6 +58,8 @@ void PlayScene::Init()
     LightManager::GetInstance()->CreatePointLight("PointLight1");
     LightManager::GetInstance()->CreatePointLight("PointLight2");
     LightManager::GetInstance()->CreateSpotLight("SpotLight1");
+
+    ImGuiManager::GetInstance()->LoadScenesJson();
 }
 
 void PlayScene::Update()

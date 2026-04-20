@@ -15,6 +15,8 @@ class GameOverScene : public BaseScene
 	// 終了
 	void Shutdown() override;
 
+	const char* GetSceneName() const override { return "GAMEOVER"; }
+
 private:
 
 };

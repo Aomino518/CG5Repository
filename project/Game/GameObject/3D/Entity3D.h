@@ -14,6 +14,8 @@
 #include "CameraManager.h"
 #include "BlendStateUtils.h"
 #include "LightManager.h"
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 class Entity3DCommon;
 class TextureManager;
@@ -29,6 +31,10 @@ public:
 
 	// 描画
 	void Draw();
+
+	// Json保存と読み込み
+	json SaveToJson() const ;
+	void LoadFromJson(const json& j);
 
 	// getter関数
 	const Vector3& GetScale() const { return transform_.scale; }

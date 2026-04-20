@@ -50,6 +50,8 @@ void ParticleEmitter::Update()
 			frequencyTime_ -= frequency_;
 		}
 	}
+
+    localField_.SetPosition(transform_.translate);
 }
 
 void ParticleEmitter::SetSpawnShapeBox(const Vector3& min, const Vector3& max)
@@ -164,4 +166,41 @@ void ParticleEmitter::DrawImGui() {
     }
 
 #endif
+}
+
+json ParticleEmitter::SaveToJson() const {
+    return json{
+       {"transform", TransformToJson(transform_)},
+       {"count", count_},
+       {"frequency", frequency_},
+       {"loop", isLoop_},
+       {"localField", localField_.SaveToJson()}
+    };
+}
+
+void ParticleEmitter::LoadFromJson(const json& j) {
+    if (j.contains("transform")) {
+        TransformFromJson(j.at("transform"), transform_);
+    }
+
+    if (j.contains("count")) {
+        SetCount(j.value("count", 10));
+    }
+
+    if (j.contains("frequency")) {
+        SetFrenquency(j.value("frequency", 0.1f));
+    }
+
+    if (j.contains("loop")) {
+        bool loop = j.value("loop", false);
+        if (loop) {
+            StartLoop();
+        } else {
+            StopLoop();
+        }
+    }
+
+    if (j.contains("localField")) {
+        localField_.LoadFromJson(j);
+    }
 }

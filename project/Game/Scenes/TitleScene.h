@@ -16,6 +16,8 @@ public:
 
 	void Shutdown() override;
 
+	const char* GetSceneName() const override { return "TITLE"; }
+
 private:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Sprite> spr_monsterBall;

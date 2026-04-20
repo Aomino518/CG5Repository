@@ -25,6 +25,8 @@ public:
 		this->sceneFactory_ = std::move(sceneFactory);
 	}
 
+	const char* GetCurrentSceneName() const;
+	BaseScene* GetCurrentScene() const { return scene_.get(); }
 
 private:
 	SceneManager() = default;

@@ -18,6 +18,8 @@ public:
 	// 終了処理
 	virtual void Shutdown() = 0;
 
+	virtual const char* GetSceneName() const = 0;
+
 	void SetSceneManager(SceneManager* mgr) { sceneManager_ = mgr; }
 
 protected:

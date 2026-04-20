@@ -22,6 +22,8 @@ void TitleScene::Init()
     spr_monsterBall->Create(tHMonsterBall, { 360.0f, 0.0f }, Color::WHITE);
     spr_monsterBall->SetRotation(0.0f);
     Editor::GetInstance()->RegisterSprite("monsterBall", spr_monsterBall.get());
+
+    ImGuiManager::GetInstance()->LoadScenesJson();
 }
 
 void TitleScene::Update()

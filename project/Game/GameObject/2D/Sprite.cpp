@@ -80,13 +80,6 @@ void Sprite::Update()
 	uint32_t width = Graphics::GetWidth();
 	uint32_t height = Graphics::GetHeight();
 
-	// translateの更新
-	transform_.translate = { position_.x, position_.y, 0.0f };
-	// rotationの更新
-	transform_.rotate = { 0.0f,0.0f, rotation_ };
-	// scaleの更新
-	transform_.scale = { size_.x, size_.y, 1.0f };
-
 	// アンカーポイントによる頂点再計算
 	float left = 0.0f - anchorPoint_.x;
 	float right = 1.0f - anchorPoint_.x;
@@ -182,36 +175,49 @@ void Sprite::Create(uint32_t textureId, const Vector2& pos, const Vector4& color
 
 void Sprite::Move(const Vector2& delta)
 {
-	position_.x += delta.x;
-	position_.y += delta.y;
+	transform_.translate.x += delta.x;
+	transform_.translate.y += delta.y;
 }
 
 void Sprite::Rotate(float deltaAngle)
 {
-	rotation_ += deltaAngle;
+	transform_.rotate.z += deltaAngle;
 }
 
 void Sprite::Scale(float factor)
 {
-	size_.x *= factor;
-	size_.y *= factor;
+	transform_.scale.x *= factor;
+	transform_.scale.y *= factor;
 }
 
 void Sprite::Scale(const Vector2& factor)
 {
-	size_.x *= factor.x;
-	size_.y *= factor.y;
+	transform_.scale.x *= factor.x;
+	transform_.scale.y *= factor.y;
 }
 
 void Sprite::DrawImGui()
 {
 #ifdef USE_IMGUI
+	Vector2 position = GetPosition();
+	float rotation = GetRotation();
+	Vector2 size = GetSize();
 	Vector4 material = GetColor();
-	ImGui::DragFloat2("Position", reinterpret_cast<float*>(&transform_.translate), 0.01f);
-	ImGui::DragFloat("Rotation", &transform_.rotate.z, 0.1f);
-	ImGui::DragFloat2("Scale", reinterpret_cast<float*>(&transform_.scale), 0.01f, 0.0f);
-	ImGui::ColorEdit4("Color", reinterpret_cast<float*>(&material));
-	SetMaterial(material);
+
+	bool changed = false;
+	changed |= ImGui::DragFloat2("Position", reinterpret_cast<float*>(&position), 0.01f);
+	changed |= ImGui::DragFloat("Rotation", &rotation, 0.1f);
+	changed |= ImGui::DragFloat2("Scale", reinterpret_cast<float*>(&size), 0.01f, 0.0f);
+	if (ImGui::ColorEdit4("Color", reinterpret_cast<float*>(&material))) {
+		SetMaterial(material);
+	}
+
+	if (changed) {
+		SetPosition(position);
+		SetRotation(rotation);
+		SetSize(size);
+	}
+
 #endif
 }
 
@@ -222,5 +228,32 @@ void Sprite::AdjustTextureSize()
 	textureSize_.x = static_cast<float>(metaData.width);
 	textureSize_.y = static_cast<float>(metaData.height);
 	// 画像サイズをテクスチャのサイズに合わせる
-	size_ = textureSize_;
+	transform_.scale.x = textureSize_.x;
+	transform_.scale.y = textureSize_.y;
+}
+
+json Sprite::SaveToJson() const {
+	return json{
+	   {"transform", TransformToJson(transform_)},
+	   {"blendMode", static_cast<int>(mode_)},
+	   {"material", ToJson(GetColor())}
+	};
+}
+
+void Sprite::LoadFromJson(const json& j) {
+	if (j.contains("transform")) {
+		Transform transform{};
+		TransformFromJson(j.at("transform"), transform);
+		SetTransform(transform);
+	}
+
+	if (j.contains("blendMode")) {
+		mode_ = static_cast<BlendMode>(j.at("blendMode").get<int>());
+	}
+
+	if (j.contains("material")) {
+		Vector4 material{};
+		FromJson(j.at("material"), material);
+		SetMaterial(material);
+	}
 }

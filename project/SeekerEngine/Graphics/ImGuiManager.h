@@ -40,6 +40,8 @@ public:
 	void ShowMemoryUsage();
 	void BeginInspector();
 	void EndInspector();
+	void SaveScenesJson();
+	void LoadScenesJson();
 
 private:
 	// メンバ関数

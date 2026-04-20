@@ -12,6 +12,7 @@
 #include "LightManager.h"
 #include "WorldFieldManager.h"
 #include "EmitterManager.h"
+#include "SceneManager.h"
 #include "Editor.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -300,6 +301,18 @@ void ImGuiManager::DrawMainMenuBar()
 {
 #ifdef USE_IMGUI
 	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Save")) {
+				SaveScenesJson();
+			}
+
+			if (ImGui::MenuItem("Load")) {
+				LoadScenesJson();
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Window")) {
 			ImGui::MenuItem("Stats", nullptr, &windowState_.showStats);
 			ImGui::MenuItem("Camera", nullptr, &windowState_.showCamera);
@@ -658,4 +671,29 @@ void ImGuiManager::ApplyStyle()
 	style.WindowBorderSize = 1.0f;
 	style.FrameBorderSize = 0.5f;
 #endif
+}
+
+void ImGuiManager::SaveScenesJson()
+{
+	if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("TITLE")) {
+		Editor::GetInstance()->SaveSceneJson("resources/json/titleScene.json");
+	} else if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("GAMEPLAY")) {
+		Editor::GetInstance()->SaveSceneJson("resources/json/playScene.json");
+	} else if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("GAMEOVER")) {
+		Editor::GetInstance()->SaveSceneJson("resources/json/gameOverScene.json");
+	} else if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("CLAER")) {
+		Editor::GetInstance()->SaveSceneJson("resources/json/clearScene.json");
+	}
+}
+
+void ImGuiManager::LoadScenesJson() {
+	if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("TITLE")) {
+		Editor::GetInstance()->LoadSceneJson("resources/json/titleScene.json");
+	} else if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("GAMEPLAY")) {
+		Editor::GetInstance()->LoadSceneJson("resources/json/playScene.json");
+	} else if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("GAMEOVER")) {
+		Editor::GetInstance()->LoadSceneJson("resources/json/gameOverScene.json");
+	} else if (SceneManager::GetInstance()->GetCurrentSceneName() == std::string("CLAER")) {
+		Editor::GetInstance()->LoadSceneJson("resources/json/clearScene.json");
+	}
 }

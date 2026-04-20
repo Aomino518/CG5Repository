@@ -3,6 +3,8 @@
 #include "Entity3D.h"
 #include "EmitterManager.h"
 #include "ParticleManager.h"
+#include "Logger.h"
+#include <nlohmann/json.hpp>
 #ifdef USE_IMGUI
 #include "externals/imgui/imgui.h"
 #endif
@@ -33,7 +35,84 @@ void Editor::RegisterModel(const std::string& name, Entity3D* model)
 
 void Editor::RegisterParticle(const std::string& name)
 {
-	particles_[name];
+	particles_[name] = EmitterManager::GetInstance()->GetEmitter(name);
+}
+
+void Editor::SaveSceneJson(const std::string& path) const
+{
+    json root;
+    root["sprites"] = json::object();
+    root["models"] = json::object();
+    root["particles"] = json::object();
+
+    for (const auto& [name, sprite] : sprites_) {
+        if (!sprite) {
+            continue;
+        }
+        root["sprites"][name] = sprite->SaveToJson();
+    }
+
+    for (const auto& [name, model] : models_) {
+        if (!model) {
+            continue;
+        }
+
+        root["models"][name] = model->SaveToJson();
+    }
+
+    for (const auto& [name, particle] : particles_) {
+        if (!particle) {
+            continue;
+        }
+        root["particles"][name] = particle->SaveToJson();
+    }
+
+    std::ofstream ofs(path);
+    if (!ofs.is_open()) {
+        Logger::Write(Logger::LogLevel::Error, "Failed to open file" + path);
+        return;
+    }
+
+    ofs << std::setw(4) << root << std::endl;
+}
+
+void Editor::LoadSceneJson(const std::string& path)
+{
+    std::ifstream ifs(path);
+    if (!ifs.is_open()) {
+        Logger::Write(Logger::LogLevel::Error, "Failed to open file" + path);
+        return;
+    }
+
+    json root;
+    ifs >> root;
+    if (root.contains("sprites")) {
+        for (auto& [name, data] : root["sprites"].items()) {
+            auto it = sprites_.find(name);
+            if (it != sprites_.end() && it->second) {
+                it->second->LoadFromJson(data);
+            }
+        }
+    }
+
+    if (root.contains("models")) {
+        for (auto& [name, data] : root["models"].items()) {
+            auto it = models_.find(name);
+            if (it != models_.end() && it->second) {
+                it->second->LoadFromJson(data);
+            }
+        }
+    }
+
+    if (root.contains("particles")) {
+        for (auto& [name, data] : root["particles"].items()) {
+            auto it = particles_.find(name);
+            if (it != particles_.end() && it->second) {
+                it->second->LoadFromJson(data);
+            }
+        }
+    }
+
 }
 
 void Editor::Clear()

@@ -33,6 +33,10 @@ public:
     void RegisterModel(const std::string& name, Entity3D* model);
     void RegisterParticle(const std::string& name);
 
+    // 保存と読み込み
+    void SaveSceneJson(const std::string& path) const;
+    void LoadSceneJson(const std::string& path);
+
     void Clear();
 
 private:

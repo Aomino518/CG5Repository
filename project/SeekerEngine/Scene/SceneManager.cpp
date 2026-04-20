@@ -49,3 +49,11 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 
 	nextScene_ = sceneFactory_->CreateScene(sceneName);
 }
+
+const char* SceneManager::GetCurrentSceneName() const
+{
+	if (!scene_) {
+		return "Unknown";
+	}
+	return scene_->GetSceneName();
+}

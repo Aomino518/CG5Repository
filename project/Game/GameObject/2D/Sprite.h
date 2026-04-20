@@ -10,6 +10,8 @@
 #include "CreateResorceUtils.h"
 #include "Color.h"
 #include "BlendStateUtils.h"
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 class SpriteCommon;
 
@@ -31,10 +33,10 @@ public:
 	void SetUvTransform(Transform uvTransform) { uvTransform_ = uvTransform; }
 
 	// Getter
-	const Vector2& GetPosition() const { return position_; }
-	float GetRotation() const { return rotation_; }
+	Vector2 GetPosition() const { return { transform_.translate.x, transform_.translate.y }; }
+	float GetRotation() const { return transform_.rotate.z; }
+	Vector2 GetSize() const { return { transform_.scale.x, transform_.scale.y }; }
 	const Vector4& GetColor() const { return materialData->color; }
-	const Vector2& GetSize() const { return size_; }
 	const Vector2& GetAnchorPoint() const { return anchorPoint_; }
 	bool GetFlipX() const { return isFlipX_; }
 	bool GetFlipY() const { return isFlipY_; }
@@ -42,13 +44,19 @@ public:
 	const Vector2& GetTextureSize() const { return textureSize_; }
 	const Transform& GetUV() const { return uvTransform_; }
 	const BlendMode& GetBlendMode() const { return mode_; }
-	const Transform& GetTransform() { return transform_; }
+	const Transform& GetTransform() const { return transform_; }
 
 	// Setter
-	void SetPosition(const Vector2& position) { this->position_ = position; }
-	void SetRotation(float rotation) { this->rotation_ = rotation; }
+	void SetPosition(const Vector2& position) { 
+		this->transform_.translate.x = position.x; 
+		this->transform_.translate.y = position.y; 
+	}
+	void SetRotation(float rotation) { this->transform_.rotate.z = rotation; }
+	void SetSize(const Vector2& size) { 
+		this->transform_.scale.x = size.x; 
+		this->transform_.scale.y = size.y; 
+	}
 	void SetColor(const Vector4& color_) { materialData->color = color_; }
-	void SetSize(const Vector2& size) { this->size_ = size; }
 	void SetAnchorPoint(const Vector2& anchorPoint) { this->anchorPoint_ = anchorPoint; }
 	void SetFlipX(bool isFlipX) { this->isFlipX_ = isFlipX; }
 	void SetFlipY(bool isFlipY) { this->isFlipY_ = isFlipY; }
@@ -77,6 +85,11 @@ public:
 	void Scale(const Vector2& factor);
 
 	void DrawImGui();
+
+	// Json保存と読み込み
+	json SaveToJson() const;
+	void LoadFromJson(const json& j);
+
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource;
@@ -96,10 +109,6 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_{};
 
 	Transform uvTransform_ = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
-
-	Vector2 position_ = { 0.0f, 0.0f };
-	float rotation_ = 0.0f;
-	Vector2 size_ = { 360.0f, 360.0f };
 
 	// アンカーポイント
 	Vector2 anchorPoint_ = { 0.0f, 0.0f };

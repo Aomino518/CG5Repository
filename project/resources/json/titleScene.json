@@ -1,0 +1,58 @@
+{
+    "models": {},
+    "particles": {},
+    "sprites": {
+        "monsterBall": {
+            "blendMode": 1,
+            "material": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1200.0,
+                    "y": 600.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 360.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            }
+        },
+        "uvChecker": {
+            "blendMode": 1,
+            "material": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "transform": {
+                "rotate": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 512.0,
+                    "y": 512.0,
+                    "z": 1.0
+                },
+                "translate": {
+                    "x": 0.0,
+                    "y": 300.0,
+                    "z": 0.0
+                }
+            }
+        }
+    }
+}
