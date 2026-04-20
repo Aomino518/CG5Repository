@@ -44,6 +44,8 @@ void Editor::SaveSceneJson(const std::string& path) const
     root["sprites"] = json::object();
     root["models"] = json::object();
     root["particles"] = json::object();
+    root["spotLight"] = json::object();
+    root["pointLight"] = json::object();
 
     for (const auto& [name, sprite] : sprites_) {
         if (!sprite) {
@@ -66,6 +68,8 @@ void Editor::SaveSceneJson(const std::string& path) const
         }
         root["particles"][name] = particle->SaveToJson();
     }
+
+    root["lights"] = LightManager::GetInstance()->SaveToJson();
 
     std::ofstream ofs(path);
     if (!ofs.is_open()) {
@@ -111,6 +115,10 @@ void Editor::LoadSceneJson(const std::string& path)
                 it->second->LoadFromJson(data);
             }
         }
+    }
+
+    if (root.contains("lights")) {
+        LightManager::GetInstance()->LoadFromJson(root["lights"]);
     }
 
 }

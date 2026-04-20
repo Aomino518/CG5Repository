@@ -1,6 +1,8 @@
 #include "LightManager.h"
 #include "Logger.h"
 #include <numbers>
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 LightManager* LightManager::GetInstance()
 {
@@ -162,4 +164,74 @@ void LightManager::SetSpotLight(std::string& name, SpotLight* spotLight)
     it->second.direction = spotLight->direction;
     it->second.cosAngle = spotLight->cosAngle;
     it->second.cosFalloffStart = spotLight->cosFalloffStart;
+}
+
+json LightManager::SaveToJson() const {
+    json j;
+
+    // Directional
+    j["directionalLight"]["color"] = ToJson(dirLight_->color);
+    j["directionalLight"]["direction"] = ToJson(dirLight_->direction);
+    j["directionalLight"]["intensity"] = dirLight_->intensity;
+
+    // Point
+    for (auto& [name, light] : pointLights_) {
+        auto& p = j["pointLights"][name];
+
+        p["position"] = ToJson(light.position);
+        p["color"] = ToJson(light.color);
+        p["radius"] = light.radius;
+        p["decay"] = light.decay;
+        p["intensity"] = light.intensity;
+    }
+
+    for (auto& [name, light] : spotLights_) {
+        auto& s = j["spotLights"][name];
+
+        s["position"] = ToJson(light.position);
+        s["color"] = ToJson(light.color);
+        s["direction"] = ToJson(light.direction);
+        s["distance"] = light.distance;
+        s["intensity"] = light.intensity;
+    }
+
+    return j;
+}
+
+void LightManager::LoadFromJson(const json& j) {
+   
+    if (j.contains("directionalLight")) {
+        const auto& data = j.at("directionalLight");
+        FromJson(data.at("color"), dirLight_->color);
+        FromJson(data.at("direction"), dirLight_->direction);
+        dirLight_->intensity = data.at("intensity");
+    }
+
+    if (j.contains("pointLights")) {
+        for (auto& [name, data] : j["pointLights"].items()) {
+            auto* pointLight = GetPointLight(name);
+            if (!pointLight) {
+                continue; 
+            }
+            FromJson(data.at("position"), pointLight->position);
+            FromJson(data.at("color"), pointLight->color);
+            pointLight->radius = data["radius"];
+            pointLight->decay = data["decay"];
+            pointLight->intensity = data["intensity"];
+        }
+    }
+
+    if (j.contains("spotLights")) {
+        for (auto& [name, data] : j["spotLights"].items()) {
+            auto* spotLight = GetSpotLight(name);
+            if (!spotLight) {
+                continue;
+            }
+            FromJson(data.at("position"), spotLight->position);
+            FromJson(data.at("color"), spotLight->color);
+            FromJson(data.at("direction"), spotLight->direction);
+            spotLight->distance = data["distance"];
+            spotLight->intensity = data["intensity"];
+        }
+    }
 }

@@ -2,6 +2,8 @@
 #include "SeekerEngine.h"
 #include "CreateResorceUtils.h"
 #include <map>
+#include <nlohmann/json.hpp>
+#include "JsonTransform.h"
 
 class LightManager
 {
@@ -30,6 +32,10 @@ public:
 	void SetDirectionalLight(DirectionalLight* dirLight);
 	void SetPointLight(std::string& name, PointLight* pointLight);
 	void SetSpotLight(std::string& name, SpotLight* spotLight);
+
+	// Json保存と読み込み
+	json SaveToJson() const;
+	void LoadFromJson(const json& j);
 
 private:
 	LightManager() = default;

@@ -1,4 +1,76 @@
 {
+    "lights": {
+        "directionalLight": {
+            "color": {
+                "w": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "direction": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "intensity": 0.0
+        },
+        "pointLights": {
+            "PointLight1": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.7168141007423401,
+                    "z": 0.0
+                },
+                "decay": 1.0,
+                "intensity": 1.0,
+                "position": {
+                    "x": 0.0,
+                    "y": 2.0,
+                    "z": 3.0
+                },
+                "radius": 10.0
+            },
+            "PointLight2": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "decay": 1.0,
+                "intensity": 1.0,
+                "position": {
+                    "x": 0.0,
+                    "y": 2.0,
+                    "z": 3.0
+                },
+                "radius": 15.0
+            }
+        },
+        "spotLights": {
+            "SpotLight1": {
+                "color": {
+                    "w": 1.0,
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "direction": {
+                    "x": -0.7071068286895752,
+                    "y": -0.7071068286895752,
+                    "z": 0.0
+                },
+                "distance": 20.0,
+                "intensity": 0.0,
+                "position": {
+                    "x": -10.0,
+                    "y": 1.0,
+                    "z": 0.0
+                }
+            }
+        }
+    },
     "models": {
         "ball": {
             "blendMode": 1,
@@ -100,6 +172,8 @@
             }
         }
     },
+    "pointLight": {},
+    "spotLight": {},
     "sprites": {
         "uvChecker": {
             "blendMode": 1,

@@ -54,4 +54,3 @@ private:
     std::unordered_map<std::string, Entity3D*> models_;
     std::unordered_map<std::string, ParticleEmitter*> particles_;
 };
-
