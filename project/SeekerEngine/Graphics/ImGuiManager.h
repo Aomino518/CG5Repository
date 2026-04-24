@@ -63,7 +63,7 @@ private:
 		bool showStats = true;
 		bool showCamera = true;
 		bool showSound = true;
-		bool showLogger = true;
+		bool showConsole = true;
 	};
 
 	WindowFlags windowState_;

@@ -77,7 +77,7 @@ void Logger::Write(LogLevel level, const std::string& msg)
 		break;
 	}
 
-	std::string line = std::string(prefix) + msg;
+	std::string line = "[" + GetDate() + "]" + std::string(prefix) + msg;
 
 	// メモリに履歴を保存
 	std::lock_guard<std::mutex> lock(mutex_);
@@ -144,4 +144,18 @@ void Logger::RemoveOldLogs()
 	for (int i = 0; i < removeCount; ++i) {
 		fs::remove(logFiles[i]);
 	}
+}
+
+std::string Logger::GetDate()
+{
+	// 現在時刻を取得　(UTC時刻)
+	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+	// ログファイルの名前にコンマ何秒はいらないので、削って秒にする
+	std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>
+		nowSeconds = std::chrono::time_point_cast<std::chrono::seconds>(now);
+	// 日本時間 (PCの設定時間)　に変換
+	std::chrono::zoned_time localTime{ std::chrono::current_zone(), nowSeconds };
+	// formatを使って年月日_時分秒の文字列に変換
+	std::string dateString = std::format("{:%H:%M:%S}", localTime);
+	return dateString;
 }

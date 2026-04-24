@@ -30,6 +30,7 @@ private:
 	static constexpr int kMaxLogFiles = 10;
 
 	static void RemoveOldLogs();
+	static std::string GetDate();
 
 	static std::vector<std::string> logHistory_;
 	static std::mutex mutex_;

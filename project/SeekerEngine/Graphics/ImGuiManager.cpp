@@ -285,7 +285,7 @@ void ImGuiManager::DrawMainMenuBar()
 			ImGui::MenuItem("Stats", nullptr, &windowState_.showStats);
 			ImGui::MenuItem("Camera", nullptr, &windowState_.showCamera);
 			ImGui::MenuItem("Sound", nullptr, &windowState_.showSound);
-			ImGui::MenuItem("Logger", nullptr, &windowState_.showLogger);
+			ImGui::MenuItem("Console", nullptr, &windowState_.showConsole);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -296,7 +296,7 @@ void ImGuiManager::DrawMainMenuBar()
 void ImGuiManager::DrawLoggerWindow()
 {
 #ifdef USE_IMGUI
-	if (windowState_.showLogger) {
+	if (windowState_.showConsole) {
 		ImGui::Begin("Console");
 
 		if (ImGui::Button("Clear")) {
