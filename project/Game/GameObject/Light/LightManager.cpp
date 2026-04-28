@@ -112,6 +112,36 @@ void LightManager::CreateSpotLight(const std::string& name)
     spotLights_.emplace(name, std::move(entry));
 }
 
+void LightManager::RemovePointLight(const std::string& name)
+{
+    auto it = pointLights_.find(name);
+    if (it == pointLights_.end()) {
+        return;
+    }
+
+    pointLights_.erase(it);
+}
+
+void LightManager::RemoveSpotLight(const std::string& name)
+{
+    auto it = spotLights_.find(name);
+    if (it == spotLights_.end()) {
+        return;
+    }
+
+    spotLights_.erase(it);
+}
+
+void LightManager::ClearPointLights()
+{
+    pointLights_.clear();
+}
+
+void LightManager::ClearSpotLights()
+{
+    spotLights_.clear();
+}
+
 PointLight* LightManager::GetPointLight(const std::string& name)
 {
     auto it = pointLights_.find(name);

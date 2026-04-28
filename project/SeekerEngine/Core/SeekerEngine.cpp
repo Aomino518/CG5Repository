@@ -27,6 +27,7 @@
 #include "DebugDraw.h"
 #include "DebugDraw2D.h"
 #include "DebugDraw3D.h"
+#include "Particle2DManager.h"
 
 void SeekerEngine::Init()
 {
@@ -54,6 +55,7 @@ void SeekerEngine::Init()
 	rs3D_ = rootSignatureFactory_.Create3D();
 	rs2D_ = rootSignatureFactory_.Create2D();
 	rsParticle_ = rootSignatureFactory_.CreateParticle3D();
+	rsParticle2D_ = rootSignatureFactory_.CreateParticle2D();
 	rsDebugShape2D_ = rootSignatureFactory_.CreateDebugShape2D();
 	rsDebugShape3D_ = rootSignatureFactory_.CreateDebugShape3D();
 
@@ -70,6 +72,7 @@ void SeekerEngine::Init()
 	Entity3DCommon::GetInstance()->Init(dxcCompiler_, rs3D_.Get());
 
 	ParticleManager::GetInstance()->Init(dxcCompiler_, rsParticle_.Get());
+	Particle2DManager::GetInstance()->Init(dxcCompiler_, rsParticle2D_.Get());
 	LightManager::GetInstance()->Init();
 	ImGuiManager::GetInstance()->Init();
 }
@@ -87,6 +90,7 @@ void SeekerEngine::Shutdown()
 	SceneManager::GetInstance()->Shutdown();
 	ImGuiManager::GetInstance()->Shutdown();
 	LightManager::GetInstance()->Shutdown();
+	Particle2DManager::GetInstance()->Shutdown();
 	ParticleManager::GetInstance()->Shutdown();
 	Entity3DCommon::GetInstance()->Shutdown();
 	SpriteCommon::GetInstance()->Shutdown();

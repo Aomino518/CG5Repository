@@ -86,6 +86,22 @@ public:
 	void DrawRectSolid(const Vector2& leftTop, const Vector2& size, const Vector4& color);
 
 	/// <summary>
+	/// ワイヤーAABB2D（軸平行境界ワイヤーボックス）を描画する
+	/// </summary>
+	/// <param name="position">座標</param>
+	/// <param name="aabb">描画対象の AABB 軸平行境界ボックス</param>
+	/// <param name="color">色</param>
+	void DrawAABB2DWire(const Vector2& position, const AABB2D& aabb, const Vector4& color);
+
+	/// <summary>
+	/// ソリッドAABB2D（軸平行境界ワイヤーボックス）を描画する
+	/// </summary>
+	/// <param name="position">座標</param>
+	/// <param name="aabb">描画対象の AABB 軸平行境界ボックス</param>
+	/// <param name="color">色</param>
+	void DrawAABB2DSolid(const Vector2& position, const AABB2D& aabb, const Vector4& color);
+
+	/// <summary>
 	/// 更新処理
 	/// </summary>
 	void Update();
@@ -106,6 +122,7 @@ private:
 	void CreateTransformationMatrixResource();
 	void DrawWire();
 	void DrawSolid();
+	void DrawPolygon(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color);
 
 private:
 	// 他クラスファイルからの取得変数

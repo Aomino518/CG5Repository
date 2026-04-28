@@ -21,9 +21,9 @@ public:
 	void RemoveField(const std::string& name);
 
 	// Getter関数
-	AccelerationField* GetAccelerationField(const std::string& name);
-	std::vector<AccelerationField*> GetFields() const;
-	const std::unordered_map<std::string, AccelerationField>& GetWorldFields() const { return worldFields_; }
+	AccelerationField* GetWorldField(const std::string& name);
+	std::vector<AccelerationField*> GetAllWorldFields() const;
+	const std::unordered_map<std::string, AccelerationField>& GetWorldFieldMap() const { return worldFields_; }
 
 	// Setter関数
 	void SetField(std::string name, AccelerationField field) { this->worldFields_[name] = field; }

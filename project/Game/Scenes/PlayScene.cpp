@@ -3,6 +3,7 @@
 
 void PlayScene::Init()
 {
+    Logger::Write("現在シーンPlayScene");
    //===========================
    // Sound
    //===========================
@@ -135,5 +136,10 @@ void PlayScene::Draw()
 void PlayScene::Shutdown()
 {
     ParticleManager::GetInstance()->RemoveParticleGroup("Smoke");
+    EmitterManager::GetInstance()->RemoveEmitter("Smoke");
+    WorldFieldManager::GetInstance()->RemoveField("TestWind_001");
+    WorldFieldManager::GetInstance()->RemoveField("TestWind_002");
+    LightManager::GetInstance()->ClearPointLights();
+    LightManager::GetInstance()->ClearSpotLights();
     Editor::GetInstance()->Clear();
 }

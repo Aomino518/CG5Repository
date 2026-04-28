@@ -84,5 +84,13 @@ public:
 	/// <param name="aabb">描画対象の AABB 軸平行境界ボックス</param>
 	/// <param name="mode">描画モード</param>
 	static void DrawAABB(const Vector3& position, const AABB& aabb, const Vector4& color, DebugDrawMode mode);
+
+	// <summary>
+	/// AABB（軸平行境界ボックス）を描画する
+	/// </summary>
+	/// <param name="position">座標</param>
+	/// <param name="aabb">描画対象の AABB2D 軸平行境界ボックス</param>
+	/// <param name="mode">描画モード</param>
+	static void DrawAABB2D(const Vector2& position, const AABB2D& aabb, const Vector4& color, DebugDrawMode mode);
 };
 

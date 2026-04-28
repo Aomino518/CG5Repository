@@ -1,24 +1,25 @@
-#include "WorldFieldManager.h"
+#include "WorldField2DManager.h"
 #include "Logger.h"
 #include "imgui.h"
 
-WorldFieldManager* WorldFieldManager::GetInstance() {
-	static WorldFieldManager instance;
+WorldField2DManager* WorldField2DManager::GetInstance()
+{
+	static WorldField2DManager instance;
 	return &instance;
 }
 
-void WorldFieldManager::CreateWorldField(std::string name, Vector3 position, Vector3 acceleration, AABB area, bool isActive)
+void WorldField2DManager::CreateWorldField(std::string name, Vector2 position, Vector2 acceleration, AABB2D area, bool isActive)
 {
-	AccelerationField field;
+	AccelerationField2D field;
 	field.SetSpace(FieldSpace::World);
 	field.SetPosition(position);
 	field.SetAcceleration(acceleration);
-	field.SetAABB(area);
+	field.SetAABB2D(area);
 	field.SetIsActive(isActive);
 	worldFields_.emplace(name, std::move(field));
 }
 
-void WorldFieldManager::RemoveField(const std::string& name)
+void WorldField2DManager::RemoveField(const std::string& name)
 {
 	auto it = worldFields_.find(name);
 	if (it == worldFields_.end()) {
@@ -27,62 +28,62 @@ void WorldFieldManager::RemoveField(const std::string& name)
 
 	worldFields_.erase(it);
 
-	Logger::Write("WorldField removed: " + name);
+	Logger::Write("WorldField2D removed: " + name);
 }
 
-AccelerationField* WorldFieldManager::GetWorldField(const std::string& name)
+AccelerationField2D* WorldField2DManager::GetWorldField(const std::string& name)
 {
 	auto it = worldFields_.find(name);
 	assert(it != worldFields_.end() && "WorldField not found");
 	return &it->second;
 }
 
-std::vector<AccelerationField*> WorldFieldManager::GetAllWorldFields() const
+std::vector<AccelerationField2D*> WorldField2DManager::GetAllWorldFields() const
 {
-	std::vector<AccelerationField*> result;
+	std::vector<AccelerationField2D*> result;
 	result.reserve(worldFields_.size());
-	for (const auto& worldfield : worldFields_) {
-		result.push_back(const_cast<AccelerationField*>(&worldfield.second));
+	for(const auto& worldField : worldFields_) {
+		result.push_back(const_cast<AccelerationField2D*>(&worldField.second));
 	}
 	return result;
 }
 
-void WorldFieldManager::DrawDebug()
+void WorldField2DManager::DrawDebug()
 {
 	for (auto& field : worldFields_) {
 		field.second.DrawDebug(field.second.GetPosition());
 	}
 }
 
-void WorldFieldManager::DrawImGui(const std::string& name)
+void WorldField2DManager::DrawImGui(const std::string& name)
 {
 	auto it = worldFields_.find(name);
 	if (it != worldFields_.end()) {
 		ImGui::Text("Name: %s", it->first.c_str());
 		bool changed = false;
-		Vector3 pos = it->second.GetPosition();
-		Vector3 accelerarion = it->second.GetAcceleration();
-		AABB area = it->second.GetAABB();
+		Vector2 pos = it->second.GetPosition();
+		Vector2 accelerarion = it->second.GetAcceleration();
+		AABB2D area = it->second.GetAABB();
 		bool isActive = it->second.GetIsActive();
 
-		changed |= ImGui::DragFloat3("Position", (float*)&pos, 0.01f);
-		changed |= ImGui::DragFloat3("Acceleration", (float*)&accelerarion, 0.01f);
+		changed |= ImGui::DragFloat2("Position", (float*)&pos, 0.01f);
+		changed |= ImGui::DragFloat2("Acceleration", (float*)&accelerarion, 0.01f);
 		// minをmaxが下回ると落ちるのでのちのち修正
-		changed |= ImGui::DragFloat3("AABB Min", (float*)&area.min, 0.1f);
-		changed |= ImGui::DragFloat3("AABB Max", (float*)&area.max, 0.1f);
+		changed |= ImGui::DragFloat2("AABB Min", (float*)&area.min, 0.1f);
+		changed |= ImGui::DragFloat2("AABB Max", (float*)&area.max, 0.1f);
 		changed |= ImGui::Checkbox("isActive", &isActive);
 
 		if (changed) {
 			it->second.SetPosition(pos);
 			it->second.SetAcceleration(accelerarion);
-			it->second.SetAABB(area);
+			it->second.SetAABB2D(area);
 			it->second.SetIsActive(isActive);
 			SetField(name, it->second);
 		}
 	}
 }
 
-nlohmann::json WorldFieldManager::SaveToJson() const
+nlohmann::json WorldField2DManager::SaveToJson() const
 {
 	nlohmann::json j;
 
@@ -94,10 +95,10 @@ nlohmann::json WorldFieldManager::SaveToJson() const
 	return j;
 }
 
-void WorldFieldManager::LoadFromJson(const nlohmann::json& json)
+void WorldField2DManager::LoadFromJson(const nlohmann::json& json)
 {
 	for (auto& [name, fieldJson] : json.items()) {
-		AccelerationField field;
+		AccelerationField2D field;
 		field.LoadFromJson(fieldJson);
 
 		if (fieldJson.contains("space")) {

@@ -13,5 +13,6 @@ namespace ImGuiUtils
 	bool DrawColor4(const char* label, Vector4& color);
 	bool DrawVector3(const char* label, Vector3& value);
 	bool DrawEditParticleConfig(ParticleConfig& config);
+	bool DrawEditParticleConfig2D(ParticleConfig& config);
 };
 

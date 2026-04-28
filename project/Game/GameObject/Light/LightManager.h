@@ -16,6 +16,12 @@ public:
 	void CreatePointLight(const std::string& name);
 	void CreateSpotLight(const std::string& name);
 
+	// ライト解放関数
+	void RemovePointLight(const std::string& name);
+	void RemoveSpotLight(const std::string& name);
+	void ClearPointLights();
+	void ClearSpotLights();
+
 	// Getter
 	const DirectionalLight& GetDirectionalLight() const { return *dirLight_; }
 	const std::map<std::string, PointLight>& GetPointLights() const { return pointLights_; };

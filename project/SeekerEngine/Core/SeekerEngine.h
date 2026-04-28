@@ -27,6 +27,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rs3D_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rs2D_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rsParticle_;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rsParticle2D_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rsDebugShape2D_;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rsDebugShape3D_;
 

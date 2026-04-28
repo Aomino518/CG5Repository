@@ -13,6 +13,11 @@ void EmitterManager::Update() {
 	}
 }
 
+void EmitterManager::Shutdown()
+{
+	emitters_.clear();
+}
+
 void EmitterManager::CreateEmitter(const std::string& name, const ParticleConfig& config, uint32_t count, float frequency)
 {
 	// 同名がないかチェック
@@ -45,7 +50,7 @@ ParticleEmitter* EmitterManager::GetEmitter(const std::string& name)
 	return it->second.get();
 }
 
-std::vector<ParticleEmitter*> EmitterManager::GetEmitters() const
+std::vector<ParticleEmitter*> EmitterManager::GetAllEmitters() const
 {
 	std::vector<ParticleEmitter*> result;
 	result.reserve(emitters_.size());
@@ -55,7 +60,7 @@ std::vector<ParticleEmitter*> EmitterManager::GetEmitters() const
 	return result;
 }
 
-const std::unordered_map<std::string, std::unique_ptr<ParticleEmitter>>& EmitterManager::GetEmittersAndNames() const
+const std::unordered_map<std::string, std::unique_ptr<ParticleEmitter>>& EmitterManager::GetEmitterMap() const
 {
 	return emitters_;
 }
@@ -66,15 +71,19 @@ uint32_t EmitterManager::GetEmitterCount() const
 }
 
 void EmitterManager::DrawDebug() {
+#ifdef _DEBUG
 	for (auto& emitter : emitters_) {
 		emitter.second->DrawDebug();
 	}
+#endif
 }
 
 void EmitterManager::DrawImgui(const std::string& name)
 {
+#ifdef _DEBUG
 	auto it = emitters_.find(name);
 	if (it != emitters_.end()) {
 		it->second->DrawImGui();
 	}
+#endif
 }

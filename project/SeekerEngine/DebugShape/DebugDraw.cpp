@@ -67,6 +67,15 @@ void DebugDraw::DrawAABB(const Vector3& position, const AABB& aabb, const Vector
 	}
 }
 
+void DebugDraw::DrawAABB2D(const Vector2& position, const AABB2D& aabb, const Vector4& color, DebugDrawMode mode)
+{
+	if (mode == DebugDrawMode::Solid) {
+		DebugDraw2D::GetInstance()->DrawAABB2DSolid(position, aabb, color);
+	} else if (mode == DebugDrawMode::Wireframe) {
+		DebugDraw2D::GetInstance()->DrawAABB2DWire(position, aabb, color);
+	}
+}
+
 void DebugDraw::DrawBox(const Vector3& center, const Vector3& halfSize, const Vector4& color, DebugDrawMode mode)
 {
 	if (mode == DebugDrawMode::Solid) {

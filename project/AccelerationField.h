@@ -3,11 +3,6 @@
 #include <nlohmann/json.hpp>
 #include "JsonTransform.h"
 
-enum class FieldSpace {
-    Local,
-    World
-};
-
 class AccelerationField
 {
 public:

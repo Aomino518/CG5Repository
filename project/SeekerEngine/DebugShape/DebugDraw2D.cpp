@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "DebugDraw2D.h"
 #include "Graphics.h"
 #include "Logger.h"
@@ -91,6 +92,20 @@ void DebugDraw2D::DrawSolid()
 	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	cmdList_->DrawInstanced(solidVertexCount_, 1, 0, 0);
 	Graphics::GetInstance()->AddDrawCallCount();
+}
+
+void DebugDraw2D::DrawPolygon(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Vector4& color)
+{
+	solidVertexData_[solidVertexCount_ + 0].position = { point1.x, point1.y, 1.0f };
+	solidVertexData_[solidVertexCount_ + 0].color = color;
+
+	solidVertexData_[solidVertexCount_ + 1].position = { point2.x, point2.y, 1.0f };
+	solidVertexData_[solidVertexCount_ + 1].color = color;
+
+	solidVertexData_[solidVertexCount_ + 2].position = { point3.x, point3.y, 1.0f };
+	solidVertexData_[solidVertexCount_ + 2].color = color;
+
+	solidVertexCount_ += 3;
 }
 
 void DebugDraw2D::DrawLine(const Vector2& start, const Vector2& end, const Vector4& color) {
@@ -269,6 +284,56 @@ void DebugDraw2D::DrawRectSolid(const Vector2& leftTop, const Vector2& size, con
 	solidVertexData_[solidVertexCount_ + 5].color = color;
 
 	solidVertexCount_ += 6;
+}
+
+void DebugDraw2D::DrawAABB2DWire(const Vector2& position, const AABB2D& aabb, const Vector4& color)
+{
+	Vector2 minPos = aabb.min + position;
+	Vector2 maxPos = aabb.max + position;
+
+	Vector3 min = {
+		std::min(minPos.x, maxPos.x),
+		std::min(minPos.y, maxPos.y)
+	};
+
+	Vector3 max = {
+		std::max(minPos.x, maxPos.x),
+		std::max(minPos.y, maxPos.y)
+	};
+
+	Vector2 v0 = { min.x, min.y };
+	Vector2 v1 = { max.x, min.y };
+	Vector2 v2 = { max.x, max.y };
+	Vector2 v3 = { min.x, max.y };
+
+	DrawLine(v0, v1, color);
+	DrawLine(v1, v2, color);
+	DrawLine(v2, v3, color);
+	DrawLine(v3, v0, color);
+}
+
+void DebugDraw2D::DrawAABB2DSolid(const Vector2& position, const AABB2D& aabb, const Vector4& color)
+{
+	Vector2 minPos = aabb.min + position;
+	Vector2 maxPos = aabb.max + position;
+
+	Vector3 min = {
+		std::min(minPos.x, maxPos.x),
+		std::min(minPos.y, maxPos.y)
+	};
+
+	Vector3 max = {
+		std::max(minPos.x, maxPos.x),
+		std::max(minPos.y, maxPos.y)
+	};
+
+	Vector2 v0 = { min.x, min.y };
+	Vector2 v1 = { max.x, min.y };
+	Vector2 v2 = { max.x, max.y };
+	Vector2 v3 = { min.x, max.y };
+
+	DrawPolygon(v0, v1, v3, color);
+	DrawPolygon(v1, v2, v3, color);
 }
 
 void DebugDraw2D::Update() {

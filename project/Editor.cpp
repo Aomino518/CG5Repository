@@ -2,11 +2,14 @@
 #include "Sprite.h"
 #include "Entity3D.h"
 #include "EmitterManager.h"
+#include "Emitter2DManager.h"
 #include "ParticleManager.h"
+#include "Particle2DManager.h"
 #include "ModelManager.h"
 #include "Logger.h"
 #include "ImGuiManager.h"
 #include "WorldFieldManager.h"
+#include "WorldField2DManager.h"
 #include "CameraManager.h"
 #include <nlohmann/json.hpp>
 #ifdef USE_IMGUI
@@ -42,13 +45,20 @@ void Editor::RegisterParticle(const std::string& name)
 	particles_[name] = EmitterManager::GetInstance()->GetEmitter(name);
 }
 
+void Editor::RegisterParticle2D(const std::string& name)
+{
+	particles2D_[name] = Emitter2DManager::GetInstance()->GetEmitter(name);
+}
+
 void Editor::SaveSceneJson(const std::string& path) const
 {
 	json root;
 	root["sprites"] = json::object();
 	root["models"] = json::object();
+	root["particles2D"] = json::object();
 	root["particles"] = json::object();
 	root["isLighting"] = ModelManager::GetInstance()->GetIsModelLighting();
+	root["worldField2D"] = json::object();
 	root["worldField"] = json::object();
 	root["cameras"] = json::array();
 
@@ -65,6 +75,19 @@ void Editor::SaveSceneJson(const std::string& path) const
 		}
 
 		root["models"][name] = model->SaveToJson();
+	}
+
+	for (const auto& [name, particle2D] : particles2D_) {
+		if (!particle2D) {
+			continue;
+		}
+
+		json particle2DJson = particle2D->SaveToJson();
+		json managerJson = Particle2DManager::GetInstance()->SaveToJson(name);
+
+		particle2DJson["blendMode"] = managerJson["blendMode"];
+		
+		root["particles2D"][name] = particle2DJson;
 	}
 
 	for (const auto& [name, particle] : particles_) {
@@ -84,6 +107,8 @@ void Editor::SaveSceneJson(const std::string& path) const
 	root["lights"] = LightManager::GetInstance()->SaveToJson();
 
 	root["windowState"] = ImGuiManager::GetInstance()->SaveEditorJson();
+
+	root["worldField2D"] = WorldField2DManager::GetInstance()->SaveToJson();
 
 	root["worldField"] = WorldFieldManager::GetInstance()->SaveToJson();
 
@@ -130,6 +155,16 @@ void Editor::LoadSceneJson(const std::string& path)
 		}
 	}
 
+	if (root.contains("particles2D")) {
+		for (auto& [name, data] : root["particles2D"].items()) {
+			auto it = particles2D_.find(name);
+			if (it != particles2D_.end() && it->second) {
+				it->second->LoadFromJson(data);
+				Particle2DManager::GetInstance()->LoadFromJson(data, name);
+			}
+		}
+	}
+
 	if (root.contains("particles")) {
 		for (auto& [name, data] : root["particles"].items()) {
 			auto it = particles_.find(name);
@@ -146,6 +181,10 @@ void Editor::LoadSceneJson(const std::string& path)
 
 	if (root.contains("windowState")) {
 		ImGuiManager::GetInstance()->LoadEditorJson(root["windowState"]);
+	}
+
+	if (root.contains("worldField2D")) {
+		WorldField2DManager::GetInstance()->LoadFromJson(root["worldField2D"]);
 	}
 
 	if (root.contains("worldField")) {
@@ -206,10 +245,27 @@ void Editor::DrawHierarchy()
 	}
 
 	// =========================
+	// Particle2D
+	// =========================
+	if (ImGui::CollapsingHeader("Particle2D", ImGuiTreeNodeFlags_DefaultOpen)) {
+		auto& emitters = Emitter2DManager::GetInstance()->GetEmitterMap();
+
+		for (auto& [name, emitter] : emitters) {
+
+			bool selected = (selection_.category == InspectorCategory::Particle2D && selection_.name == name);
+
+			if (ImGui::Selectable(name.c_str(), selected)) {
+				selection_.category = InspectorCategory::Particle2D;
+				selection_.name = name;
+			}
+		}
+	}
+
+	// =========================
 	// Particle
 	// =========================
 	if (ImGui::CollapsingHeader("Particle", ImGuiTreeNodeFlags_DefaultOpen)) {
-		auto& emitters = EmitterManager::GetInstance()->GetEmittersAndNames();
+		auto& emitters = EmitterManager::GetInstance()->GetEmitterMap();
 
 		for (auto& [name, emitter] : emitters) {
 
@@ -263,8 +319,22 @@ void Editor::DrawHierarchy()
 	// =========================
 	// WorldField
 	// =========================
+	if (ImGui::CollapsingHeader("WorldField2D", ImGuiTreeNodeFlags_DefaultOpen)) {
+		auto& fields = WorldField2DManager::GetInstance()->GetWorldFieldMap();
+		for (auto& [name, field] : fields) {
+			bool selected = (selection_.category == InspectorCategory::WorldField2D && selection_.name == name);
+			if (ImGui::Selectable(name.c_str(), selected)) {
+				selection_.category = InspectorCategory::WorldField2D;
+				selection_.name = name;
+			}
+		}
+	}
+
+	// =========================
+	// WorldField
+	// =========================
 	if (ImGui::CollapsingHeader("WorldField", ImGuiTreeNodeFlags_DefaultOpen)) {
-		auto& fields = WorldFieldManager::GetInstance()->GetWorldFields();
+		auto& fields = WorldFieldManager::GetInstance()->GetWorldFieldMap();
 		for (auto& [name, field] : fields) {
 			bool selected = (selection_.category == InspectorCategory::WorldField && selection_.name == name);
 			if (ImGui::Selectable(name.c_str(), selected)) {
@@ -305,6 +375,18 @@ void Editor::DrawInspector()
 		break;
 	}
 
+	case InspectorCategory::Particle2D:
+	{
+		auto* emitter = Emitter2DManager::GetInstance()->GetEmitter(selection_.name);
+
+		if (emitter) {
+			emitter->DrawImGui();
+		}
+
+		Particle2DManager::GetInstance()->DrawParticleGroup2DImGui(selection_.name);
+		break;
+	}
+
 	case InspectorCategory::Particle:
 	{
 		auto* emitter = EmitterManager::GetInstance()->GetEmitter(selection_.name);
@@ -332,6 +414,12 @@ void Editor::DrawInspector()
 	case InspectorCategory::SpotLight:
 	{
 		LightManager::GetInstance()->DrawSpotLightImGui(selection_.name);
+		break;
+	}
+
+	case InspectorCategory::WorldField2D:
+	{
+		WorldField2DManager::GetInstance()->DrawImGui(selection_.name);
 		break;
 	}
 

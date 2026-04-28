@@ -156,14 +156,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AccelerationField.cpp" />
+    <ClCompile Include="AccelerationField2D.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Emitter2DManager.cpp" />
     <ClCompile Include="JsonUtils.cpp" />
+    <ClCompile Include="Game\GameObject\Effect\Particle2DManager.cpp" />
+    <ClCompile Include="Particle2DEmitter.cpp" />
     <ClCompile Include="SeekerEngine\Math\MathFunc.cpp" />
     <ClCompile Include="SeekerEngine\Math\MathOperator.cpp" />
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw3D.cpp" />
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw.cpp" />
     <ClCompile Include="SeekerEngine\DebugShape\DebugDraw2D.cpp" />
     <ClCompile Include="EmitterManager.cpp" />
+    <ClCompile Include="WorldField2DManager.cpp" />
     <ClCompile Include="WorldFieldManager.cpp" />
     <ClCompile Include="ImGuiUtils.cpp" />
     <ClCompile Include="main.cpp" />
@@ -333,10 +338,14 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AccelerationField2D.h" />
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="Emitter2DManager.h" />
     <ClInclude Include="JsonMath.h" />
     <ClInclude Include="JsonTransform.h" />
     <ClInclude Include="JsonUtils.h" />
+    <ClInclude Include="Game\GameObject\Effect\Particle2DManager.h" />
+    <ClInclude Include="Particle2DEmitter.h" />
     <ClInclude Include="SceneIncludes.h" />
     <ClInclude Include="SeekerEngine\Math\MathFunc.h" />
     <ClInclude Include="SeekerEngine\Math\MathOperator.h" />
@@ -425,6 +434,7 @@
     <ClInclude Include="externals\assimp\include\assimp\XmlParser.h" />
     <ClInclude Include="externals\assimp\include\assimp\XMLTools.h" />
     <ClInclude Include="externals\assimp\include\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="WorldField2DManager.h" />
     <ClInclude Include="WorldFieldManager.h" />
     <ClInclude Include="ImGuiUtils.h" />
     <ClInclude Include="SeekerEngine\Scene\AbstractSceneFactory.h" />

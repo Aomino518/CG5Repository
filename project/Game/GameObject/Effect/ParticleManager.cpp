@@ -50,8 +50,8 @@ void ParticleManager::Update(CameraManager* cameraManager)
 				continue;
 			}
 
-			auto emitters = EmitterManager::GetInstance()->GetEmitters();
-			auto worldFields = WorldFieldManager::GetInstance()->GetFields();
+			auto emitters = EmitterManager::GetInstance()->GetAllEmitters();
+			auto worldFields = WorldFieldManager::GetInstance()->GetAllWorldFields();
 			// ワールドフィールドの更新
 			Vector3 totalAcceleration{ 0.0f, 0.0f, 0.0f };
 			for (const auto& field : worldFields) {
@@ -443,7 +443,7 @@ void ParticleManager::CreateGraphicsPipeline(DxcCompiler& dxcCompiler)
 	);
 
 	psoParticle3D_ = builder.BuildPso(psoDesc3D);
-	Logger::Write("pipelineState生成完了");
+	Logger::Write("Particle3DPipelineState生成完了");
 }
 
 // 板ポリ生成関数

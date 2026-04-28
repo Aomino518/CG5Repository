@@ -1,10 +1,10 @@
 #pragma once
-#include "ParticleEmitter.h"
+#include "Particle2DEmitter.h"
 
-class EmitterManager
+class Emitter2DManager
 {
 public:
-	static EmitterManager* GetInstance();
+	static Emitter2DManager* GetInstance();
 
 	/// <summary>
 	/// 更新処理
@@ -39,18 +39,19 @@ public:
 	void DrawImgui(const std::string& name);
 
 	// Getter関数
-	ParticleEmitter* GetEmitter(const std::string& name);
-	std::vector<ParticleEmitter*> GetAllEmitters() const;
-	const std::unordered_map<std::string, std::unique_ptr<ParticleEmitter>>&GetEmitterMap() const;
+	Particle2DEmitter* GetEmitter(const std::string& name);
+	std::vector<Particle2DEmitter*> GetAllEmitters() const;
+	const std::unordered_map<std::string, std::unique_ptr<Particle2DEmitter>>& GetEmitterMap() const;
 	uint32_t GetEmitterCount() const;
+
 private:
 	// メンバ関数
-	EmitterManager() = default;
-	~EmitterManager() = default;
-	EmitterManager(const EmitterManager&) = delete;
-	EmitterManager& operator=(const EmitterManager&) = delete;
+	Emitter2DManager() = default;
+	~Emitter2DManager() = default;
+	Emitter2DManager(const Emitter2DManager&) = delete;
+	Emitter2DManager& operator=(const Emitter2DManager&) = delete;
 
 	// メンバ変数
-	std::unordered_map<std::string, std::unique_ptr<ParticleEmitter>> emitters_;
+	std::unordered_map<std::string, std::unique_ptr<Particle2DEmitter>> emitters_;
 };
 
