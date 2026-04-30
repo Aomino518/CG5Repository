@@ -35,6 +35,8 @@ void ImGuiManager::Init()
 
 	ImGuiIO& io = ImGui::GetIO();
 
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 	io.Fonts->AddFontFromFileTTF(
 		"resources/fonts/NotoSansJP-Regular.ttf",
 		18.0f,
@@ -64,6 +66,7 @@ void ImGuiManager::BeginFrame()
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	DrawDockSpace();
 #endif
 }
 
@@ -435,10 +438,51 @@ void ImGuiManager::ApplyStyle()
 #endif
 }
 
+void ImGuiManager::DrawDockSpace()
+{
+#ifdef USE_IMGUI
+	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+	ImGuiWindowFlags windowFlags = 
+		ImGuiWindowFlags_NoDocking |
+		ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoBringToFrontOnFocus |
+		ImGuiWindowFlags_NoNavFocus |
+		ImGuiWindowFlags_NoBackground;
+
+	const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+	ImGui::Begin("DockSpace", nullptr, windowFlags);
+
+	ImGui::PopStyleVar(3);
+
+	ImGuiID dockspaceID = ImGui::GetID("MainDockSpace");
+	ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
+
+	ImGui::End();
+#endif
+}
+
 void ImGuiManager::DrawConfirmPopup()
 {
 #ifdef USE_IMGUI
-	if (ImGui::BeginPopupModal("Confirm Save", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+	ImGuiWindowFlags flags =
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoMove;
+
+	ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+
+	if (ImGui::BeginPopupModal("Confirm Save", nullptr, flags)) {
 		ImGui::Text("現在のシーンを保存しますか？");
 
 		if (ImGui::Button("OK", ImVec2(120, 0))) {
@@ -455,7 +499,7 @@ void ImGuiManager::DrawConfirmPopup()
 		ImGui::EndPopup();
 	}
 
-	if (ImGui::BeginPopupModal("Confirm Load", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+	if (ImGui::BeginPopupModal("Confirm Load", nullptr, flags)) {
 		ImGui::Text("現在の編集内容を破棄してロードしますか？");
 
 		if (ImGui::Button("OK", ImVec2(120, 0))) {

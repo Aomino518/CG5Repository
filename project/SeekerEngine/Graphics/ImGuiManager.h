@@ -58,6 +58,7 @@ private:
 	ImGuiManager& operator=(const ImGuiManager&) = delete;
 
 	void ApplyStyle();
+	void DrawDockSpace();
 
 	// メンバ変数
 	Application* app_ = nullptr;
