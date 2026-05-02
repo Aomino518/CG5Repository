@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.5.11723.231
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CG2_GameEngine", "CG2_GameEngine.vcxproj", "{39E029E5-B17E-4B96-BBE2-E215432ED169}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine.vcxproj", "{39E029E5-B17E-4B96-BBE2-E215432ED169}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AC5F6D3F-06D4-4D06-BDEA-85C9F70800A1} = {AC5F6D3F-06D4-4D06-BDEA-85C9F70800A1}
 	EndProjectSection
