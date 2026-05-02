@@ -21,6 +21,28 @@
                 }
             },
             "name": "MainCamera"
+        },
+        {
+            "camera": {
+                "transform": {
+                    "rotate": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "translate": {
+                        "x": 0.0,
+                        "y": 10.0,
+                        "z": -10.0
+                    }
+                }
+            },
+            "name": "EntranceCamera"
         }
     ],
     "isLighting": true,
@@ -34,226 +56,21 @@
             },
             "direction": {
                 "x": 1.0,
-                "y": 0.0,
+                "y": -0.0,
                 "z": 0.0
             },
-            "intensity": 0.0
+            "intensity": 1.0
         }
     },
     "models": {},
     "particles": {},
-    "particles2D": {
-        "Smoke": {
-            "blendMode": 0,
-            "boxMax": {
-                "x": 0.5,
-                "y": 0.5,
-                "z": 0.5
-            },
-            "boxMin": {
-                "x": -0.5,
-                "y": -0.5,
-                "z": -0.5
-            },
-            "count": 10,
-            "endColorMax": {
-                "w": 0.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "endColorMin": {
-                "w": 0.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "endScaleMax": {
-                "x": 24.0,
-                "y": 24.0,
-                "z": 0.0
-            },
-            "endScaleMin": {
-                "x": 12.0,
-                "y": 12.0,
-                "z": 0.0
-            },
-            "frequency": 0.10000000149011612,
-            "localField": {
-                "acceleration": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "areaMax": {
-                    "x": 32.0,
-                    "y": 32.0
-                },
-                "areaMin": {
-                    "x": -32.0,
-                    "y": -32.0
-                },
-                "isActive": true,
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0
-                }
-            },
-            "loop": false,
-            "maxLifeTime": 10.0,
-            "maxRotate": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "maxRotateVelocity": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "maxVelocity": {
-                "x": 50.0,
-                "y": 50.0,
-                "z": 0.0
-            },
-            "minLifeTime": 5.0,
-            "minRotate": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "minRotateVelocity": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            },
-            "minVelocity": {
-                "x": -50.0,
-                "y": -50.0,
-                "z": 0.0
-            },
-            "shape": 0,
-            "sphereRadius": 1.0,
-            "startColorMax": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "startColorMin": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "startScaleMax": {
-                "x": 132.0,
-                "y": 132.0,
-                "z": 0.0
-            },
-            "startScaleMin": {
-                "x": 128.0,
-                "y": 128.0,
-                "z": 0.0
-            },
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 32.0,
-                    "y": 32.0,
-                    "z": 0.0
-                },
-                "translate": {
-                    "x": 640.0,
-                    "y": 360.0,
-                    "z": 0.0
-                }
-            }
-        }
-    },
-    "sprites": {
-        "monsterBall": {
-            "blendMode": 1,
-            "material": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1200.0,
-                    "y": 600.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 360.0,
-                    "y": 0.0,
-                    "z": 0.0
-                }
-            }
-        },
-        "uvChecker": {
-            "blendMode": 1,
-            "material": {
-                "w": 1.0,
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            },
-            "transform": {
-                "rotate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 512.0,
-                    "y": 512.0,
-                    "z": 1.0
-                },
-                "translate": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                }
-            }
-        }
-    },
+    "particles2D": {},
+    "sprites": {},
     "windowState": {
         "showCamera": true,
         "showSound": true,
         "showStats": true
     },
     "worldField": null,
-    "worldField2D": {
-        "TestField": {
-            "acceleration": {
-                "x": 0.0,
-                "y": 0.0
-            },
-            "areaMax": {
-                "x": 1.0,
-                "y": 1.0
-            },
-            "areaMin": {
-                "x": -1.0,
-                "y": -1.0
-            },
-            "isActive": true,
-            "space": 1,
-            "translate": {
-                "x": 0.0,
-                "y": 0.0
-            }
-        }
-    }
+    "worldField2D": null
 }
