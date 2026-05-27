@@ -7,6 +7,8 @@
 #include <format>
 #include <cassert>
 #include <thread>
+#include "MathFunc.h"
+#include <CreateResorceUtils.h>
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
@@ -315,6 +317,14 @@ bool Graphics::IsInit() const
 	return cmdQueue_ && fence_ && swapChain_;
 }
 
+D3D12_CPU_DESCRIPTOR_HANDLE Graphics::AllocateRTV()
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += SIZE_T(nextRtvIndex_) * descSizeRTV_;
+	++nextRtvIndex_;
+	return handle;
+}
+
 ComPtr<ID3D12DescriptorHeap> Graphics::CreateDescriptorHeap(
 	const Microsoft::WRL::ComPtr<ID3D12Device>& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible)
 {
@@ -455,7 +465,7 @@ bool Graphics::CreateSwapChain()
 bool Graphics::CreateHeapsAndTargets()
 {
 	/*--ディスクリプタヒープの生成--*/
-	rtvHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kBufferCount, false);
+	rtvHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kBufferCount + 1, false);
 
 	// RTV
 	for (uint32_t i = 0; i < kBufferCount; ++i) {
@@ -551,6 +561,90 @@ bool Graphics::CreateScissorRect()
 	Logger::Write("scissorRect");
 
 	return true;
+}
+
+void Graphics::CreateRenderTextureRTV()
+{
+	const Vector4 kRenderTargetClearValue{ 1.0f, 0.0f, 0.0f, 1.0f };
+	renderTextureClearValue_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	renderTextureClearValue_.Color[0] = kRenderTargetClearValue.x;
+	renderTextureClearValue_.Color[1] = kRenderTargetClearValue.y;
+	renderTextureClearValue_.Color[2] = kRenderTargetClearValue.z;
+	renderTextureClearValue_.Color[3] = kRenderTargetClearValue.w;
+
+	renderTextureResource_ = CreateRenderTextureResource(
+		device_, width_, height_, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
+	renderTextureRTVHandle_ = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+	renderTextureRTVHandle_.ptr += SIZE_T(kBufferCount) * descSizeRTV_;
+	device_->CreateRenderTargetView(renderTextureResource_.Get(), &rtvDesc, renderTextureRTVHandle_);
+
+	renderTextureSrvIndex_ = SrvManager::GetInstance()->Allocate();
+
+	SrvManager::GetInstance()->CreateSRVforTexture2D(
+		renderTextureSrvIndex_,
+		renderTextureResource_.Get(),
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+		1
+	);
+
+}
+
+void Graphics::BeginSceneToRenderTexture()
+{
+	ResetDrawCallCount();
+
+	/*if (renderTextureState_ != D3D12_RESOURCE_STATE_RENDER_TARGET) {
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = renderTextureResource_.Get();
+		barrier.Transition.StateBefore = renderTextureState_;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		cmdList_->ResourceBarrier(1, &barrier);
+		renderTextureState_ = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	}
+	
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
+	// TransitionBarrierを張る
+	cmdList_->OMSetRenderTargets(1, &renderTextureRTVHandle_, false, &dsvHandle);
+	cmdList_->ClearRenderTargetView(renderTextureRTVHandle_, renderTextureClearValue_.Color, 0, nullptr);
+	cmdList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+	SrvManager::GetInstance()->PreDraw();
+
+	cmdList_->RSSetViewports(1, &viewport_);
+	cmdList_->RSSetScissorRects(1, &scissorRect_);*/
+}
+
+void Graphics::BeginImGuiToSwapChain()
+{
+	backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
+
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = backBuffers_[backBufferIndex_].Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+	cmdList_->ResourceBarrier(1, &barrier);
+
+	cmdList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex_], false, nullptr);
+	cmdList_->ClearRenderTargetView(rtvHandles_[backBufferIndex_], clear, 0, nullptr);
+
+	cmdList_->RSSetViewports(1, &viewport_);
+	cmdList_->RSSetScissorRects(1, &scissorRect_);
+}
+
+void Graphics::EndSceneToRenderTexture()
+{
+	if (renderTextureState_ != D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE) {
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = renderTextureResource_.Get();
+		barrier.Transition.StateBefore = renderTextureState_;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		cmdList_->ResourceBarrier(1, &barrier);
+		renderTextureState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	}
 }
 
 void Graphics::InitFixFPS()

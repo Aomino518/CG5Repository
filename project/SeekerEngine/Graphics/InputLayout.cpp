@@ -70,3 +70,10 @@ D3D12_INPUT_LAYOUT_DESC InputLayout::CreateInputLayoutDebug3D()
 
 	return inputLayoutDescDebug3D_;
 }
+
+D3D12_INPUT_LAYOUT_DESC InputLayout::CreateInputLayoutOffScreen()
+{
+	inputLayoutDescOffScreen_.pInputElementDescs = nullptr;
+	inputLayoutDescOffScreen_.NumElements = 0;
+	return inputLayoutDescOffScreen_;
+}

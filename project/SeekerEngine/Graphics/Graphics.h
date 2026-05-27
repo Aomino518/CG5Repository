@@ -41,9 +41,19 @@ public:
 	D3D12_VIEWPORT GetViewport() const { return viewport_; }
 	D3D12_RECT GetScissorRect() const { return scissorRect_; }
 
+	D3D12_CPU_DESCRIPTOR_HANDLE AllocateRTV();
+
 	static Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
 		const Microsoft::WRL::ComPtr<ID3D12Device>& device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
   
+	void CreateRenderTextureRTV();
+
+	// Object
+	void BeginSceneToRenderTexture();
+	// ImGui
+	void BeginImGuiToSwapChain();
+
+	void EndSceneToRenderTexture();
 private:
 	Graphics() = default;
 	~Graphics() = default;
@@ -112,9 +122,19 @@ private:
 	// 記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
-private:
 	// DrawCallした数
 	uint32_t drawCallCount_ = 0;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource_;
+	D3D12_CPU_DESCRIPTOR_HANDLE renderTextureRTVHandle_{};
+	uint32_t renderTextureSrvIndex_ = 0;
+
+	D3D12_CLEAR_VALUE renderTextureClearValue_{};
+	
+	D3D12_RESOURCE_STATES renderTextureState_ = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+	uint32_t nextRtvIndex_ = 2;
+
 public:
 	void ResetDrawCallCount() { drawCallCount_ = 0; }
 	void AddDrawCallCount(uint32_t count = 1) { drawCallCount_ += count; }

@@ -5,6 +5,16 @@ void TitleScene::Init()
 {
     Logger::Write("現在シーンTitleScene");
    
+    auto camMgr = CameraManager::GetInstance();
+    Entity3DCommon::GetInstance()->SetCameraManager(camMgr);
+    Entity3DCommon::GetInstance()->SetDebugCamera(camMgr->GetDebugCamera());
+
+    terrain_ = std::make_unique<Entity3D>();
+    ModelManager::GetInstance()->LoadModel("terrain.obj");
+    terrain_->Init();
+    terrain_->SetModel("terrain");
+    terrain_->SetTranslate({ 0.0f, 0.0f, 0.0f });
+
     ImGuiManager::GetInstance()->LoadScenesJson();
 }
 
@@ -20,19 +30,13 @@ void TitleScene::Update()
         SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
     }
 
-    ImGuiManager::GetInstance()->BeginFrame();
-    ImGuiManager::GetInstance()->DrawMainMenuBar();
-    ImGuiManager::GetInstance()->DrawCameraWindow(camMgr);
-    ImGuiManager::GetInstance()->DrawEditor();
-    ImGuiManager::GetInstance()->Stats();
-    ImGuiManager::GetInstance()->DrawSoundWindow();
-    ImGuiManager::GetInstance()->DrawLoggerWindow();
-    ImGuiManager::GetInstance()->EndFrame();
+    terrain_->SetCamera(camMgr->GetActiveCamera());
+    terrain_->Update();
 }
 
 void TitleScene::Draw()
 {
-    ImGuiManager::GetInstance()->Draw();
+    terrain_->Draw();
 }
 
 void TitleScene::Shutdown()

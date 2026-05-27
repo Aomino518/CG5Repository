@@ -20,7 +20,5 @@ public:
 	const char* GetSceneName() const override { return "TITLE"; }
 
 private:
-	std::unique_ptr<Sprite> sprite;
-	std::unique_ptr<Sprite> spr_monsterBall;
-	std::unique_ptr<Particle2DEmitter> emitter_;
+	std::unique_ptr<Entity3D> terrain_;
 };

@@ -42,6 +42,8 @@ void SeekerEngine::Init()
 
 	SrvManager::GetInstance()->Init();
 
+	//Graphics::GetInstance()->CreateRenderTextureRTV();
+
 	// DxcCompilerの初期化
 	dxcCompiler_.Init();
 
@@ -58,6 +60,7 @@ void SeekerEngine::Init()
 	rsParticle2D_ = rootSignatureFactory_.CreateParticle2D();
 	rsDebugShape2D_ = rootSignatureFactory_.CreateDebugShape2D();
 	rsDebugShape3D_ = rootSignatureFactory_.CreateDebugShape3D();
+	rsOffScreen_ = rootSignatureFactory_.CreateOffScreen();
 
 	SoundManager::GetInstance()->Init();
 
@@ -70,6 +73,9 @@ void SeekerEngine::Init()
 
 	// モデル共通部の作成
 	Entity3DCommon::GetInstance()->Init(dxcCompiler_, rs3D_.Get());
+
+	renderTexture_.Create(Graphics::GetWidth(), Graphics::GetHeight());
+	copyImageRenderer_.Init(dxcCompiler_, rsOffScreen_.Get());
 
 	ParticleManager::GetInstance()->Init(dxcCompiler_, rsParticle_.Get());
 	Particle2DManager::GetInstance()->Init(dxcCompiler_, rsParticle2D_.Get());
@@ -113,11 +119,30 @@ void SeekerEngine::Shutdown()
 
 void SeekerEngine::BegineFrame()
 {
-	Graphics::GetInstance()->BeginFrame();
+	renderTexture_.BeginWrite(Graphics::GetCmdList());
 }
 
 void SeekerEngine::EndFrame()
 {
+	renderTexture_.EndWrite(Graphics::GetCmdList());
+
+
+	Graphics::GetInstance()->BeginImGuiToSwapChain();
+	copyImageRenderer_.Draw(renderTexture_.GetSrvIndex());
+
+#ifdef USE_IMGUI
+	auto camMgr = CameraManager::GetInstance();
+	ImGuiManager::GetInstance()->BeginFrame();
+	ImGuiManager::GetInstance()->DrawMainMenuBar();
+	ImGuiManager::GetInstance()->DrawCameraWindow(camMgr);
+	ImGuiManager::GetInstance()->DrawEditor();
+	ImGuiManager::GetInstance()->Stats();
+	ImGuiManager::GetInstance()->DrawSoundWindow();
+	ImGuiManager::GetInstance()->DrawLoggerWindow();
+	ImGuiManager::GetInstance()->EndFrame();
+	ImGuiManager::GetInstance()->Draw();
+#endif
+
 	Graphics::GetInstance()->EndFrame();
 }
 
