@@ -28,6 +28,7 @@
 #include "DebugDraw2D.h"
 #include "DebugDraw3D.h"
 #include "Particle2DManager.h"
+#include "CopyImageRenderer.h"
 
 void SeekerEngine::Init()
 {
@@ -41,8 +42,6 @@ void SeekerEngine::Init()
 	Graphics::GetInstance()->Init(true);
 
 	SrvManager::GetInstance()->Init();
-
-	//Graphics::GetInstance()->CreateRenderTextureRTV();
 
 	// DxcCompilerの初期化
 	dxcCompiler_.Init();
@@ -75,7 +74,7 @@ void SeekerEngine::Init()
 	Entity3DCommon::GetInstance()->Init(dxcCompiler_, rs3D_.Get());
 
 	renderTexture_.Create(Graphics::GetWidth(), Graphics::GetHeight());
-	copyImageRenderer_.Init(dxcCompiler_, rsOffScreen_.Get());
+	CopyImageRenderer::GetInstance()->Init(dxcCompiler_, rsOffScreen_.Get());
 
 	ParticleManager::GetInstance()->Init(dxcCompiler_, rsParticle_.Get());
 	Particle2DManager::GetInstance()->Init(dxcCompiler_, rsParticle2D_.Get());
@@ -128,7 +127,7 @@ void SeekerEngine::EndFrame()
 
 
 	Graphics::GetInstance()->BeginImGuiToSwapChain();
-	copyImageRenderer_.Draw(renderTexture_.GetSrvIndex());
+	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::Grayscale);
 
 #ifdef USE_IMGUI
 	auto camMgr = CameraManager::GetInstance();

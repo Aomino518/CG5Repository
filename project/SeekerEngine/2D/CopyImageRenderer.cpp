@@ -7,6 +7,12 @@
 #include "SrvManager.h"
 #include <assert.h>
 
+CopyImageRenderer* CopyImageRenderer::GetInstance()
+{
+    static CopyImageRenderer instance;
+    return &instance;
+}
+
 void CopyImageRenderer::Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* rootSignature)
 {
     assert(rootSignature);
@@ -14,10 +20,14 @@ void CopyImageRenderer::Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* root
     rootSignature_ = rootSignature;
 
     Microsoft::WRL::ComPtr<IDxcBlob> vsBlob =
-        dxcCompiler.CompileShader(L"resources/hlsl/CopyImage.VS.hlsl", L"vs_6_0");
+        dxcCompiler.CompileShader(L"resources/hlsl/Fullscreen.VS.hlsl", L"vs_6_0");
 
-    Microsoft::WRL::ComPtr<IDxcBlob> psBlob =
-        dxcCompiler.CompileShader(L"resources/hlsl/CopyImage.PS.hlsl", L"ps_6_0");
+    struct ShaderInfo { EffectType type; std::wstring path; };
+    std::vector<ShaderInfo> shaders = {
+        {EffectType::Copy, L"resources/hlsl/Fullscreen.PS.hlsl"},
+        {EffectType::Grayscale, L"resources/hlsl/Grayscale.PS.hlsl"},
+        {EffectType::Sepia, L"resources/hlsl/Sepia.PS.hlsl"},
+    };
 
     InputLayout inputLayout;
     D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = inputLayout.CreateInputLayoutOffScreen();
@@ -36,29 +46,34 @@ void CopyImageRenderer::Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* root
     PsoBuilder builder;
     builder.Init(Graphics::GetInstance());
 
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = builder.CreatePsoDesc(
-        rootSignature_,
-        inputLayoutDesc,
-        vsBlob,
-        psBlob,
-        blendDesc,
-        rasterizerDesc,
-        depthStencilDesc,
-        D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-    );
+    for (const auto& shader : shaders) {
+        Microsoft::WRL::ComPtr<IDxcBlob> psBlob =
+            dxcCompiler.CompileShader(shader.path.c_str(), L"ps_6_0");
 
-    pso_ = builder.BuildPso(psoDesc);
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = builder.CreatePsoDesc(
+            rootSignature_,
+            inputLayoutDesc,
+            vsBlob,
+            psBlob,
+            blendDesc,
+            rasterizerDesc,
+            depthStencilDesc,
+            D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+        );
+
+        psoMap_[shader.type] = builder.BuildPso(psoDesc);
+    }
 }
 
-void CopyImageRenderer::Draw(uint32_t textureSrvIndex)
+void CopyImageRenderer::Draw(uint32_t textureSrvIndex, EffectType type)
 {
     ID3D12GraphicsCommandList* commandList = Graphics::GetCmdList();
     assert(commandList);
     assert(rootSignature_);
-    assert(pso_);
+    assert(psoMap_.count(type));
 
     commandList->SetGraphicsRootSignature(rootSignature_.Get());
-    commandList->SetPipelineState(pso_.Get());
+    commandList->SetPipelineState(psoMap_[type].Get());
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     SrvManager::GetInstance()->PreDraw();
     SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(0, textureSrvIndex);

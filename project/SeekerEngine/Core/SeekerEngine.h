@@ -5,7 +5,6 @@
 #include "InputLayout.h"
 #include "PsoBuilder.h"
 #include "RenderTexture.h"
-#include "CopyImageRenderer.h"
 
 class Application;
 class Graphics;
@@ -40,5 +39,4 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rsOffScreen_;
 	RenderTexture renderTexture_;
-	CopyImageRenderer copyImageRenderer_;
 };
