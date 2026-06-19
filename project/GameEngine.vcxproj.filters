@@ -357,6 +357,7 @@
     <FxCompile Include="resources\hlsl\Fullscreen.PS.hlsl" />
     <FxCompile Include="resources\hlsl\Grayscale.PS.hlsl" />
     <FxCompile Include="resources\hlsl\Sepia.PS.hlsl" />
+    <FxCompile Include="resources\hlsl\Vignetting.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SeekerEngine\Audio\SoundManager.h">

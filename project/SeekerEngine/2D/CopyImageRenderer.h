@@ -7,7 +7,8 @@
 enum class EffectType {
 	Copy,
 	Grayscale,
-	Sepia
+	Sepia,
+	Vignetting
 };
 
 class DxcCompiler;

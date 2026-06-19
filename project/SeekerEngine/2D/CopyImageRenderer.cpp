@@ -27,6 +27,7 @@ void CopyImageRenderer::Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* root
         {EffectType::Copy, L"resources/hlsl/Fullscreen.PS.hlsl"},
         {EffectType::Grayscale, L"resources/hlsl/Grayscale.PS.hlsl"},
         {EffectType::Sepia, L"resources/hlsl/Sepia.PS.hlsl"},
+        {EffectType::Vignetting, L"resources/hlsl/Vignetting.PS.hlsl"},
     };
 
     InputLayout inputLayout;

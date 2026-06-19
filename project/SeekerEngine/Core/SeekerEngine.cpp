@@ -127,7 +127,8 @@ void SeekerEngine::EndFrame()
 
 
 	Graphics::GetInstance()->BeginImGuiToSwapChain();
-	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::Grayscale);
+	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::Copy);
+	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::Vignetting);
 
 #ifdef USE_IMGUI
 	auto camMgr = CameraManager::GetInstance();
