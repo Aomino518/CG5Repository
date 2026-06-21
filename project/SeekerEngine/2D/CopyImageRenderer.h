@@ -8,7 +8,9 @@ enum class EffectType {
 	Copy,
 	Grayscale,
 	Sepia,
-	Vignetting
+	Vignetting,
+	BoxFilter3x3,
+	BoxFilter5x5,
 };
 
 class DxcCompiler;

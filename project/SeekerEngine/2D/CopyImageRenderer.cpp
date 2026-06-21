@@ -28,6 +28,8 @@ void CopyImageRenderer::Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* root
         {EffectType::Grayscale, L"resources/hlsl/Grayscale.PS.hlsl"},
         {EffectType::Sepia, L"resources/hlsl/Sepia.PS.hlsl"},
         {EffectType::Vignetting, L"resources/hlsl/Vignetting.PS.hlsl"},
+        {EffectType::BoxFilter3x3, L"resources/hlsl/BoxFilter3x3.PS.hlsl"},
+        {EffectType::BoxFilter5x5, L"resources/hlsl/BoxFilter5x5.PS.hlsl"},
     };
 
     InputLayout inputLayout;

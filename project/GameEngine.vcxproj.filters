@@ -358,6 +358,8 @@
     <FxCompile Include="resources\hlsl\Grayscale.PS.hlsl" />
     <FxCompile Include="resources\hlsl\Sepia.PS.hlsl" />
     <FxCompile Include="resources\hlsl\Vignetting.PS.hlsl" />
+    <FxCompile Include="resources\hlsl\BoxFilter3x3.PS.hlsl" />
+    <FxCompile Include="resources\hlsl\BoxFilter5x5.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SeekerEngine\Audio\SoundManager.h">
