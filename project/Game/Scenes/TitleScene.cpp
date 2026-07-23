@@ -15,6 +15,8 @@ void TitleScene::Init()
     terrain_->SetModel("terrain");
     terrain_->SetTranslate({ 0.0f, 0.0f, 0.0f });
 
+    gaussian_ = std::make_unique<CopyImageRenderer>();
+
     ImGuiManager::GetInstance()->LoadScenesJson();
 }
 
@@ -37,6 +39,11 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
     terrain_->Draw();
+}
+
+void TitleScene::DrawPostEffect(uint32_t textureSrvIndex)
+{
+    gaussian_->Draw(textureSrvIndex, EffectType::GaussianFilter);
 }
 
 void TitleScene::Shutdown()

@@ -28,7 +28,7 @@
 #include "DebugDraw2D.h"
 #include "DebugDraw3D.h"
 #include "Particle2DManager.h"
-#include "CopyImageRenderer.h"
+#include "BaseImageRenderer.h"
 
 void SeekerEngine::Init()
 {
@@ -74,7 +74,7 @@ void SeekerEngine::Init()
 	Entity3DCommon::GetInstance()->Init(dxcCompiler_, rs3D_.Get());
 
 	renderTexture_.Create(Graphics::GetWidth(), Graphics::GetHeight());
-	CopyImageRenderer::GetInstance()->Init(dxcCompiler_, rsOffScreen_.Get());
+	BaseImageRenderer::GetInstance()->Init(dxcCompiler_, rsOffScreen_.Get());
 
 	ParticleManager::GetInstance()->Init(dxcCompiler_, rsParticle_.Get());
 	Particle2DManager::GetInstance()->Init(dxcCompiler_, rsParticle2D_.Get());
@@ -97,6 +97,7 @@ void SeekerEngine::Shutdown()
 	LightManager::GetInstance()->Shutdown();
 	Particle2DManager::GetInstance()->Shutdown();
 	ParticleManager::GetInstance()->Shutdown();
+	BaseImageRenderer::GetInstance()->Shutdown();
 	Entity3DCommon::GetInstance()->Shutdown();
 	SpriteCommon::GetInstance()->Shutdown();
 	DebugDraw3D::GetInstance()->Shutdown();
@@ -125,10 +126,8 @@ void SeekerEngine::EndFrame()
 {
 	renderTexture_.EndWrite(Graphics::GetCmdList());
 
-
 	Graphics::GetInstance()->BeginImGuiToSwapChain();
-	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::Copy);
-	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::GaussianFilter);
+	SceneManager::GetInstance()->DrawPostEffect(renderTexture_.GetSrvIndex());
 
 #ifdef USE_IMGUI
 	auto camMgr = CameraManager::GetInstance();

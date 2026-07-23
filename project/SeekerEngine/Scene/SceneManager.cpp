@@ -36,6 +36,13 @@ void SceneManager::Draw() {
 	}
 }
 
+void SceneManager::DrawPostEffect(uint32_t sourceTextureSrvIndex)
+{
+	if (scene_) {
+		scene_->DrawPostEffect(sourceTextureSrvIndex);
+	}
+}
+
 void SceneManager::Shutdown() {
 	scene_.reset();
 	nextScene_.reset();

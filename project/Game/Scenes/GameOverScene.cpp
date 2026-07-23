@@ -19,6 +19,10 @@ void GameOverScene::Draw()
 
 }
 
+void GameOverScene::DrawPostEffect(uint32_t textureSrvIndex)
+{
+}
+
 void GameOverScene::Shutdown()
 {
     Editor::GetInstance()->Clear();
