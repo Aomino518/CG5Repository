@@ -23,10 +23,6 @@ void PlayScene::Draw()
 
 }
 
-void PlayScene::DrawPostEffect(uint32_t textureSrvIndex)
-{
-}
-
 void PlayScene::Shutdown()
 {
     Editor::GetInstance()->Clear();

@@ -19,10 +19,6 @@ void ClearScene::Draw()
 
 }
 
-void ClearScene::DrawPostEffect(uint32_t textureSrvIndex)
-{
-}
-
 void ClearScene::Shutdown()
 {
     Editor::GetInstance()->Clear();

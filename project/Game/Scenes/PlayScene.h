@@ -14,8 +14,6 @@ public:
 	// 描画
 	void Draw() override;
 
-	void DrawPostEffect(uint32_t textureSrvIndex);
-
 	void Shutdown() override;
 
 	const char* GetSceneName() const override { return "GAMEPLAY"; }

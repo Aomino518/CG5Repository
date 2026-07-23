@@ -12,8 +12,6 @@ class ClearScene : public BaseScene
 	// 描画
 	void Draw() override;
 
-	void DrawPostEffect(uint32_t textureSrvIndex);
-
 	// 終了
 	void Shutdown() override;
 
