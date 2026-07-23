@@ -128,7 +128,7 @@ void SeekerEngine::EndFrame()
 
 	Graphics::GetInstance()->BeginImGuiToSwapChain();
 	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::Copy);
-	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::BoxFilter5x5);
+	CopyImageRenderer::GetInstance()->Draw(renderTexture_.GetSrvIndex(), EffectType::GaussianFilter);
 
 #ifdef USE_IMGUI
 	auto camMgr = CameraManager::GetInstance();

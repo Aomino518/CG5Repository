@@ -11,6 +11,7 @@ enum class EffectType {
 	Vignetting,
 	BoxFilter3x3,
 	BoxFilter5x5,
+	GaussianFilter
 };
 
 class DxcCompiler;
