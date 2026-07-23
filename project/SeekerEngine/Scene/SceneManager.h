@@ -3,6 +3,7 @@
 #include "AbstractSceneFactory.h"
 #include <memory>
 #include <string>
+#include <cstdint>
 
 class SceneManager
 {
@@ -14,6 +15,8 @@ public:
 	void Update();
 
 	void Draw();
+
+	void DrawPostEffect(uint32_t sourceTextureSrvIndex);
 
 	void Shutdown();
 

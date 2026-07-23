@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 class SceneManager;
 class BaseScene
@@ -17,6 +18,8 @@ public:
 
 	// 終了処理
 	virtual void Shutdown() = 0;
+
+	virtual void DrawPostEffect(uint32_t) {};
 
 	virtual const char* GetSceneName() const = 0;
 

@@ -1,37 +1,18 @@
 #pragma once
 #include <cstdint>
-#include <d3d12.h>
-#include <wrl.h>
-#include <unordered_map>
-
-enum class EffectType {
-	Copy,
-	Grayscale,
-	Sepia,
-	Vignetting,
-	BoxFilter3x3,
-	BoxFilter5x5,
-	GaussianFilter
-};
+#include "PostEffectType.h"
 
 class DxcCompiler;
 
 class CopyImageRenderer
 {
 public: 
-	// シングルトンインスタンスの取得
-	static CopyImageRenderer* GetInstance();
-	void Init(DxcCompiler& dxcCompiler, ID3D12RootSignature* rootSignature);
-	void Draw(uint32_t textureSrvIndex, EffectType type);
+	void Draw(uint32_t sourceTextureSrvIndex, EffectType type);
+
+	EffectType GetEffectType() const { return effectType_; }
+	void SetEffectType(EffectType effectType) { this->effectType_ = effectType; }
 
 private:
-	CopyImageRenderer() = default;
-	~CopyImageRenderer() = default;
-	CopyImageRenderer(const CopyImageRenderer&) = delete;
-	CopyImageRenderer& operator=(const CopyImageRenderer&) = delete;
-
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> pso_;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
-	std::unordered_map<EffectType, Microsoft::WRL::ComPtr<ID3D12PipelineState>> psoMap_;
+	EffectType effectType_ = EffectType::Copy;
 };
 
