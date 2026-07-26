@@ -43,7 +43,7 @@ void TitleScene::Draw()
 
 void TitleScene::DrawPostEffect(uint32_t textureSrvIndex)
 {
-    gaussian_->Draw(textureSrvIndex, EffectType::GaussianFilter);
+    gaussian_->Draw(textureSrvIndex, EffectType::Grayscale);
 }
 
 void TitleScene::Shutdown()
