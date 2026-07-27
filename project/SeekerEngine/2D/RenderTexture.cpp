@@ -5,43 +5,35 @@
 
 void RenderTexture::Create(uint32_t width, uint32_t height)
 {
+    assert(width > 0);
+    assert(height > 0);
+
     Graphics* graphics = Graphics::GetInstance();
-    ID3D12Device* device = Graphics::GetDevice();
 
-    const Vector4 clearColor{ 0.1f, 0.25f, 0.5f, 1.0f };
+    if (!descriptorAllocated_) {
+        rtvHandle_ = graphics->AllocateRTV();
+        srvIndex_ = SrvManager::GetInstance()->Allocate();
+        descriptorAllocated_ = true;
+    }
 
-    resource_ = CreateRenderTextureResource(
-        device,
-        width,
-        height,
-        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-        clearColor
-    );
+    CreateResource(width, height);
+}
 
-    assert(resource_);
+void RenderTexture::Resize(uint32_t width, uint32_t height)
+{
+    if (width == 0 || height == 0) {
+        return;
+    }
 
-    rtvHandle_ = graphics->AllocateRTV();
+    if (width == width && height == height) {
+        return;
+    }
 
-    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+    assert(descriptorAllocated_);
 
-    device->CreateRenderTargetView(
-        resource_.Get(),
-        &rtvDesc,
-        rtvHandle_
-    );
+    resource_.Reset();
 
-    srvIndex_ = SrvManager::GetInstance()->Allocate();
-
-    SrvManager::GetInstance()->CreateSRVforTexture2D(
-        srvIndex_,
-        resource_.Get(),
-        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-        1
-    );
-
-    state_ = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    CreateResource(width, height);
 }
 
 void RenderTexture::BeginWrite(ID3D12GraphicsCommandList* cmdList)
@@ -105,4 +97,42 @@ uint32_t RenderTexture::GetSrvIndex() const
 ID3D12Resource* RenderTexture::GetResource() const
 {
 	return resource_.Get();
+}
+
+void RenderTexture::CreateResource(uint32_t width, uint32_t height)
+{
+    ID3D12Device* device = Graphics::GetDevice();
+
+    const Vector4 clearColor{ 0.1f, 0.25f, 0.5f, 1.0f };
+
+    resource_ = CreateRenderTextureResource(
+        device,
+        width,
+        height,
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        clearColor
+    );
+
+    assert(resource_);
+
+    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+    rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+    device->CreateRenderTargetView(
+        resource_.Get(),
+        &rtvDesc,
+        rtvHandle_
+    );
+
+    SrvManager::GetInstance()->CreateSRVforTexture2D(
+        srvIndex_,
+        resource_.Get(),
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        1
+    );
+
+    width_ = width;
+    height_ = height;
+    state_ = D3D12_RESOURCE_STATE_RENDER_TARGET;
 }

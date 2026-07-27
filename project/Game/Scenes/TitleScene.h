@@ -25,5 +25,6 @@ public:
 
 private:
 	std::unique_ptr<Entity3D> terrain_;
+	std::unique_ptr<Entity3D> ball_;
 	std::unique_ptr<CopyImageRenderer> gaussian_;
 };

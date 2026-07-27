@@ -15,6 +15,12 @@ void TitleScene::Init()
     terrain_->SetModel("terrain");
     terrain_->SetTranslate({ 0.0f, 0.0f, 0.0f });
 
+    ball_ = std::make_unique<Entity3D>();
+    ModelManager::GetInstance()->LoadModel("ball.obj");
+    ball_->Init();
+    ball_->SetModel("ball");
+    ball_->SetTranslate({ 0.0, 1.0, 0.0 });
+
     gaussian_ = std::make_unique<CopyImageRenderer>();
 
     ImGuiManager::GetInstance()->LoadScenesJson();
@@ -34,11 +40,15 @@ void TitleScene::Update()
 
     terrain_->SetCamera(camMgr->GetActiveCamera());
     terrain_->Update();
+
+    ball_->SetCamera(camMgr->GetActiveCamera());
+    ball_->Update();
 }
 
 void TitleScene::Draw()
 {
     terrain_->Draw();
+    ball_->Draw();
 }
 
 void TitleScene::DrawPostEffect(uint32_t textureSrvIndex)

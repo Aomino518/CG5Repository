@@ -33,8 +33,8 @@ private:
 	HINSTANCE hInstance_ = nullptr;
 	HWND hwnd_ = nullptr;
 	WNDCLASS wndclass{};
-	std::wstring className_ = L"CG2WindowClass";
-	std::wstring title_ = L"CG2";
+	std::wstring className_ = L"CG5WindowClass";
+	std::wstring title_ = L"CG5";
 	static int clientWidth_;
 	static int clientHeight_;
 	DWORD style_ = WS_OVERLAPPEDWINDOW;
